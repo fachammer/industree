@@ -7,14 +7,8 @@ public class Pause : MonoBehaviour {
 	
 	public Texture2D message;
 	
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
 	void Update () {
-		if(GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>().gameEnded)return;
+		if(GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>().gameEnded) return;
 		if(Input.GetKeyDown(KeyCode.Escape)){
 			paused = !paused;
 		}

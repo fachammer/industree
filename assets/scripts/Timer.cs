@@ -9,7 +9,6 @@ public class Timer : MonoBehaviour {
     public event TickHandler Tick;
 
     private float timer;
-    private bool running; 
 
     void Update()
     {
@@ -18,11 +17,6 @@ public class Timer : MonoBehaviour {
         if (timer >= interval)
         {
             Tick();
-        }
-
-        if (Tick.GetInvocationList().Length == 0)
-        {
-            Destroy(this.gameObject);
         }
     }
 
@@ -49,7 +43,6 @@ public class Timer : MonoBehaviour {
         timer.enabled = true;
         timer.interval = interval;
         timer.Tick += onTick;
-        timer.running = true;
         return timer;
     }
 }

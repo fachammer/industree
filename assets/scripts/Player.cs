@@ -97,7 +97,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (GameObject.FindGameObjectWithTag(Tags.pause).GetComponent<Pause>().paused ||

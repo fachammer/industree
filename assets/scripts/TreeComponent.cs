@@ -63,7 +63,7 @@ public class TreeComponent:Interactive
         }
 
         //Plays the animation after the last animatin
-        // transform.GetChild(0).animation.PlayQueued(idlAnim[level - 1],QueueMode.CompleteOthers);
+        // animation.PlayQueued(idlAnim[level - 1],QueueMode.CompleteOthers);
         
     }
 
@@ -79,7 +79,7 @@ public class TreeComponent:Interactive
 
     public void levelUp()
     {
-        // transform.GetChild(0).animation.Play(growAnim[level]);
+        // animation.Play(growAnim[level]);
         level += 1;
 		
 		audio.PlayOneShot(soundLevelUp);

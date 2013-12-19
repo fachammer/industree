@@ -67,8 +67,8 @@ $RECYCLE.BIN/
 .DS_Store
 
 # Unity crap
-library/
-Temp/
+[Ll]ibrary/
+[Tt]emp/
 *.sln
 *.userprefs
 *.csproj

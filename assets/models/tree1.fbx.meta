@@ -64,6 +64,7 @@ ModelImporter:
     4300000: Cube
     7400000: Default Take
     7400002: default
+    7400004: default0
     9500000: //RootNode
     11100000: //RootNode
     13700000: Cube
@@ -81,7 +82,175 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Default Take
+      takeName: Default Take
+      firstFrame: 0
+      lastFrame: 154
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature_001
+        weight: 1
+      - path: Armature_001/root
+        weight: 1
+      - path: Armature_001/root/branch_lvl1
+        weight: 1
+      - path: Armature_001/root/branch_lvl1/branch_lvl2_001
+        weight: 1
+      - path: Armature_001/root/branch_lvl1/branch_lvl2_008
+        weight: 1
+      - path: Armature_001/root/branch_lvl1/branch_lvl2_008/leave
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2/branch_lvl3
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2/branch_lvl3/branch_lvl3_001
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2_006
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2_006/branch_lvl2_010
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2_007
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2_007/branch_lvl2_011
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_002
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_002/branch_lvl1_005
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_003
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_003/branch_lvl2_003
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_003/branch_lvl2_003/branch_lvl2_012
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_004
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_004/branch_lvl2_004
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_004/branch_lvl2_005
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_004/branch_lvl2_005/branch_lvl2_013
+        weight: 1
+      - path: Armature_001/root/branch_lvl2_002
+        weight: 1
+      - path: Armature_001/root/branch_lvl2_002/branch_lvl2_009
+        weight: 1
+      - path: Armature_001/root/root_001
+        weight: 1
+      - path: Armature_001/root/root_001/root_002
+        weight: 1
+      - path: Cube
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: default
+      takeName: default
+      firstFrame: -1
+      lastFrame: 154
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature_001
+        weight: 1
+      - path: Armature_001/root
+        weight: 1
+      - path: Armature_001/root/branch_lvl1
+        weight: 1
+      - path: Armature_001/root/branch_lvl1/branch_lvl2_001
+        weight: 1
+      - path: Armature_001/root/branch_lvl1/branch_lvl2_008
+        weight: 1
+      - path: Armature_001/root/branch_lvl1/branch_lvl2_008/leave
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2/branch_lvl3
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2/branch_lvl3/branch_lvl3_001
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2_006
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2_006/branch_lvl2_010
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2_007
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_001/branch_lvl2_007/branch_lvl2_011
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_002
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_002/branch_lvl1_005
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_003
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_003/branch_lvl2_003
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_003/branch_lvl2_003/branch_lvl2_012
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_004
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_004/branch_lvl2_004
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_004/branch_lvl2_005
+        weight: 1
+      - path: Armature_001/root/branch_lvl1_004/branch_lvl2_005/branch_lvl2_013
+        weight: 1
+      - path: Armature_001/root/branch_lvl2_002
+        weight: 1
+      - path: Armature_001/root/branch_lvl2_002/branch_lvl2_009
+        weight: 1
+      - path: Armature_001/root/root_001
+        weight: 1
+      - path: Armature_001/root/root_001/root_002
+        weight: 1
+      - path: Cube
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
     isReadable: 1
   meshes:
     lODScreenPercentages: []
