@@ -24,7 +24,7 @@ public class Disaster:Interactive
         base.performAction(player, castDirection);
 
         //Find all spawnpoints and spawn mine
-        GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawnpoint");
+        GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag(Tags.spawnPoint);
 
         foreach (GameObject item in spawnPoints)
         {
