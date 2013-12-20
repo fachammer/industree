@@ -44,24 +44,21 @@ public class Planet : MonoBehaviour {
     public Texture2D winDialog;
     public Texture2D loseDialog;
 	
-	public bool started = false;
-	public bool gameEnded = false;
 	private bool gameWin = false;
 	
 	public AudioClip soundVictory;
 	public AudioClip soundDefeated;
 
-	public delegate void GameEndHandler(bool win);
-	public event GameEndHandler GameEnd = delegate(bool win){};
-
-	// Don't show in Inspector
+	[HideInInspector]
 	public Pollutable pollutable;
+
+	private GameController gameController;
    
 	// Use this for initialization
 	void Start () {
 		pollutable = GetComponent<Pollutable>();
-		pollutable.Pollute += OnPollution;
-		GameEnd += OnGameEnd;
+		gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+		gameController.GameEnd += OnGameEnd;
 
 		Screen.lockCursor = true;
 		Screen.showCursor = false;
@@ -85,20 +82,7 @@ public class Planet : MonoBehaviour {
 		
 	}
 
-	void OnPollution(Pollutable pollutable, int pollution){
-
-		if (pollutable.currentPollution == air)
-		{           
-			GameEnd(false);
-		}
-        else if (pollutable.currentPollution == 0)
-		{    
-			GameEnd(true); 
-		}
-	}
-
 	void OnGameEnd(bool win){
-		gameEnded = true;
 		gameWin = win;
 
 		if(gameWin){
@@ -111,7 +95,7 @@ public class Planet : MonoBehaviour {
 
     // Update is called once per frame
     void Update(){
-		if(started){
+		if(gameController.gameStarted){
 	        buildTimer += Time.deltaTime;
 			buildingLevelUpTimer += Time.deltaTime;
 			
@@ -161,7 +145,7 @@ public class Planet : MonoBehaviour {
         GUI.DrawTexture(pollutionRect, pollutionTex, ScaleMode.StretchToFill);
 		GUI.DrawTexture(new Rect((Screen.width-512)/2+2,0,512,128),bilanceHeader);
 
-        if(gameEnded){
+        if(gameController.gameEnded){
         	if(gameWin){
         		showEndDialog(winDialog);
         	}
@@ -183,7 +167,6 @@ public class Planet : MonoBehaviour {
 
     public void showEndDialog(Texture2D message)
     {
-		gameEnded = true;
         Time.timeScale = 0f;
         GUI.DrawTexture(new Rect((Screen.width-message.width)/2,200,message.width,message.height),message);
 

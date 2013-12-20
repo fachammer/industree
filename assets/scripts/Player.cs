@@ -33,9 +33,19 @@ public class Player : MonoBehaviour
     public string selectInputName;
     public string castInputName;
 
+    private GameController gameController;
+    private TimeManager timeManager;
+
     // Use this for initialization
     void Start()
     {
+        timeManager = GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>();
+        gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+
+        timeManager.Pause += OnPause;
+        timeManager.Resume += OnResume;
+        gameController.GameEnd += OnGameEnd;
+
         interactiveRect = new List<Rect>();
         //Callculate the offset for each player
         int sideOffset = (side == Side.left) ? 0 : (Screen.width - iconSize);
@@ -60,6 +70,18 @@ public class Player : MonoBehaviour
 
         inputManager.PlayerCast += OnInteractiveCast;
         inputManager.PlayerSelect += OnInteractiveSelection;
+    }
+
+    void OnPause(){
+        enabled = false;
+    }
+
+    void OnResume(){
+        enabled = true;
+    }
+
+    void OnGameEnd(bool win){
+        enabled = false;
     }
 
     private void OnInteractiveSelection(Player player, float selectDirection)
@@ -99,10 +121,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().paused ||
-            GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>().gameEnded)
-            return;
-
         createCredits();
 
         updateCooldowns();

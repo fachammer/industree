@@ -11,10 +11,19 @@ public class TimeManager : MonoBehaviour {
 	public event ResumeHandler Resume = delegate() {};
 	
 	public Texture2D message;
+
+	private GameController gameController;
+
+	void Start(){
+		gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+		gameController.GameEnd += OnGameEnd;
+	}
+
+	private void OnGameEnd(bool win){
+		enabled = false;
+	}
 	
 	void Update () {
-		if(GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>().gameEnded) return;
-
 		if(Input.GetKeyDown(KeyCode.Escape)){
 			paused = !paused;
 
@@ -43,5 +52,13 @@ public class TimeManager : MonoBehaviour {
 			Application.LoadLevel(1);	
 		}
 
+    }
+
+    public void PauseTime(){
+    	Time.timeScale = 0f;
+    }
+
+    public void ResumeTime(){
+    	Time.timeScale = 1f;
     }
 }

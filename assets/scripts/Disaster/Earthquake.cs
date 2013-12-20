@@ -18,10 +18,20 @@ public class Earthquake:Disaster
 
     private float lastTime;
 
+    private GameController gameController;
+    private TimeManager timeManager;
+
     public override void Start()
     {
         base.Start();
 		
+        gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+        timeManager = GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>();
+
+        gameController.GameEnd += OnGameEnd;
+        timeManager.Pause += OnPause;
+        timeManager.Resume += OnResume;
+
         Destroy(this.gameObject,duration);
 
         //set values
@@ -39,9 +49,21 @@ public class Earthquake:Disaster
 		transform.position = Camera.main.transform.position;
     }
 
+    private void OnGameEnd(bool win){
+        enabled = false;
+    }
+
+    private void OnPause(){
+        enabled = false;
+    }
+
+    private void OnResume(){
+        enabled = true;
+    }
+
     public override void Update()
     {
-		if(GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().paused || planet.gameEnded) return;
+		if(GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().paused || gameController.gameEnded) return;
         base.Update();
 		
 		//shake
