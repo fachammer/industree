@@ -18,7 +18,6 @@ public class Planet : MonoBehaviour {
 	public int placeCount;
     public float timeBetweenBuild;
 	
-	public float pollution;
 	public float air =100;
 	
 	private PlacingSystem placingSystem;
@@ -47,12 +46,23 @@ public class Planet : MonoBehaviour {
 	
 	public bool started = false;
 	public bool gameEnded = false;
+	private bool gameWin = false;
 	
 	public AudioClip soundVictory;
 	public AudioClip soundDefeated;
+
+	public delegate void GameEndHandler(bool win);
+	public event GameEndHandler GameEnd = delegate(bool win){};
+
+	// Don't show in Inspector
+	public Pollutable pollutable;
    
 	// Use this for initialization
 	void Start () {
+		pollutable = GetComponent<Pollutable>();
+		pollutable.Pollute += OnPollution;
+		GameEnd += OnGameEnd;
+
 		Screen.lockCursor = true;
 		Screen.showCursor = false;
 		
@@ -73,6 +83,30 @@ public class Planet : MonoBehaviour {
 		timeBetweenLevelUp = Random.Range (minTimeBetweenLevelUp, maxTimeBetweenLevelUp);
 		
 		
+	}
+
+	void OnPollution(Pollutable pollutable, int pollution){
+
+		if (pollutable.currentPollution == air)
+		{           
+			GameEnd(false);
+		}
+        else if (pollutable.currentPollution == 0)
+		{    
+			GameEnd(true); 
+		}
+	}
+
+	void OnGameEnd(bool win){
+		gameEnded = true;
+		gameWin = win;
+
+		if(gameWin){
+			audio.PlayOneShot(soundVictory);
+		}
+		else {
+			audio.PlayOneShot(soundDefeated);
+		}
 	}
 
     // Update is called once per frame
@@ -121,26 +155,20 @@ public class Planet : MonoBehaviour {
     {
         GUI.DrawTexture(bilanceRect, bilanceTex, ScaleMode.StretchToFill);
 
-		pollution = Mathf.Clamp(pollution,0,air);
-        pollutionRect.width = bilanceRect.width * pollution / air;
+		pollutable.currentPollution = (int) Mathf.Clamp(pollutable.currentPollution,0,air);
+        pollutionRect.width = bilanceRect.width * pollutable.currentPollution / air;
 
         GUI.DrawTexture(pollutionRect, pollutionTex, ScaleMode.StretchToFill);
 		GUI.DrawTexture(new Rect((Screen.width-512)/2+2,0,512,128),bilanceHeader);
 
-        if (pollution == air)
-		{           
-			if(!gameEnded)
-				audio.PlayOneShot(soundDefeated);
-			
-			 showEndDialog(loseDialog);
-		}
-        if (pollution == 0)
-		{            
-			if(!gameEnded)
-				audio.PlayOneShot(soundVictory);
-			
-			showEndDialog(winDialog);
-		}
+        if(gameEnded){
+        	if(gameWin){
+        		showEndDialog(winDialog);
+        	}
+        	else {
+        		showEndDialog(loseDialog);
+        	}
+        }
             
     }
 	
@@ -150,7 +178,7 @@ public class Planet : MonoBehaviour {
 	
 	public void setAirPollution()
 	{
-		sun.color = Color.Lerp(lightColor_clean,lightColor_dirty,pollution / air);
+		sun.color = Color.Lerp(lightColor_clean,lightColor_dirty, pollutable.currentPollution / air);
 	}
 
     public void showEndDialog(Texture2D message)

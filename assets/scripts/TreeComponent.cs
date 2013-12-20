@@ -74,7 +74,7 @@ public class TreeComponent:Interactive
 
     public void cleanAir()
     {
-        planet.pollution -= reducePollution[level-1];
+        planet.GetComponent<Pollutable>().currentPollution -= reducePollution[level-1];
     }
 
     public void levelUp()

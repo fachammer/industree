@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (GameObject.FindGameObjectWithTag(Tags.pause).GetComponent<Pause>().paused ||
+        if (GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().paused ||
             GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>().gameEnded)
             return;
 

@@ -8,7 +8,6 @@ public class Building:Interactive
 {
     public int hitpoints;
     public bool alive = true;
-    public int poullution;
     public int level = 1;
     public float[] minLevelUpTimes;
     public float[] maxLevelUpTimes;
@@ -16,7 +15,6 @@ public class Building:Interactive
     public delegate void LevelUpHandler(Building sender);
     public event LevelUpHandler LevelUp;
 
-    private float lastTime = 0;
     private float dyingSpeed = 0;
     private float[] levelUpBuildingTime = {0,0,0};
 
@@ -47,8 +45,6 @@ public class Building:Interactive
     {
         if (alive)
         {
-            pollute();
-			
 			levelUpTimer += Time.deltaTime;
 			
 			if (level <= levelUpBuildingTime.Length && levelUpTimer >= levelUpBuildingTime[level - 1]){
@@ -72,18 +68,6 @@ public class Building:Interactive
             hitpoints = 0;
             destroy();
         }
-    }
-
-    public void pollute()
-    {
-		
-        //Pollute every second
-        if (Time.time > lastTime + 1)
-        {
-            planet.pollution += poullution;
-            lastTime = Time.time;
-        }
-        
     }
 
     public void destroy()

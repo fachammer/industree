@@ -48,6 +48,8 @@ public class PlacingSystem
 		
 		GameObject newGameObject = placeGameObject(industryBuildingModel, buildingIndex, out replacedGameObject);
 		rotateIndustryBuildingRandomly(newGameObject);
+
+		newGameObject.GetComponent<Polluting>().pollutable = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Pollutable>();
 		
 		return replacedGameObject;
     }

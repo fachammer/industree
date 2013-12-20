@@ -1,17 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Pause : MonoBehaviour {
+public class TimeManager : MonoBehaviour {
 	
 	public bool paused = false;
+
+	public delegate void PauseHandler();
+	public delegate void ResumeHandler();
+	public event PauseHandler Pause = delegate() {};
+	public event ResumeHandler Resume = delegate() {};
 	
 	public Texture2D message;
 	
 	void Update () {
 		if(GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>().gameEnded) return;
+
 		if(Input.GetKeyDown(KeyCode.Escape)){
 			paused = !paused;
+
+			if(paused){
+				Pause();
+			}
+			else {
+				Resume();
+			}
 		}
+
 		Time.timeScale = paused ? 0 : 1;
 	}
 	

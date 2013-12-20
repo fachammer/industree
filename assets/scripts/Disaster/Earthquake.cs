@@ -41,7 +41,7 @@ public class Earthquake:Disaster
 
     public override void Update()
     {
-		if(GameObject.FindGameObjectWithTag(Tags.pause).GetComponent<Pause>().paused || planet.gameEnded) return;
+		if(GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().paused || planet.gameEnded) return;
         base.Update();
 		
 		//shake

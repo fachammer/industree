@@ -5,17 +5,14 @@ public class Polluting : MonoBehaviour {
 
     public int pollution;
     public float timeBetweenPollution;
+    public Pollutable pollutable;
 
-    public delegate void PolluteHandler(Polluting polluting);
-    public event PolluteHandler Pollute;
-
-	// Use this for initialization
 	void Start () {
         Timer.Instantiate(timeBetweenPollution, OnPollutionTimerTick);
 	}
 
     void OnPollutionTimerTick()
     {
-        Pollute(this);
+        pollutable.IncreasePollution(pollution);
     }
 }
