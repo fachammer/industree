@@ -7,7 +7,7 @@ public class Levelable : MonoBehaviour {
     public float[] levelUpTimes;
     public int maxLevel;
 
-    public int level;
+    private int level;
 
     public int Level {
     	get { return level; }
