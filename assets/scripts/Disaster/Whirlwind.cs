@@ -59,7 +59,7 @@ public class Whirlwind:Disaster
             {
                 if (UnityEngine.Random.Range(0f, 1f) <= probability)
                 {
-                    c.transform.parent.parent.GetComponent<Building>().takeDamage(damage);
+                    c.transform.parent.parent.GetComponent<Building>().Damagable.TakeDamage(damage);
                 }
             }
             lastTime = Time.time;

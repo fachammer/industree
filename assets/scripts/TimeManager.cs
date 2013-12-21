@@ -3,18 +3,21 @@ using System.Collections;
 
 public class TimeManager : MonoBehaviour {
 	
-	public bool paused = false;
+	public Texture2D message;
+
+	private bool paused;
+	private GameController gameController;
+
+	public bool Paused {
+		get { return paused; }
+	}
 
 	public delegate void PauseHandler();
 	public delegate void ResumeHandler();
 	public event PauseHandler Pause = delegate() {};
 	public event ResumeHandler Resume = delegate() {};
-	
-	public Texture2D message;
 
-	private GameController gameController;
-
-	void Start(){
+	private void Awake(){
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
 		gameController.GameEnd += OnGameEnd;
 	}
@@ -23,7 +26,7 @@ public class TimeManager : MonoBehaviour {
 		enabled = false;
 	}
 	
-	void Update () {
+	private void Update () {
 		if(Input.GetKeyDown(KeyCode.Escape)){
 			paused = !paused;
 
@@ -38,11 +41,11 @@ public class TimeManager : MonoBehaviour {
 		Time.timeScale = paused ? 0 : 1;
 	}
 	
-	void OnGUI(){
+	private void OnGUI(){
 		if(paused) showPauseDialog();
 	}
 	
-	void showPauseDialog(){
+	private void showPauseDialog(){
         GUI.DrawTexture(new Rect((Screen.width-message.width)/2,200,message.width,message.height),message);
 
         if(Input.GetKeyDown(KeyCode.Q)){

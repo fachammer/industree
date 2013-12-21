@@ -4,82 +4,73 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class Building:Interactive
+public class Building : MonoBehaviour
 {
-    public int hitpoints;
-    public bool alive = true;
-    public int level = 1;
+    public int initialHitPoints;
+
     public float[] minLevelUpTimes;
     public float[] maxLevelUpTimes;
 
-    public delegate void LevelUpHandler(Building sender);
-    public event LevelUpHandler LevelUp;
+    public GameObject[] buildingLevelModels;
+    public int[] pollutionLevels;
+
+    public float destroyDelay;
 
     private float dyingSpeed = 0;
-    private float[] levelUpBuildingTime = {0,0,0};
 
-	private Planet planet;
+    private Polluting polluting;
+    private Damagable damagable;
+    private Levelable levelable;
+
+    public Levelable Levelable {
+        get { return levelable; }
+    }
+
+    public Damagable Damagable {
+        get { return damagable; }
+    }
+
+    public void Awake(){
+        polluting = GetComponent<Polluting>();
+        levelable = GetComponent<Levelable>();
+        damagable = GetComponent<Damagable>();
+        levelable.LevelUp += OnLevelUp;
+        damagable.BeforeDestroy += OnBuildingDestroy;
+    }
 	
-	private float levelUpTimer;
-	
-	public void Start(){
-		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
-		
+	public void Start(){	
 		for(int i = 0; i < minLevelUpTimes.Length; i++){
-	        levelUpBuildingTime[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
+	        levelable.levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
-		
-       	levelUpTimer = 0f;
 
-        LevelUp += OnLevelUp;
+        GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[0], transform.position, transform.rotation);
+        newGameObject.transform.parent = transform;
 	}
 
-    private void OnLevelUp(Building buildingToLevelUp)
-    {
-        level += 1;
-        levelUpTimer = 0f;
-        planet.levelUpBuilding(this);
-    }
-	
-    public void Update()
-    {
-        if (alive)
-        {
-			levelUpTimer += Time.deltaTime;
-			
-			if (level <= levelUpBuildingTime.Length && levelUpTimer >= levelUpBuildingTime[level - 1]){
-                LevelUp(this);
-        	}
-			
-			
-        }
-        else
-        {
-            destroyMovement();
-        }
-    }
-	
-    public void takeDamage(int damage)
-    {
-        hitpoints -= damage;
+    public void Update(){
 
-        if (hitpoints <= 0)
-        {
-            hitpoints = 0;
-            destroy();
+        // Animate if destroyed
+        if(damagable.Destroyed){
+            dyingSpeed += 0.1f;
+            transform.position -= transform.up * Time.deltaTime * dyingSpeed;
         }
     }
 
-    public void destroy()
+    private void OnLevelUp(Levelable levelable)
     {
-        Destroy(gameObject, 3);
-        alive = false;
+        polluting.pollution = pollutionLevels[levelable.level - 1];
+
+        // Destroy children and add new model as current model
+        foreach(Transform t in transform){
+            Destroy(t.gameObject);
+        }
+
+        GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[levelable.level - 1], transform.position, transform.rotation);
+        newGameObject.transform.parent = transform;
     }
 
-    public void destroyMovement()
-    {
-        dyingSpeed += 0.1f;
-        transform.position -= transform.up*Time.deltaTime*dyingSpeed;
+    private void OnBuildingDestroy(Damagable damagable){
+        Destroy(gameObject, destroyDelay);
     }
 }
 

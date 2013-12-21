@@ -66,7 +66,7 @@ public class PlacingSystem
 		
 		GameObject newGameObject = placeGameObject(treeModel, treeIndex, out replacedGameObject);
 		
-		newGameObject.transform.Rotate(new Vector3(0, Random.Range(0, 360), 0));
+		newGameObject.transform.Rotate(new Vector3(-90, 0, 0));
 		float randomScale = Random.Range (0.8f, 1.0f);
 		newGameObject.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
 		
@@ -98,7 +98,7 @@ public class PlacingSystem
 	
 	private bool canPlaceTreeOnIndex(int index){
 		return treesAndBuildings[index] == null || (treesAndBuildings[index].GetComponent<Building>() != null &&
-				!treesAndBuildings[index].GetComponent<Building>().alive);
+				treesAndBuildings[index].GetComponent<Building>().Damagable.Destroyed);
 	}
 	
 	public bool canPlaceTree(Player.Side side){		
@@ -111,6 +111,7 @@ public class PlacingSystem
 		
 		Vector3 worldCenter = Vector3.zero;
 		newGameObject.transform.LookAt(worldCenter, Vector3.right);
+		// newGameObject.transform.Rotate(new Vector3(0, 90, 0));
 		newGameObject.transform.Rotate(new Vector3(0, 0, 90), Space.World);
 		
 		replacedObject = treesAndBuildings[placeIndex];
@@ -167,6 +168,9 @@ public class PlacingSystem
 	
 	public void levelUpBuilding(Building building, GameObject newBuildingModel){  
 		
+		if(building == null){
+			Debug.Log("building is null");
+		}
 		int buildingIndex = treesAndBuildings.FindIndex(delegate(GameObject obj) {
 			if(obj != null){
 				return obj == building.gameObject;
@@ -177,7 +181,7 @@ public class PlacingSystem
 		GameObject replacedObj;
 		
 		GameObject newGameObject = placeGameObject(newBuildingModel, buildingIndex, out replacedObj);
-		
+
 		rotateIndustryBuildingRandomly(newGameObject);
 		
 		MonoBehaviour.Destroy(replacedObj);

@@ -12,7 +12,7 @@ public class Planet : MonoBehaviour {
 	
 	public GameObject treeModel;
 	
-	public GameObject[] industryBuildingModels;
+	public GameObject industryBuildingModel;
 	
 	public float worldRadius;
 	public int placeCount;
@@ -22,12 +22,7 @@ public class Planet : MonoBehaviour {
 	
 	private PlacingSystem placingSystem;
 	
-	float buildTimer = 0.0f;
-	float buildingLevelUpTimer = 0f;
-	
-	public float minTimeBetweenLevelUp;
-	public float maxTimeBetweenLevelUp;
-	private float timeBetweenLevelUp;
+	private float buildTimer = 0.0f;
 
     public Vector2 bilanceSize;
     private Rect bilanceRect;
@@ -76,10 +71,6 @@ public class Planet : MonoBehaviour {
 
         bilanceTex.Apply();
         pollutionTex.Apply();
-		
-		timeBetweenLevelUp = Random.Range (minTimeBetweenLevelUp, maxTimeBetweenLevelUp);
-		
-		
 	}
 
 	void OnGameEnd(bool win){
@@ -97,29 +88,22 @@ public class Planet : MonoBehaviour {
     void Update(){
 		if(gameController.gameStarted){
 	        buildTimer += Time.deltaTime;
-			buildingLevelUpTimer += Time.deltaTime;
-			
+
 			if(buildTimer >= timeBetweenBuild){
 				
 				if(placingSystem.canPlaceBuilding()){
-					GameObject replacedObject = placingSystem.placeNewIndustryBuilding(industryBuildingModels[0]);
+					GameObject replacedObject = placingSystem.placeNewIndustryBuilding(industryBuildingModel);
 					
 					if(replacedObject != null && replacedObject.tag == Tags.tree){
 						replacedObject.GetComponent<TreeComponent>().die();
 					}
+
 					buildTimer = 0f;
 				}
 				else {
 					// Game lost
 				}
 			}
-			
-			if(buildingLevelUpTimer >= timeBetweenLevelUp){
-				//placingSystem.levelUpBuilding();
-				
-				timeBetweenLevelUp = Random.Range(minTimeBetweenLevelUp, maxTimeBetweenLevelUp);
-				buildingLevelUpTimer = 0f;
-			}		
 		}
 		
 		setAirPollution();
@@ -155,10 +139,6 @@ public class Planet : MonoBehaviour {
         }
             
     }
-	
-	public void levelUpBuilding(Building building){
-		placingSystem.levelUpBuilding(building, industryBuildingModels[building.level - 1]);
-	}
 	
 	public void setAirPollution()
 	{

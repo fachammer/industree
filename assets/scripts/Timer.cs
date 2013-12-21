@@ -5,19 +5,19 @@ public class Timer : MonoBehaviour {
 
     public float interval;
 
-    public delegate void TickHandler();
-    public event TickHandler Tick = delegate() {};
-
     private float timer;
     private TimeManager timeManager;
 
-    void Start(){
+    public delegate void TickHandler();
+    public event TickHandler Tick = delegate() {};
+
+    private void Awake(){
         timeManager = GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>();
         timeManager.Pause += Pause;
         timeManager.Resume += Resume;
     }
 
-    void Update()
+    private void Update()
     {
         timer += Time.deltaTime;
 
@@ -28,6 +28,11 @@ public class Timer : MonoBehaviour {
         }
     }
 
+    private void OnDestroy(){
+        timeManager.Pause -= Pause;
+        timeManager.Resume -= Resume;
+    }
+
     public void Pause()
     {
         enabled = false;
@@ -36,7 +41,7 @@ public class Timer : MonoBehaviour {
     public void Stop()
     {
         Pause();
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     public void Resume()

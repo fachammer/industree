@@ -3,31 +3,36 @@ using System.Collections;
 
 public class Damagable : MonoBehaviour {
 
-    public int hitpoints;
+	public int initialHitpoints;
+    private int hitpoints;
+    private bool destroyed;
+
+    public int Hitpoints {
+    	get { return hitpoints; }
+    }
+
+    public bool Destroyed {
+    	get { return destroyed; }
+    }
 
     public delegate void DamagedHandler(Damagable damagedDamagable, int damage);
     public delegate void DestroyedHandler(Damagable destroyedDamagable);
 
-    public event DamagedHandler Damaged;
-    public event DestroyedHandler Destroyed;
+    public event DamagedHandler Damage = delegate(Damagable damagable, int damage) { };
+    public event DestroyedHandler BeforeDestroy = delegate(Damagable damagable) { };
 
-    public void Start()
-    {
-        Damaged += OnDamaged;
-    }
-
-    private void OnDamaged(Damagable damagedDamagable, int damage)
-    {
-        hitpoints -= damage;
-
-        if (hitpoints <= 0)
-        {
-            Destroyed(this);
-        }
+    public void Start() {
+    	hitpoints = initialHitpoints;
     }
 
     public void TakeDamage(int damage)
     {
-        Damaged(this, damage);
+        hitpoints -= damage;
+        Damage(this, damage);
+
+        if(hitpoints <= 0){
+            destroyed = true;
+            BeforeDestroy(this);
+        }
     }
 }

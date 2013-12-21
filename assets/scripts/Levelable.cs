@@ -12,25 +12,22 @@ public class Levelable : MonoBehaviour {
 
     private Timer levelUpTimer;
 
-	// Use this for initialization
-	void Start () {
-        levelUpTimer = Timer.Instantiate(levelUpTimes[0], OnLevelUpTick);
-        LevelUp += OnLevelUp;
+	public void Start () {
+        levelUpTimer = Timer.Instantiate(levelUpTimes[level - 1], OnLevelUpTick);
 	}
 
-    void OnLevelUp(Levelable levelable)
+    private void OnLevelUpTick()
     {
-        levelable.level++;
+        if(level < maxLevel){
+            level++;
+            LevelUp(this);
 
-        if (levelable.level >= maxLevel)
-        {
+            if(level != maxLevel)
+                levelUpTimer.interval = levelUpTimes[level - 1];
+        }
+
+        else {
             levelUpTimer.Stop();
         }
-    }
-
-    void OnLevelUpTick()
-    {
-        LevelUp(this);
-        levelUpTimer.interval = levelUpTimes[level];
     }
 }

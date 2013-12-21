@@ -19,13 +19,13 @@ public class Hail:Disaster
         RaycastHit hit;
         if (Physics.Linecast(transform.position, planet.transform.position, out hit, 1 << 10))
         {
-            if (hit.collider.transform.parent.parent.GetComponent<Building>().alive && currentTarget != hit.collider.transform.parent.parent.GetComponent<Building>())
+            if (!hit.collider.transform.parent.parent.GetComponent<Building>().Damagable.Destroyed && currentTarget != hit.collider.transform.parent.parent.GetComponent<Building>())
             {
                 currentTarget=hit.collider.transform.parent.parent.GetComponent<Building>();
 
                 if (probability >= UnityEngine.Random.Range(0f, 1f))
                 {
-                	currentTarget.takeDamage(damage);
+                	currentTarget.Damagable.TakeDamage(damage);
             	}
               
 			}

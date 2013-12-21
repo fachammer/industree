@@ -20,9 +20,9 @@ public class Thunderstorm:Disaster
         RaycastHit hit;
         if (!hitted && Physics.Linecast(transform.position, planet.transform.position,out hit, 1 << 10))
         {
-			if(hit.collider.transform.parent.parent.GetComponent<Building>().alive)
+			if(!hit.collider.transform.parent.parent.parent.GetComponent<Building>().Damagable.Destroyed)
 			{
-	            hit.collider.transform.parent.parent.GetComponent<Building>().takeDamage(damage);
+	            hit.collider.transform.parent.parent.parent.GetComponent<Building>().Damagable.TakeDamage(damage);
 	            sendLightning(hit.point);
 	            hitted = true;
 			}

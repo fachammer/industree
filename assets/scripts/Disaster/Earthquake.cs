@@ -63,7 +63,7 @@ public class Earthquake:Disaster
 
     public override void Update()
     {
-		if(GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().paused || gameController.gameEnded) return;
+		if(GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().Paused || gameController.gameEnded) return;
         base.Update();
 		
 		//shake
@@ -79,7 +79,7 @@ public class Earthquake:Disaster
 			Building b=buildingList[UnityEngine.Random.Range(0, buildingList.Count - 1)];
 			
 			if(b)
-				b.takeDamage(UnityEngine.Random.Range(0,damage));
+				b.Damagable.TakeDamage(UnityEngine.Random.Range(0,damage));
         }
     }
 	
