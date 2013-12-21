@@ -3,16 +3,23 @@ using System.Collections;
 
 public class Levelable : MonoBehaviour {
 
-    public int level;
+    public int initialLevel;
     public float[] levelUpTimes;
     public int maxLevel;
 
+    public int level;
+
+    public int Level {
+    	get { return level; }
+    }
+
     public delegate void LevelUpHandler(Levelable levelable);
-    public event LevelUpHandler LevelUp;
+    public event LevelUpHandler LevelUp = delegate(Levelable levelable){ };
 
     private Timer levelUpTimer;
 
 	public void Start () {
+		level = initialLevel;
         levelUpTimer = Timer.Instantiate(levelUpTimes[level - 1], OnLevelUpTick);
 	}
 

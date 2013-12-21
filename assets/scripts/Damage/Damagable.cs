@@ -4,6 +4,7 @@ using System.Collections;
 public class Damagable : MonoBehaviour {
 
 	public int initialHitpoints;
+	
     private int hitpoints;
     private bool destroyed;
 

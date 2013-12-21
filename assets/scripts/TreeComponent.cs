@@ -4,110 +4,96 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class TreeComponent:Interactive
+// TODO: fix animations
+// TODO: fix tree size
+public class TreeComponent: Interactive
 {
     public int[] creditsPerSec = { 1, 2, 3 };
     public int[] reducePollution = { 1, 2, 3 };
-    public float[] levelUpTime = {0,0};
+    public float timeBetweenClean;
 	
 	public float[] minLevelUpTimes;
 	public float[] maxLevelUpTimes;
 
-    public String[] idlAnim;
+    public String[] idleAnim;
     public String[] growAnim;
 
-    public int level = 0;
-    public bool alive = true;
     public Player player;
 
-    private float lastTime = 0;
-    private float startTime;
-    private float dieSpeed=0;
+    private float dieSpeed = 0;
     public Vector3 down;
 	
+	private Levelable levelable;
+    private Damagable damagable;
+    private Polluting polluting;
 	private Planet planet;
 	
 	public AudioClip soundLevelUp;
+
+	public Damagable Damagable {
+		get { return damagable; }
+	}
 	
-
-    public void Start()
-	{
+	private void Awake(){
+		levelable = GetComponent<Levelable>();
+		damagable = GetComponent<Damagable>();
+		polluting = GetComponent<Polluting>();
 		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
-        levelUpTime[0] = UnityEngine.Random.Range(minLevelUpTimes[0], maxLevelUpTimes[0]);
-        levelUpTime[1] = levelUpTime[0] + UnityEngine.Random.Range(minLevelUpTimes[1], maxLevelUpTimes[1]);
+		Timer.Instantiate(timeBetweenClean, OnCleanTimerTick);
+	}
 
-        startTime = Time.time;
+	private void Start(){
+		levelable.LevelUp += OnLevelUp;
+		damagable.BeforeDestroy += OnTreeDestroy;
 
-        levelUp();
-    }
+		for(int i = 0; i < levelable.levelUpTimes.Length; i++){
+			levelable.levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
+		}
+	}
 
+	private void OnLevelUp(Levelable levelable){
+		// animation.Play(growAnim[levelable.Level]);		
+		audio.PlayOneShot(soundLevelUp);
+
+		polluting.pollution = -reducePollution[levelable.Level - 1];
+	}
+
+	private void OnTreeDestroy(Damagable damagable){
+		Destroy(gameObject, 2);
+        down = -transform.up;
+        levelable.LevelUp -= OnLevelUp;
+        damagable.BeforeDestroy -= OnTreeDestroy;
+	}
+
+	private void OnCleanTimerTick(){
+		player.credits += creditsPerSec[levelable.Level - 1];
+	}
 
     public void Update()
     {
-        if (Time.time > lastTime + 1)
-        {
-            createCredits();
-            cleanAir();
-
-            lastTime = Time.time;
-        }
-
-        if (level != 3 && Time.time - startTime > levelUpTime[level - 1])
-        {
-            levelUp();
-        }
-
-        if (!alive)
+        if (damagable.Destroyed)
         {
             dieAnimation();
         }
 
-        //Plays the animation after the last animatin
-        animation.PlayQueued(idlAnim[level - 1],QueueMode.CompleteOthers);
+        // Plays the animation after the last animation
+        // animation.PlayQueued(idleAnim[levelable.Level - 1],QueueMode.CompleteOthers);
         
     }
 
-    public void createCredits()
-    {
-        player.credits += creditsPerSec[level-1];
-    }
-
-    public void cleanAir()
-    {
-        planet.GetComponent<Pollutable>().currentPollution -= reducePollution[level-1];
-    }
-
-    public void levelUp()
-    {
-        animation.Play(growAnim[level]);
-        level += 1;
-		
-		audio.PlayOneShot(soundLevelUp);
-    }
-
-    public void die()
-    {
-        alive = false;
-        Destroy(gameObject, 2);
-        down = -transform.up;
-    }
-
-    public void dieAnimation()
+    private void dieAnimation()
     {
         dieSpeed += 0.1f;
 
-        if (this.transform.rotation == Quaternion.Euler(-90,0,0))
+        if (transform.rotation == Quaternion.Euler(-90,0,0))
         {
             transform.position = down * Time.deltaTime * dieSpeed;
         }
 		
-		
         else
         {
-            this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, Quaternion.Euler(-90, 0, 0), dieSpeed);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(-90, 0, 0), dieSpeed);
         }
-
-        
     }
 	
 	public override bool performAction(Player player, float castDirection){

@@ -95,13 +95,11 @@ public class Planet : MonoBehaviour {
 					GameObject replacedObject = placingSystem.placeNewIndustryBuilding(industryBuildingModel);
 					
 					if(replacedObject != null && replacedObject.tag == Tags.tree){
-						replacedObject.GetComponent<TreeComponent>().die();
+						TreeComponent replacedTree = replacedObject.GetComponent<TreeComponent>();
+						replacedTree.Damagable.TakeDamage(replacedTree.Damagable.Hitpoints);
 					}
 
 					buildTimer = 0f;
-				}
-				else {
-					// Game lost
 				}
 			}
 		}

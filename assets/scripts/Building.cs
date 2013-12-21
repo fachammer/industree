@@ -58,14 +58,14 @@ public class Building : MonoBehaviour
 
     private void OnLevelUp(Levelable levelable)
     {
-        polluting.pollution = pollutionLevels[levelable.level - 1];
+        polluting.pollution = pollutionLevels[levelable.Level - 1];
 
         // Destroy children and add new model as current model
         foreach(Transform t in transform){
             Destroy(t.gameObject);
         }
 
-        GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[levelable.level - 1], transform.position, transform.rotation);
+        GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[levelable.Level - 1], transform.position, transform.rotation);
         newGameObject.transform.parent = transform;
     }
 
