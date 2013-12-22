@@ -60,13 +60,12 @@ public class Earthquake:Disaster
 
     public override void Update()
     {
-		if(GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().Paused || gameController.GameEnded) return;
         base.Update();
 		
 		//shake
 		
 		
-        Camera.main.transform.position = originPosition +new Vector3(UnityEngine.Random.insideUnitCircle.x,UnityEngine.Random.insideUnitCircle.y,0)*shake_intensity;
+        Camera.main.transform.position = originPosition + new Vector3(UnityEngine.Random.insideUnitCircle.x,UnityEngine.Random.insideUnitCircle.y,0)*shake_intensity;
 		
 		shake_intensity-=Time.deltaTime*shake_intensity;
 
