@@ -6,15 +6,15 @@ public class Timer : MonoBehaviour {
     public float interval;
 
     private float timer;
-    private TimeManager timeManager;
+    private GameController gameController;
 
     public delegate void TickHandler();
     public event TickHandler Tick = delegate() {};
 
     private void Awake(){
-        timeManager = GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>();
-        timeManager.Pause += Pause;
-        timeManager.Resume += Resume;
+        gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+        gameController.GamePause += Pause;
+        gameController.GameResume += Resume;
     }
 
     private void Update()
@@ -29,8 +29,8 @@ public class Timer : MonoBehaviour {
     }
 
     private void OnDestroy(){
-        timeManager.Pause -= Pause;
-        timeManager.Resume -= Resume;
+        gameController.GamePause -= Pause;
+        gameController.GameResume -= Resume;
     }
 
     public void Pause()

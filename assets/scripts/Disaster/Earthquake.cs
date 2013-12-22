@@ -19,22 +19,19 @@ public class Earthquake:Disaster
     private float lastTime;
 
     private GameController gameController;
-    private TimeManager timeManager;
 
     public override void Start()
     {
         base.Start();
 		
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
-        timeManager = GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>();
-
+        
         gameController.GameEnd += OnGameEnd;
-        timeManager.Pause += OnPause;
-        timeManager.Resume += OnResume;
+        gameController.GamePause += OnGamePause;
+        gameController.GameResume += OnGameResume;
 
-        Destroy(this.gameObject,duration);
+        Destroy(gameObject, duration);
 
-        //set values
         originPosition = Camera.main.transform.position;
         originRotation = Camera.main.transform.rotation;
         shake_intensity = .5f;
@@ -53,17 +50,17 @@ public class Earthquake:Disaster
         enabled = false;
     }
 
-    private void OnPause(){
+    private void OnGamePause(){
         enabled = false;
     }
 
-    private void OnResume(){
+    private void OnGameResume(){
         enabled = true;
     }
 
     public override void Update()
     {
-		if(GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().Paused || gameController.gameEnded) return;
+		if(GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>().Paused || gameController.GameEnded) return;
         base.Update();
 		
 		//shake

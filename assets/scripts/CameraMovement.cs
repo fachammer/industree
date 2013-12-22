@@ -16,7 +16,7 @@ public class CameraMovement:MonoBehaviour
         this.GetComponent<Camera>().orthographicSize += speed * Time.deltaTime;
 
         if (edgeLeft.GetComponentInChildren<Renderer>().isVisible && edgeRight.GetComponentInChildren<Renderer>().isVisible){
-			GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().gameStarted = true;	
+			GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().StartGame();	
             Destroy(this);
 		}
     }

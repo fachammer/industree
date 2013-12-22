@@ -86,7 +86,7 @@ public class Planet : MonoBehaviour {
 
     // Update is called once per frame
     void Update(){
-		if(gameController.gameStarted){
+		if(gameController.GameStarted){
 	        buildTimer += Time.deltaTime;
 
 			if(buildTimer >= timeBetweenBuild){
@@ -127,7 +127,7 @@ public class Planet : MonoBehaviour {
         GUI.DrawTexture(pollutionRect, pollutionTex, ScaleMode.StretchToFill);
 		GUI.DrawTexture(new Rect((Screen.width-512)/2+2,0,512,128),bilanceHeader);
 
-        if(gameController.gameEnded){
+        if(gameController.GameEnded){
         	if(gameWin){
         		showEndDialog(winDialog);
         	}

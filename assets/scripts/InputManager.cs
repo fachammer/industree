@@ -7,22 +7,38 @@ public class InputManager : MonoBehaviour
 
     public delegate void SelectHandler(Player player, float selectDirection);
     public delegate void CastHandler(Player player, float castDirection);
+    public delegate void GamePauseInputHandler();
+    public delegate void GameExitInputHandler();
+    public delegate void GameReloadInputHandler();
 
-    public event SelectHandler PlayerSelect;
-    public event CastHandler PlayerCast;
+    public event SelectHandler PlayerSelect = delegate(Player player, float selectDirection) {};
+    public event CastHandler PlayerCast = delegate(Player player, float castDirection) {};
+    public event GamePauseInputHandler GamePauseInput = delegate() {}; 
+    public event GameExitInputHandler GameExitInput = delegate() {};
+    public event GameReloadInputHandler GameReloadInput = delegate() {};
 
     private float[] previousPlayerSelectAxes;
     private float[] previousPlayerCastAxes;
 
-    void Start()
+    private const string PAUSE_BUTTON = "GamePause";
+    private const string EXIT_BUTTON = "GameExit";
+    private const string RELOAD_BUTTON = "GameReload";
+
+    private void Start()
     {
         previousPlayerSelectAxes = new float[players.Length];
         previousPlayerCastAxes = new float[players.Length];
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        checkPlayersInput();
+        checkPauseInput();
+        checkExitInput();
+        checkReloadInput();
+    }
+
+    private void checkPlayersInput(){
         for (int i = 0; i < players.Length; i++)
         {
             float playerSelectAxis;
@@ -43,6 +59,24 @@ public class InputManager : MonoBehaviour
 
             previousPlayerSelectAxes[i] = playerSelectAxis;
             previousPlayerCastAxes[i] = playerCastAxis;
+        }
+    }
+
+    private void checkPauseInput(){
+        if(Input.GetButtonDown(PAUSE_BUTTON)){
+            GamePauseInput();
+        }
+    }
+
+    private void checkExitInput(){
+        if(Input.GetButtonDown(EXIT_BUTTON)){
+            GameExitInput();
+        }
+    }
+
+    private void checkReloadInput(){
+        if(Input.GetButtonDown(RELOAD_BUTTON)){
+            GameReloadInput();
         }
     }
 }

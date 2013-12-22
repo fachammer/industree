@@ -34,16 +34,13 @@ public class Player : MonoBehaviour
     public string castInputName;
 
     private GameController gameController;
-    private TimeManager timeManager;
 
-    // Use this for initialization
     void Start()
     {
-        timeManager = GameObject.FindGameObjectWithTag(Tags.timeManager).GetComponent<TimeManager>();
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
 
-        timeManager.Pause += OnPause;
-        timeManager.Resume += OnResume;
+        gameController.GamePause += OnGamePause;
+        gameController.GameResume += OnGameResume;
         gameController.GameEnd += OnGameEnd;
 
         interactiveRect = new List<Rect>();
@@ -72,11 +69,11 @@ public class Player : MonoBehaviour
         inputManager.PlayerSelect += OnInteractiveSelection;
     }
 
-    void OnPause(){
+    void OnGamePause(){
         enabled = false;
     }
 
-    void OnResume(){
+    void OnGameResume(){
         enabled = true;
     }
 
