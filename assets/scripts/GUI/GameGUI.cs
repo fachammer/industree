@@ -13,6 +13,8 @@ public class GameGUI : MonoBehaviour {
 
 	public Player[] players;
 	public Texture2D selectedActionIconOverlay;
+	public Texture2D deniedActionIconOverlay;
+	public float deniedActionIconOverlayTime;
 
 	private GameController gameController;
 	private InputManager inputManager;
@@ -26,6 +28,8 @@ public class GameGUI : MonoBehaviour {
 
     private int[] selectedActionIndices;
     private Rect[][] playersInteractiveIconRectangles;
+    private bool[][] drawActionDeniedOverlay;
+    private Timer[][] actionDeniedOverlayTimers;
 
 	private const float BILANCE_TOP_OFFSET = 35;
 	private const float DIALOG_TOP_OFFSET = 200;
@@ -39,6 +43,7 @@ public class GameGUI : MonoBehaviour {
 		planet = planetObject.GetComponent<Planet>();
 
 		inputManager.PlayerSelect += OnPlayerSelect;
+		inputManager.PlayerCast += OnPlayerCast;
 
 		bilanceAirRectangle = new Rect((Screen.width - bilanceSize.x) / 2, BILANCE_TOP_OFFSET, bilanceSize.x, bilanceSize.y);
         bilancePollutionRectangle = new Rect((Screen.width - bilanceSize.x) / 2, BILANCE_TOP_OFFSET, bilanceSize.x, bilanceSize.y);
@@ -55,10 +60,22 @@ public class GameGUI : MonoBehaviour {
         		playersInteractiveIconRectangles[i][j] = calculateInteractiveIconRectangle(i, j);
         	}
         }
+
+        drawActionDeniedOverlay = new bool[players.Length][];
+
+        for(int i = 0; i < drawActionDeniedOverlay.Length; i++){
+        	drawActionDeniedOverlay[i] = new bool[players[i].interactiveList.Count];
+        }
+
+        actionDeniedOverlayTimers = new Timer[players.Length][];
+
+        for(int i = 0; i < actionDeniedOverlayTimers.Length; i++){
+        	actionDeniedOverlayTimers[i] = new Timer[players[i].interactiveList.Count];
+        }
 	}
 
-	private void OnPlayerSelect(int playerIndex, float direction){
-		if(direction > 0){
+	private void OnPlayerSelect(int playerIndex, float selectDirection){
+		if(selectDirection > 0){
 			if(selectedActionIndices[playerIndex] > 0){
 				selectedActionIndices[playerIndex]--;
 			}
@@ -67,6 +84,25 @@ public class GameGUI : MonoBehaviour {
 			if(selectedActionIndices[playerIndex] < players[playerIndex].interactiveList.Count - 1){
 				selectedActionIndices[playerIndex]++;
 			}
+		}
+	}
+
+	private void OnPlayerCast(int playerIndex, float castDirection){
+		Player player = players[playerIndex];
+		int interactiveIndex = selectedActionIndices[playerIndex];
+		Interactive interactive = player.interactiveList[interactiveIndex];
+		if(!player.ActIfPossible(interactive, castDirection)){
+			drawActionDeniedOverlay[playerIndex][interactiveIndex] = true;
+
+			Timer currentActionDeniedOverlayTimer = actionDeniedOverlayTimers[playerIndex][interactiveIndex];
+			if(currentActionDeniedOverlayTimer != null){
+				currentActionDeniedOverlayTimer.Stop();
+			}
+
+			actionDeniedOverlayTimers[playerIndex][interactiveIndex] = Timer.Instantiate(deniedActionIconOverlayTime, delegate(Timer timer) {
+				drawActionDeniedOverlay[playerIndex][interactiveIndex] = false;
+				timer.Stop();
+			});
 		}
 	}
 
@@ -98,6 +134,8 @@ public class GameGUI : MonoBehaviour {
     private void DrawActions(){
     	for(int i = 0; i < players.Length; i++){
     		DrawPlayerActions(i);
+
+    		// draw selected icon overlay
     		GUI.DrawTexture(playersInteractiveIconRectangles[i][selectedActionIndices[i]], selectedActionIconOverlay);
     	}
     }
@@ -105,6 +143,11 @@ public class GameGUI : MonoBehaviour {
     private void DrawPlayerActions(int playerIndex){
         for (int i = 0; i < players[playerIndex].interactiveList.Count; i++){
         	DrawPlayerAction(playerIndex, i);
+
+        	// draw denied action overlays
+        	if(drawActionDeniedOverlay[playerIndex][i]){
+    			GUI.DrawTexture(playersInteractiveIconRectangles[playerIndex][i], deniedActionIconOverlay);
+    		}
         }
     }
 

@@ -10,7 +10,6 @@ public class Player : MonoBehaviour
     public int creditsPerSec = 1;
     public Side side;
     public List<Interactive> interactiveList;
-    public Texture2D iconSelected;
     public Texture2D iconCredit;
     public Texture2D interactiveCooldownOverlayIcon;
     public Texture2D interactiveDeniedOverlayIcon;
@@ -50,7 +49,7 @@ public class Player : MonoBehaviour
         interactiveCooldownOverlayRects = new List<Rect>();
         drawRedCrossTimers = new float[interactiveList.Count];
 
-        //Fill the rectList with 
+        //Fill the rectList 
         for (int i = 0; i < interactiveList.Count; i++)
         {
             Rect currentInteractiveRect = new Rect(sideOffset, iconTopOffset + iconSize * i, iconSize, iconSize);
@@ -118,12 +117,6 @@ public class Player : MonoBehaviour
         //Show the Actions
         for (int i = 0; i < interactiveList.Count; i++)
         {
-            GUI.DrawTexture(interactiveRect[i], interactiveList[i].icon);
-            GUI.Label(new Rect(
-                interactiveRect[i].x + (side == Side.left ? interactiveRect[i].width + 10 : -50),
-                interactiveRect[i].y + interactiveRect[i].height / 2,
-                50, 50), interactiveList[i].cost.ToString());
-
             if (interactiveCoolDownTimers[i] > 0)
             {
                 interactiveCooldownOverlayRects[i] = calculateCooldownOverlayRect(i);
@@ -134,10 +127,7 @@ public class Player : MonoBehaviour
             {
                 GUI.DrawTexture(interactiveRect[i], interactiveDeniedOverlayIcon);
             }
-        }
-
-        //Schow the current Selected Interactive 
-        GUI.DrawTexture(interactiveRect[curSelected], iconSelected);*/
+        }*/
     }
 
     //Every second x credits:
@@ -192,5 +182,9 @@ public class Player : MonoBehaviour
                 drawRedCrossTimers[i] -= Time.deltaTime;
             }
         }
+    }
+
+    public bool ActIfPossible(Interactive interactive, float castDirection){
+        return false;
     }
 }

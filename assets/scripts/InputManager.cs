@@ -9,6 +9,9 @@ public class InputManager : MonoBehaviour
     public string exitButton;
     public string reloadButton;
 
+    private float[] previousPlayerSelectAxes;
+    private float[] previousPlayerCastAxes;
+
     public delegate void SelectHandler(int playerIndex, float selectDirection);
     public delegate void CastHandler(int playerIndex, float castDirection);
     public delegate void GamePauseInputHandler();
@@ -20,9 +23,6 @@ public class InputManager : MonoBehaviour
     public event GamePauseInputHandler GamePauseInput = delegate() {}; 
     public event GameExitInputHandler GameExitInput = delegate() {};
     public event GameReloadInputHandler GameReloadInput = delegate() {};
-
-    private float[] previousPlayerSelectAxes;
-    private float[] previousPlayerCastAxes;
 
     private void Start()
     {
