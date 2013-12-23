@@ -65,7 +65,7 @@ public class TreeComponent: Interactive
         damagable.BeforeDestroy -= OnTreeDestroy;
 	}
 
-	private void OnCleanTimerTick(){
+	private void OnCleanTimerTick(Timer timer){
 		player.credits += creditsPerSec[levelable.Level - 1];
 	}
 

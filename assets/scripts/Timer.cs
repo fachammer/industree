@@ -8,8 +8,12 @@ public class Timer : MonoBehaviour {
     private float timer;
     private GameController gameController;
 
-    public delegate void TickHandler();
-    public event TickHandler Tick = delegate() {};
+    public float TimeSinceLastTick {
+        get { return timer; }
+    }
+
+    public delegate void TickHandler(Timer timer);
+    public event TickHandler Tick = delegate(Timer timer) {};
 
     private void Awake(){
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
@@ -23,7 +27,7 @@ public class Timer : MonoBehaviour {
 
         if (timer >= interval)
         {
-            Tick();
+            Tick(this);
             timer = 0f;
         }
     }

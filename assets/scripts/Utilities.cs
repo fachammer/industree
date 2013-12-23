@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-
 public static class Utilities
 {
 	public static Transform getMostOuterAncestor(Transform transform){
@@ -31,5 +30,13 @@ public static class Utilities
 
         return 0;
     }
+
+    public static Texture2D MakeTexture2DWithColor(Color color){
+		Texture2D texture = new Texture2D(1, 1);
+		texture.SetPixel(1, 1, color);
+		texture.Apply();
+
+		return texture;
+	}
 }
 

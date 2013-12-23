@@ -4,11 +4,11 @@ using System.Collections;
 public class GameController : MonoBehaviour {
 
 	public GameObject timer;
-	public Texture2D pauseMessage;
 
 	private bool gameStarted = false;
 	private bool gameEnded = false;
 	private bool gamePaused = false;
+	private bool gameWon = false;
 	private Planet planet;
 	private InputManager inputManager;
 
@@ -22,6 +22,14 @@ public class GameController : MonoBehaviour {
 
 	public bool GamePaused {
 		get { return gamePaused; }
+	}
+
+	public bool GameWon {
+		get { return gameEnded && gameWon; }
+	}
+
+	public bool GameLost {
+		get { return gameEnded && !gameWon; }
 	}
 
 	public delegate void GameEndHandler(bool win);
@@ -42,20 +50,14 @@ public class GameController : MonoBehaviour {
 		inputManager.GameReloadInput += OnGameReloadInput;
 	}
 
-	private void OnGUI(){
-		if(gamePaused){
-			GUI.DrawTexture(new Rect((Screen.width - pauseMessage.width) / 2, 200, pauseMessage.width, pauseMessage.height), pauseMessage);
-		}
-	}
-
 	private void OnPollution(Pollutable pollutable, int pollution){
-		if (pollutable.currentPollution == planet.air || pollutable.currentPollution == 0)
+		if (pollutable.currentPollution >= planet.air || pollutable.currentPollution <= 0)
 		{       
 			// call EndGame method
 			EndGame();
-			bool gameWin = pollutable.currentPollution == 0;
+			gameWon = pollutable.currentPollution <= 0;
 			// throw GameEnd event
-			GameEnd(gameWin);
+			GameEnd(gameWon);
 		}
 	}
 
@@ -76,12 +78,14 @@ public class GameController : MonoBehaviour {
 
 	private void OnGameExitInput(){
 		if(gamePaused){
+			ResumeGame();
 			Application.LoadLevel(0);
 		}
 	}
 
 	private void OnGameReloadInput(){
 		if(gamePaused){
+			ResumeGame();
 			Application.LoadLevel(1);
 		}
 	}

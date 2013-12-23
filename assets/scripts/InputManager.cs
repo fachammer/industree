@@ -3,16 +3,20 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour
 {
-    public Player[] players;
+    public string[] playersSelectInputNames;
+    public string[] playersCastInputNames;
+    public string pauseButton;
+    public string exitButton;
+    public string reloadButton;
 
-    public delegate void SelectHandler(Player player, float selectDirection);
-    public delegate void CastHandler(Player player, float castDirection);
+    public delegate void SelectHandler(int playerIndex, float selectDirection);
+    public delegate void CastHandler(int playerIndex, float castDirection);
     public delegate void GamePauseInputHandler();
     public delegate void GameExitInputHandler();
     public delegate void GameReloadInputHandler();
 
-    public event SelectHandler PlayerSelect = delegate(Player player, float selectDirection) {};
-    public event CastHandler PlayerCast = delegate(Player player, float castDirection) {};
+    public event SelectHandler PlayerSelect = delegate(int playerIndex, float selectDirection) {};
+    public event CastHandler PlayerCast = delegate(int playerIndex, float castDirection) {};
     public event GamePauseInputHandler GamePauseInput = delegate() {}; 
     public event GameExitInputHandler GameExitInput = delegate() {};
     public event GameReloadInputHandler GameReloadInput = delegate() {};
@@ -20,14 +24,10 @@ public class InputManager : MonoBehaviour
     private float[] previousPlayerSelectAxes;
     private float[] previousPlayerCastAxes;
 
-    private const string PAUSE_BUTTON = "GamePause";
-    private const string EXIT_BUTTON = "GameExit";
-    private const string RELOAD_BUTTON = "GameReload";
-
     private void Start()
     {
-        previousPlayerSelectAxes = new float[players.Length];
-        previousPlayerCastAxes = new float[players.Length];
+        previousPlayerSelectAxes = new float[playersSelectInputNames.Length];
+        previousPlayerCastAxes = new float[playersSelectInputNames.Length];
     }
 
     private void Update()
@@ -39,22 +39,22 @@ public class InputManager : MonoBehaviour
     }
 
     private void checkPlayersInput(){
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < playersSelectInputNames.Length; i++)
         {
             float playerSelectAxis;
             float playerCastAxis;
 
-            float playerSelectDirection = Utilities.GetAxisRawDown(players[i].selectInputName, previousPlayerSelectAxes[i], out playerSelectAxis);
-            float playerCastDirection = Utilities.GetAxisRawDown(players[i].castInputName, previousPlayerCastAxes[i], out playerCastAxis);
+            float playerSelectDirection = Utilities.GetAxisRawDown(playersSelectInputNames[i], previousPlayerSelectAxes[i], out playerSelectAxis);
+            float playerCastDirection = Utilities.GetAxisRawDown(playersCastInputNames[i], previousPlayerCastAxes[i], out playerCastAxis);
 
             if (playerSelectDirection != 0)
             {
-                PlayerSelect(players[i], playerSelectDirection);
+                PlayerSelect(i, playerSelectDirection);
             }
 
             if (playerCastDirection != 0)
             {
-                PlayerCast(players[i], playerCastDirection);
+                PlayerCast(i, playerCastDirection);
             }
 
             previousPlayerSelectAxes[i] = playerSelectAxis;
@@ -63,19 +63,19 @@ public class InputManager : MonoBehaviour
     }
 
     private void checkPauseInput(){
-        if(Input.GetButtonDown(PAUSE_BUTTON)){
+        if(Input.GetButtonDown(pauseButton)){
             GamePauseInput();
         }
     }
 
     private void checkExitInput(){
-        if(Input.GetButtonDown(EXIT_BUTTON)){
+        if(Input.GetButtonDown(exitButton)){
             GameExitInput();
         }
     }
 
     private void checkReloadInput(){
-        if(Input.GetButtonDown(RELOAD_BUTTON)){
+        if(Input.GetButtonDown(reloadButton)){
             GameReloadInput();
         }
     }

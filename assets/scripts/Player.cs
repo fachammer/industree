@@ -5,37 +5,33 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
     public enum Side { left, right };
+    
     public int credits = 0;
     public int creditsPerSec = 1;
-
     public Side side;
     public List<Interactive> interactiveList;
-    private List<float> interactiveCoolDownTimers;
-    private List<Rect> interactiveRect;
-    private Rect creditRect;
-
     public Texture2D iconSelected;
     public Texture2D iconCredit;
     public Texture2D interactiveCooldownOverlayIcon;
     public Texture2D interactiveDeniedOverlayIcon;
-    private float[] drawRedCrossTimers;
-    private float drawRedCrossOverlayTime = 0.5f;
-    private List<Rect> interactiveCooldownOverlayRects;
-
     public int iconSize = 20;
     public int iconTopOffset = 100;
-    private int curSelected = 0;
-
-    private float lastTime = 0;
-
-    private InputManager inputManager;
-
     public string selectInputName;
     public string castInputName;
 
+    private List<float> interactiveCoolDownTimers;
+    private List<Rect> interactiveRect;
+    private Rect creditRect;
+    private float[] drawRedCrossTimers;
+    private float drawRedCrossOverlayTime = 0.5f;
+    private List<Rect> interactiveCooldownOverlayRects;
+    private int curSelected = 0;
+    private float lastTime = 0;
+    private InputManager inputManager;    
+
     private GameController gameController;
 
-    void Start()
+    private void Start()
     {
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
 
@@ -66,39 +62,23 @@ public class Player : MonoBehaviour
         inputManager = GameObject.FindGameObjectWithTag(Tags.inputManager).GetComponent<InputManager>();
 
         inputManager.PlayerCast += OnInteractiveCast;
-        inputManager.PlayerSelect += OnInteractiveSelection;
     }
 
-    void OnGamePause(){
+    private void OnGamePause(){
         enabled = false;
     }
 
-    void OnGameResume(){
+    private void OnGameResume(){
         enabled = true;
     }
 
-    void OnGameEnd(bool win){
+    private void OnGameEnd(bool win){
         enabled = false;
     }
 
-    private void OnInteractiveSelection(Player player, float selectDirection)
+    private void OnInteractiveCast(int playerIndex, float castDirection)
     {
-        if (player == this)
-        {
-            if (selectDirection < 0 && curSelected < interactiveList.Count - 1)
-            {
-                curSelected++;
-            }
-            else if (selectDirection > 0 && curSelected > 0)
-            {
-                curSelected--;
-            }
-        }
-    }
-
-    private void OnInteractiveCast(Player player, float castDirection)
-    {
-        if (player == this)
+        if (playerIndex == 0 && side == Side.left)
         {
             if (interactiveCoolDownTimers[curSelected] <= 0)
             {
@@ -116,7 +96,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         createCredits();
 
@@ -126,6 +106,7 @@ public class Player : MonoBehaviour
 
     public void OnGUI()
     {
+        /*
         GUI.skin.font = GameObject.FindGameObjectWithTag(Tags.style).GetComponent<Style>().font;
         GUI.Label(creditRect, credits.ToString());
 
@@ -156,7 +137,7 @@ public class Player : MonoBehaviour
         }
 
         //Schow the current Selected Interactive 
-        GUI.DrawTexture(interactiveRect[curSelected], iconSelected);
+        GUI.DrawTexture(interactiveRect[curSelected], iconSelected);*/
     }
 
     //Every second x credits:

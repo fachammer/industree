@@ -15,26 +15,24 @@ public class Levelable : MonoBehaviour {
 
     public delegate void LevelUpHandler(Levelable levelable);
     public event LevelUpHandler LevelUp = delegate(Levelable levelable){ };
-
-    private Timer levelUpTimer;
-
+    
 	public void Start () {
 		level = initialLevel;
-        levelUpTimer = Timer.Instantiate(levelUpTimes[level - 1], OnLevelUpTick);
+        Timer.Instantiate(levelUpTimes[level - 1], OnLevelUpTick);
 	}
 
-    private void OnLevelUpTick()
+    private void OnLevelUpTick(Timer timer)
     {
         if(level < maxLevel){
             level++;
             LevelUp(this);
 
             if(level != maxLevel)
-                levelUpTimer.interval = levelUpTimes[level - 1];
+                timer.interval = levelUpTimes[level - 1];
         }
 
         else {
-            levelUpTimer.Stop();
+            timer.Stop();
         }
     }
 }

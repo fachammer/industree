@@ -10,12 +10,12 @@ public class Polluting : MonoBehaviour {
     [HideInInspector]
     private Pollutable[] pollutables;
 
-	void Start () {
+	private void Awake() {
 		pollutables = Array.ConvertAll(GameObject.FindObjectsOfType(typeof(Pollutable)), item => (Pollutable)item);
         Timer.Instantiate(timeBetweenPollution, OnPollutionTimerTick);
 	}
 
-    void OnPollutionTimerTick()
+    private void OnPollutionTimerTick(Timer timer)
     {
     	foreach(Pollutable pollutable in pollutables){
     		pollutable.IncreasePollution(pollution);
