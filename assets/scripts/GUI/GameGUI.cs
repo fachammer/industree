@@ -3,9 +3,6 @@ using System.Collections;
 
 public class GameGUI : MonoBehaviour {
 
-	public Texture2D pauseDialog;
-	public Texture2D winDialog;
-	public Texture2D loseDialog;
 	public Texture2D bilanceDecoration;
 	public Color bilanceAirColor;
 	public Color bilancePollutionColor;
@@ -18,7 +15,6 @@ public class GameGUI : MonoBehaviour {
 	public Texture2D cooldownActionIconOverlay;
 	public Texture2D creditsIcon;
 
-	private GameController gameController;
 	private InputManager inputManager;
 	private Pollutable pollutable;
 	private Planet planet;
@@ -40,7 +36,6 @@ public class GameGUI : MonoBehaviour {
 	private const float CREDITS_TOP_OFFSET = 70;
 
 	private void Awake(){
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
 		inputManager = GameObject.FindGameObjectWithTag(Tags.inputManager).GetComponent<InputManager>();
 		GameObject planetObject = GameObject.FindGameObjectWithTag(Tags.planet);
 		pollutable = planetObject.GetComponent<Pollutable>();
@@ -138,8 +133,6 @@ public class GameGUI : MonoBehaviour {
 		DrawBilance();
 		DrawActions();
 		DrawCredits();
-		
-		DrawGameEndDialogIfGameEnded();
 	}
 
 	private void DrawBilance(){
@@ -245,16 +238,5 @@ public class GameGUI : MonoBehaviour {
         	DIALOG_TOP_OFFSET, 
         	dialog.width, 
         	dialog.height), dialog);
-    }
-
-    private void DrawGameEndDialogIfGameEnded(){
-    	if(gameController.GameEnded){
-        	if(gameController.GameWon){
-        		DrawDialog(winDialog);
-        	}
-        	else {
-        		DrawDialog(loseDialog);
-        	}
-        }
     }
 }

@@ -38,5 +38,14 @@ public static class Utilities
 
 		return texture;
 	}
+
+	public static void DrawScreenCenteredTexture(Texture2D texture){
+		GUI.DrawTexture(new Rect(
+			(Screen.width - texture.width) / 2,
+			(Screen.height - texture.height) / 2,
+			texture.width,
+			texture.height),
+			texture);
+	}
 }
 
