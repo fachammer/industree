@@ -3,11 +3,6 @@ using System.Collections;
 
 public class GameGUI : MonoBehaviour {
 
-	public Texture2D bilanceDecoration;
-	public Color bilanceAirColor;
-	public Color bilancePollutionColor;
-	public Vector2 bilanceSize;
-
 	public Player[] players;
 	public Texture2D selectedActionIconOverlay;
 	public Texture2D deniedActionIconOverlay;
@@ -19,36 +14,19 @@ public class GameGUI : MonoBehaviour {
 	private Pollutable pollutable;
 	private Planet planet;
 
-    private Rect bilanceAirRectangle;
-    private Rect bilancePollutionRectangle;
-	private Texture2D bilanceAirTexture;
-    private Texture2D bilancePollutionTexture;
-
     private int[] selectedActionIndices;
     private Rect[][] playersActionIconRectangles;
     private bool[][] drawActionDeniedOverlay;
     private Timer[][] actionDeniedOverlayTimers;
     private Timer[][] actionCooldownOverlayTimers;
 
-	private const float BILANCE_TOP_OFFSET = 35;
-	private const float DIALOG_TOP_OFFSET = 200;
 	private const float ACTION_TOP_OFFSET = 100;
 	private const float CREDITS_TOP_OFFSET = 70;
 
 	private void Awake(){
 		inputManager = GameObject.FindGameObjectWithTag(Tags.inputManager).GetComponent<InputManager>();
-		GameObject planetObject = GameObject.FindGameObjectWithTag(Tags.planet);
-		pollutable = planetObject.GetComponent<Pollutable>();
-		planet = planetObject.GetComponent<Planet>();
-
 		inputManager.PlayerActionInput += OnPlayerActionInput;
 		inputManager.PlayerSelectInput += OnPlayerSelectInput;
-
-		bilanceAirRectangle = new Rect((Screen.width - bilanceSize.x) / 2, BILANCE_TOP_OFFSET, bilanceSize.x, bilanceSize.y);
-        bilancePollutionRectangle = new Rect((Screen.width - bilanceSize.x) / 2, BILANCE_TOP_OFFSET, bilanceSize.x, bilanceSize.y);
-
-        bilanceAirTexture = Utilities.MakeTexture2DWithColor(bilanceAirColor);
-        bilancePollutionTexture = Utilities.MakeTexture2DWithColor(bilancePollutionColor);
 
         selectedActionIndices = new int[players.Length];
         playersActionIconRectangles = new Rect[players.Length][];
@@ -130,19 +108,9 @@ public class GameGUI : MonoBehaviour {
 	}
 
 	private void OnGUI(){
-		DrawBilance();
 		DrawActions();
 		DrawCredits();
 	}
-
-	private void DrawBilance(){
-		float pollution =  Mathf.Clamp(pollutable.currentPollution, 0, planet.air);
-        bilancePollutionRectangle.width = bilanceAirRectangle.width * pollution / planet.air;
-
-		GUI.DrawTexture(bilanceAirRectangle, bilanceAirTexture, ScaleMode.StretchToFill);
-        GUI.DrawTexture(bilancePollutionRectangle, bilancePollutionTexture, ScaleMode.StretchToFill);
-		GUI.DrawTexture(new Rect((Screen.width - bilanceDecoration.width) / 2 + 3, 0, bilanceDecoration.width, bilanceDecoration.height), bilanceDecoration);  
-    }
 
     private void DrawActions(){
     	for(int i = 0; i < players.Length; i++){
@@ -230,13 +198,5 @@ public class GameGUI : MonoBehaviour {
 	        
 	        GUI.DrawTexture(r, creditsIcon);
 	    }
-    }
-
-    private void DrawDialog(Texture2D dialog){
-        GUI.DrawTexture(new Rect(
-        	(Screen.width - dialog.width) / 2, 
-        	DIALOG_TOP_OFFSET, 
-        	dialog.width, 
-        	dialog.height), dialog);
     }
 }
