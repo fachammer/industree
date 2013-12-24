@@ -138,8 +138,7 @@ public class GameGUI : MonoBehaviour {
 		DrawBilance();
 		DrawActions();
 		DrawCredits();
-
-		DrawPauseDialogIfGamePaused();
+		
 		DrawGameEndDialogIfGameEnded();
 	}
 
@@ -238,12 +237,6 @@ public class GameGUI : MonoBehaviour {
 	        
 	        GUI.DrawTexture(r, creditsIcon);
 	    }
-    }
-
-    private void DrawPauseDialogIfGamePaused(){
-		if(gameController.GamePaused && !gameController.GameEnded){
-			DrawDialog(pauseDialog);
-		}
     }
 
     private void DrawDialog(Texture2D dialog){
