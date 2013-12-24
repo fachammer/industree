@@ -6,13 +6,13 @@ public class Player : MonoBehaviour
 {
     public enum Side { left, right };
     
-    public int credits = 0;
-    public int creditsPerSec = 1;
+    public int credits;
+    public int creditsUpInterval;
+    public int creditsPerInterval;
     public Side side;
     public List<Interactive> interactiveList;
     public Texture2D iconCredit;
     public Texture2D interactiveCooldownOverlayIcon;
-    public Texture2D interactiveDeniedOverlayIcon;
     public int iconSize = 20;
     public int iconTopOffset = 100;
     public string selectInputName;
@@ -21,16 +21,13 @@ public class Player : MonoBehaviour
     private List<float> interactiveCoolDownTimers;
     private List<Rect> interactiveRect;
     private Rect creditRect;
-    private float[] drawRedCrossTimers;
-    private float drawRedCrossOverlayTime = 0.5f;
     private List<Rect> interactiveCooldownOverlayRects;
     private int curSelected = 0;
-    private float lastTime = 0;
     private InputManager inputManager;    
 
     private GameController gameController;
 
-    private void Start()
+    private void Awake()
     {
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
 
@@ -47,7 +44,6 @@ public class Player : MonoBehaviour
 
         interactiveCoolDownTimers = new List<float>();
         interactiveCooldownOverlayRects = new List<Rect>();
-        drawRedCrossTimers = new float[interactiveList.Count];
 
         //Fill the rectList 
         for (int i = 0; i < interactiveList.Count; i++)
@@ -61,6 +57,8 @@ public class Player : MonoBehaviour
         inputManager = GameObject.FindGameObjectWithTag(Tags.inputManager).GetComponent<InputManager>();
 
         inputManager.PlayerCast += OnInteractiveCast;
+
+        Timer.Instantiate(creditsUpInterval, OnCreditsUpTimerTick);
     }
 
     private void OnGamePause(){
@@ -85,22 +83,18 @@ public class Player : MonoBehaviour
                 {
                     credits -= interactiveList[curSelected].cost;
                     interactiveCoolDownTimers[curSelected] = interactiveList[curSelected].cooldownTime;
-                    drawRedCrossTimers[curSelected] = 0;
-                }
-                else
-                {
-                    drawRedCrossTimers[curSelected] = drawRedCrossOverlayTime;
                 }
             }
         }
     }
 
+    private void OnCreditsUpTimerTick(Timer timer){
+        credits += creditsPerInterval;
+    }
+
     private void Update()
     {
-        createCredits();
-
         updateCooldowns();
-        updateRedCrossTimers();
     }
 
     public void OnGUI()
@@ -122,22 +116,7 @@ public class Player : MonoBehaviour
                 interactiveCooldownOverlayRects[i] = calculateCooldownOverlayRect(i);
                 GUI.DrawTexture(interactiveCooldownOverlayRects[i], interactiveCooldownOverlayIcon);
             }
-
-            if (drawRedCrossTimers[i] > 0)
-            {
-                GUI.DrawTexture(interactiveRect[i], interactiveDeniedOverlayIcon);
-            }
         }*/
-    }
-
-    //Every second x credits:
-    public void createCredits()
-    {
-        if (Time.time > lastTime + 1)
-        {
-            credits += creditsPerSec;
-            lastTime = Time.time;
-        }
     }
 
     private void updateCooldowns()
@@ -170,17 +149,6 @@ public class Player : MonoBehaviour
                     interactiveCooldownOverlayRects[currentInteractiveIndex].y,
                     overlayWidth,
                     interactiveCooldownOverlayRects[currentInteractiveIndex].height);
-        }
-    }
-
-    private void updateRedCrossTimers()
-    {
-        for (int i = 0; i < drawRedCrossTimers.Length; i++)
-        {
-            if (drawRedCrossTimers[i] > 0)
-            {
-                drawRedCrossTimers[i] -= Time.deltaTime;
-            }
         }
     }
 
