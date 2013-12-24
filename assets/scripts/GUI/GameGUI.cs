@@ -3,16 +3,13 @@ using System.Collections;
 
 public class GameGUI : MonoBehaviour {
 
-	public Player[] players;
 	public Texture2D selectedActionIconOverlay;
 	public Texture2D deniedActionIconOverlay;
 	public float deniedActionIconOverlayTime;
 	public Texture2D cooldownActionIconOverlay;
-	public Texture2D creditsIcon;
 
 	private InputManager inputManager;
-	private Pollutable pollutable;
-	private Planet planet;
+	private Player[] players;
 
     private int[] selectedActionIndices;
     private Rect[][] playersActionIconRectangles;
@@ -21,9 +18,9 @@ public class GameGUI : MonoBehaviour {
     private Timer[][] actionCooldownOverlayTimers;
 
 	private const float ACTION_TOP_OFFSET = 100;
-	private const float CREDITS_TOP_OFFSET = 70;
 
 	private void Awake(){
+		players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
 		inputManager = GameObject.FindGameObjectWithTag(Tags.inputManager).GetComponent<InputManager>();
 		inputManager.PlayerActionInput += OnPlayerActionInput;
 		inputManager.PlayerSelectInput += OnPlayerSelectInput;
@@ -109,7 +106,6 @@ public class GameGUI : MonoBehaviour {
 
 	private void OnGUI(){
 		DrawActions();
-		DrawCredits();
 	}
 
     private void DrawActions(){
@@ -125,6 +121,7 @@ public class GameGUI : MonoBehaviour {
         for (int i = 0; i < players[playerIndex].actionList.Count; i++){
         	DrawPlayerAction(playerIndex, i);
 
+        	// draw cooldown overlay
         	if(actionCooldownOverlayTimers[playerIndex][i] != null){
         		Rect actionCooldownOverlayRectangle = CalculateCooldownOverlayRectangle(playerIndex, i);
         		GUI.DrawTexture(actionCooldownOverlayRectangle, cooldownActionIconOverlay);
@@ -177,26 +174,5 @@ public class GameGUI : MonoBehaviour {
             actionIconRectangle.x + costXOffset,
             actionIconRectangle.y + actionIconRectangle.height / 2,
             50, 50), action.cost.ToString());
-    }
-
-    private void DrawCredits(){
-    	for(int i = 0; i < players.Length; i++){
-	    	GUI.skin.font = GameObject.FindGameObjectWithTag(Tags.style).GetComponent<Style>().font;
-	    	Player player = players[i];
-	    	float iconSize = player.actionList[0].icon.width;
-			float iconXOffset = (player.side == Player.Side.left) ? 0 : (Screen.width - iconSize);
-	    	Rect creditRect = new Rect(iconXOffset, CREDITS_TOP_OFFSET, iconSize, 30);
-	        GUI.Label(creditRect, player.credits.ToString());
-
-	        Rect r;
-	        if (player.side == Player.Side.left) {
-	        	r = new Rect(creditRect.xMax, creditRect.height + creditsIcon.height, creditsIcon.width, creditsIcon.height);
-	        }
-	        else {
-	        	r = new Rect(creditRect.xMin - creditsIcon.width, creditRect.height + creditsIcon.height, creditsIcon.width, creditsIcon.height);
-	        }
-	        
-	        GUI.DrawTexture(r, creditsIcon);
-	    }
     }
 }

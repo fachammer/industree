@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
+	public Player[] players;
 	public GameObject timer;
 
 	private bool gameStarted = false;
@@ -12,25 +13,11 @@ public class GameController : MonoBehaviour {
 	private Planet planet;
 	private InputManager inputManager;
 
-	public bool GameStarted {
-		get { return gameStarted; }
-	}
-
-	public bool GameEnded {
-		get { return gameEnded; }
-	}
-
-	public bool GamePaused {
-		get { return gamePaused; }
-	}
-
-	public bool GameWon {
-		get { return gameEnded && gameWon; }
-	}
-
-	public bool GameLost {
-		get { return gameEnded && !gameWon; }
-	}
+	public bool GameStarted { get { return gameStarted; } }
+	public bool GameEnded { get { return gameEnded; } }
+	public bool GamePaused { get { return gamePaused; } }
+	public bool GameWon { get { return gameEnded && gameWon; } }
+	public bool GameLost { get { return gameEnded && !gameWon; } }
 
 	public delegate void GameEndHandler(bool win);
 	public delegate void GamePauseHandler();
