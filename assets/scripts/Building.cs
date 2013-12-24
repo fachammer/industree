@@ -30,7 +30,7 @@ public class Building : MonoBehaviour
         get { return damagable; }
     }
 
-    public void Awake(){
+    private void Awake(){
         polluting = GetComponent<Polluting>();
         levelable = GetComponent<Levelable>();
         damagable = GetComponent<Damagable>();
@@ -38,7 +38,7 @@ public class Building : MonoBehaviour
         damagable.BeforeDestroy += OnBuildingDestroy;
     }
 	
-	public void Start(){	
+	private void Start(){	
 		for(int i = 0; i < minLevelUpTimes.Length; i++){
 	        levelable.levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
@@ -47,7 +47,7 @@ public class Building : MonoBehaviour
         newGameObject.transform.parent = transform;
 	}
 
-    public void Update(){
+    private void Update(){
 
         // Animate if destroyed
         if(damagable.Destroyed){
@@ -70,6 +70,8 @@ public class Building : MonoBehaviour
     }
 
     private void OnBuildingDestroy(Damagable damagable){
+    	levelable.LevelUp -= OnLevelUp;
+    	damagable.BeforeDestroy -= OnBuildingDestroy;
         Destroy(gameObject, destroyDelay);
     }
 }

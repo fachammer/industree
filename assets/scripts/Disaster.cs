@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 
 
-public class Disaster:Interactive
+public class Disaster: Action
 {
     public float movespeed = 5;
     public int damage = 1;
@@ -19,18 +19,18 @@ public class Disaster:Interactive
 
     }
 
-    public override bool performAction(Player player, float castDirection)
+    public override bool performAction(Player player, float actionDirection)
     {
-        base.performAction(player, castDirection);
+        base.performAction(player, actionDirection);
 
         //Find all spawnpoints and spawn mine
         GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag(Tags.spawnPoint);
 
         foreach (GameObject item in spawnPoints)
         {
-            if(item.transform.position.x > 0 && castDirection < 0 || 
-                item.transform.position.x < 0 && castDirection > 0)
-                item.GetComponent<DisasterSpawnpoint>().insatantiateDisaster(this);
+            if(item.transform.position.x > 0 && actionDirection < 0 || 
+                item.transform.position.x < 0 && actionDirection > 0)
+                item.GetComponent<DisasterSpawnpoint>().InsatantiateDisaster(this);
         }
 		
 		return true;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 // TODO: fix animations
 // TODO: fix tree size
-public class TreeComponent: Interactive
+public class TreeComponent: Action
 {
     public int[] creditsPerSec = { 1, 2, 3 };
     public int[] reducePollution = { 1, 2, 3 };
@@ -96,7 +96,7 @@ public class TreeComponent: Interactive
         }
     }
 	
-	public override bool performAction(Player player, float castDirection){
+	public override bool performAction(Player player, float actionDirection){
 		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
 		return planet.placeTree(player);
 	}

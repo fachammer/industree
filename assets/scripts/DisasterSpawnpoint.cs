@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class DisasterSpawnpoint:Interactive
+public class DisasterSpawnpoint: Action
 {
     public Player player;
     public Planet planet;
@@ -18,7 +18,7 @@ public class DisasterSpawnpoint:Interactive
         //this.transform.Rotate(new Vector3(0, 90, 0), Space.World);
     }
 
-    public override bool performAction(Player player, float castDirection)
+    public override bool performAction(Player player, float actionDirection)
     {
         //switch position
         this.transform.position = new Vector3(-this.transform.position.x, this.transform.position.y, this.transform.position.z);
@@ -31,7 +31,7 @@ public class DisasterSpawnpoint:Interactive
         return true;
     }
 
-    public void insatantiateDisaster(Interactive disaster)
+    public void InsatantiateDisaster(Action disaster)
     {
         Disaster d = (Disaster)Instantiate(disaster, transform.position, transform.rotation);
 		
