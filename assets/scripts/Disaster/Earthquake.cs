@@ -83,6 +83,10 @@ public class Earthquake:Disaster
 	{
 		Camera.main.transform.position = originPosition;
 		Camera.main.transform.rotation = originRotation;
+
+        gameController.GameEnd -= OnGameEnd;
+        gameController.GamePause -= OnGamePause;
+        gameController.GameResume -= OnGameResume;
 	}
 
 }

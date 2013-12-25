@@ -8,12 +8,17 @@ public class CurrentlySelectedActionGUI : MonoBehaviour {
 	private InputManager inputManager;
 	private Player[] players;
 	private GameGUI gui;
+	private Action[] actions;
 	private int[] selectedActionIndices;
+
+	public int[] SelectedActionIndices { get { return selectedActionIndices; } }
 
 	private void Awake(){
 		inputManager = GameObject.FindGameObjectWithTag(Tags.inputManager).GetComponent<InputManager>();
 		players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
 		gui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<GameGUI>();
+		actions = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<ActionInvoker>().actions;
+
 		selectedActionIndices = new int[players.Length];
 
 		inputManager.PlayerSelectInput += OnPlayerSelectInput;
@@ -26,7 +31,7 @@ public class CurrentlySelectedActionGUI : MonoBehaviour {
 			}
 		}
 		else {
-			if(selectedActionIndices[playerIndex] < players[playerIndex].actionList.Count - 1){
+			if(selectedActionIndices[playerIndex] < actions.Length - 1){
 				selectedActionIndices[playerIndex]++;
 			}
 		}

@@ -7,11 +7,14 @@ public class CreditsGUI : MonoBehaviour {
 	public float creditsTopOffset;
 
 	private Player[] players;
+	private Action[] actions;
 	private Rect[] creditLabelRects;
 	private Rect[] creditIconRects;
 
 	private void Awake(){
 		players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
+		actions = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<ActionInvoker>().actions;
+
 		creditLabelRects = new Rect[players.Length];
 		creditIconRects = new Rect[players.Length];
 
@@ -32,7 +35,7 @@ public class CreditsGUI : MonoBehaviour {
 
 	private Rect CalculateCreditsLabelRectangle(int playerIndex){
 		Player player = players[playerIndex];
-		float iconSize = player.actionList[0].icon.width;
+		float iconSize = actions[0].icon.width;
 		float iconXOffset = (player.side == Player.Side.left) ? 0 : (Screen.width - iconSize);
 	    return new Rect(iconXOffset, creditsTopOffset, iconSize, 30);
 	}

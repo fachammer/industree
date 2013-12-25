@@ -10,13 +10,26 @@ public class Player : MonoBehaviour
     public int creditsUpInterval;
     public int creditsPerInterval;
     public Side side;
-    public List<Action> actionList;
 
+    private int index;
     private GameController gameController;
+    private ActionInvoker actionInvoker;
 
-    private void Awake()
-    {
+    public int Index {
+        get { return index; }
+        set { index = value; }
+    }
+
+    public delegate void PlayerActionHandler(Player player, Action action, bool actionSuccessful);
+    public event PlayerActionHandler PlayerAction = delegate(Player player, Action action, bool actionSuccessful) {};
+
+    private void Awake(){
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+        actionInvoker = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<ActionInvoker>();
+
+        for(int i = 0; i < actionInvoker.actions.Length; i++){
+            actionInvoker.actions[i].Index = i;
+        }
 
         gameController.GamePause += OnGamePause;
         gameController.GameResume += OnGameResume;
@@ -42,12 +55,14 @@ public class Player : MonoBehaviour
     }
 
     public bool ActIfPossible(Action action, float actionDirection){
-        
-        if(credits >= action.cost && action.Act(this, actionDirection)){
+        bool actionSuccessful = false;
+
+        if(credits >= action.cost && actionInvoker.Invoke(this, action, actionDirection)){
             credits -= action.cost;
-            return true;
+            actionSuccessful = true;
         }
 
-        return false;
+        PlayerAction(this, action, actionSuccessful);
+        return actionSuccessful;
     }
 }
