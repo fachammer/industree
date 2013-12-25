@@ -3,7 +3,6 @@ using System.Collections;
 
 public class GameGUI : MonoBehaviour {
 
-	public Texture2D selectedActionIconOverlay;
 	public Texture2D deniedActionIconOverlay;
 	public float deniedActionIconOverlayTime;
 	public Texture2D cooldownActionIconOverlay;
@@ -11,27 +10,26 @@ public class GameGUI : MonoBehaviour {
 	private InputManager inputManager;
 	private Player[] players;
 
-    private int[] selectedActionIndices;
-    private Rect[][] playersActionIconRectangles;
+    private Rect[][] actionSlots;
     private bool[][] drawActionDeniedOverlay;
     private Timer[][] actionDeniedOverlayTimers;
     private Timer[][] actionCooldownOverlayTimers;
 
 	private const float ACTION_TOP_OFFSET = 100;
 
+    public Rect[][] ActionSlots { get { return actionSlots; } }
+
 	private void Awake(){
 		players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
 		inputManager = GameObject.FindGameObjectWithTag(Tags.inputManager).GetComponent<InputManager>();
 		inputManager.PlayerActionInput += OnPlayerActionInput;
-		inputManager.PlayerSelectInput += OnPlayerSelectInput;
 
-        selectedActionIndices = new int[players.Length];
-        playersActionIconRectangles = new Rect[players.Length][];
+        actionSlots = new Rect[players.Length][];
 
-        for(int i = 0; i < playersActionIconRectangles.Length; i++){
-        	playersActionIconRectangles[i] = new Rect[players[i].actionList.Count];
-        	for(int j = 0; j < playersActionIconRectangles[i].Length; j++){
-        		playersActionIconRectangles[i][j] = calculateActionIconRectangle(i, j);
+        for(int i = 0; i < actionSlots.Length; i++){
+        	actionSlots[i] = new Rect[players[i].actionList.Count];
+        	for(int j = 0; j < actionSlots[i].Length; j++){
+        		actionSlots[i][j] = calculateActionIconRectangle(i, j);
         	}
         }
 
@@ -54,22 +52,9 @@ public class GameGUI : MonoBehaviour {
         }
 	}
 
-	private void OnPlayerSelectInput(int playerIndex, float selectDirection){
-		if(selectDirection > 0){
-			if(selectedActionIndices[playerIndex] > 0){
-				selectedActionIndices[playerIndex]--;
-			}
-		}
-		else {
-			if(selectedActionIndices[playerIndex] < players[playerIndex].actionList.Count - 1){
-				selectedActionIndices[playerIndex]++;
-			}
-		}
-	}
-
 	private void OnPlayerActionInput(int playerIndex, float actionDirection){
 		Player player = players[playerIndex];
-		int actionIndex = selectedActionIndices[playerIndex];
+		int actionIndex = 0;
 		Action action = player.actionList[actionIndex];
 
 		bool actionSuccessful = player.ActIfPossible(action, actionDirection);
@@ -111,9 +96,6 @@ public class GameGUI : MonoBehaviour {
     private void DrawActions(){
     	for(int i = 0; i < players.Length; i++){
     		DrawPlayerActions(i);
-
-    		// draw selected icon overlay
-    		GUI.DrawTexture(playersActionIconRectangles[i][selectedActionIndices[i]], selectedActionIconOverlay);
     	}
     }
 
@@ -129,7 +111,7 @@ public class GameGUI : MonoBehaviour {
 
         	// draw denied action overlay
         	if(drawActionDeniedOverlay[playerIndex][i]){
-    			GUI.DrawTexture(playersActionIconRectangles[playerIndex][i], deniedActionIconOverlay);
+    			GUI.DrawTexture(actionSlots[playerIndex][i], deniedActionIconOverlay);
     		}
         }
     }
@@ -137,7 +119,7 @@ public class GameGUI : MonoBehaviour {
     private Rect CalculateCooldownOverlayRectangle(int playerIndex, int actionIndex){
     	Player player = players[playerIndex];
     	Action action = player.actionList[actionIndex];
-    	Rect actionIconRectangle = playersActionIconRectangles[playerIndex][actionIndex];
+    	Rect actionIconRectangle = actionSlots[playerIndex][actionIndex];
     	Timer actionCooldownOverlayTimer = actionCooldownOverlayTimers[playerIndex][actionIndex];
     	float overlayWidth = Mathf.Clamp(
 			(action.cooldownTime - actionCooldownOverlayTimer.TimeSinceLastTick) * 
@@ -164,7 +146,7 @@ public class GameGUI : MonoBehaviour {
     }
 
     private void DrawPlayerAction(int playerIndex, int actionIndex){
-    	Rect actionIconRectangle = playersActionIconRectangles[playerIndex][actionIndex];
+    	Rect actionIconRectangle = actionSlots[playerIndex][actionIndex];
     	Action action = players[playerIndex].actionList[actionIndex];
 
         GUI.DrawTexture(actionIconRectangle, action.icon);

@@ -10,4 +10,5 @@ public class Tags
     public static string timer = "Timer";
     public static string spawnPoint = "Spawnpoint";
     public static string gameController = "GameController";
+    public static string gui = "Gui";
 }
