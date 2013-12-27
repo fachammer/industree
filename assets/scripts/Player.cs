@@ -21,8 +21,9 @@ public class Player : MonoBehaviour
 
     public Action[] Actions { get { return GetComponent<ActionInvoker>().actions; } }
 
-    public delegate void PlayerActionHandler(Player player, Action action, bool actionSuccessful);
-    public event PlayerActionHandler PlayerAction = delegate(Player player, Action action, bool actionSuccessful) {};
+    public delegate void PlayerActionHandler(Player player, Action action);
+    public event PlayerActionHandler PlayerActionSuccessful = delegate(Player player, Action action) {};
+    public event PlayerActionHandler PlayerActionFail = delegate(Player player, Action action) {};
 
     private void Awake(){
         actionInvoker = gameObject.GetComponent<ActionInvoker>();
@@ -39,14 +40,14 @@ public class Player : MonoBehaviour
     }
 
     public bool ActIfPossible(Action action, float actionDirection){
-        bool actionSuccessful = false;
 
         if(credits >= action.cost && actionInvoker.Invoke(this, action, actionDirection)){
             credits -= action.cost;
-            actionSuccessful = true;
+            PlayerActionSuccessful(this, action);
+            return true;
         }
 
-        PlayerAction(this, action, actionSuccessful);
-        return actionSuccessful;
+        PlayerActionFail(this, action);
+        return false;
     }
 }

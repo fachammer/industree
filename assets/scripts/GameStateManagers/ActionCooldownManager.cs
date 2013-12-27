@@ -20,17 +20,15 @@ public class ActionCooldownManager : MonoBehaviour {
 				actionCooldownTimerDictionary[player][action] = null;
 			}
 
-			player.PlayerAction += OnPlayerAction;
+			player.PlayerActionSuccessful += OnPlayerActionSuccessful;
 		}
 	}
 
-	private void OnPlayerAction(Player player, Action action, bool actionSuccessful){
-		if(actionSuccessful){
-			actionCooldownTimerDictionary[player][action] = Timer.AddTimer(gameObject, action.cooldownTime, 
-				delegate(Timer timer){
-					actionCooldownTimerDictionary[player][action] = null;
-					timer.Stop();
-				});
-		}
+	private void OnPlayerActionSuccessful(Player player, Action action){
+		actionCooldownTimerDictionary[player][action] = Timer.AddTimer(gameObject, action.cooldownTime, 
+			delegate(Timer timer){
+				actionCooldownTimerDictionary[player][action] = null;
+				timer.Stop();
+			});
 	}
 }

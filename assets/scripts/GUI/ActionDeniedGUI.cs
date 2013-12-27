@@ -17,7 +17,7 @@ public class ActionDeniedGUI : MonoBehaviour {
     	actionsGui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionsGUI>();
 
     	foreach(Player player in players){
-            player.PlayerAction += OnPlayerAction;
+            player.PlayerActionFail += OnPlayerActionFail;
 
             actionDeniedOverlayTimers[player] = new Dictionary<Action, Timer>();
 
@@ -27,20 +27,17 @@ public class ActionDeniedGUI : MonoBehaviour {
     	}
     }
 
-    private void OnPlayerAction(Player player, Action action, bool actionSuccessful){
-    	if(!actionSuccessful) {
+    private void OnPlayerActionFail(Player player, Action action){
+        if(actionDeniedOverlayTimers[player][action] != null){
+            actionDeniedOverlayTimers[player][action].Stop();
+            actionDeniedOverlayTimers[player][action] = null;
+        }
 
-            if(actionDeniedOverlayTimers[player][action] != null){
-                actionDeniedOverlayTimers[player][action].Stop();
+        actionDeniedOverlayTimers[player][action] = Timer.AddTimer(gameObject, deniedActionIconOverlayTime,
+            delegate(Timer timer) {
+                timer.Stop();
                 actionDeniedOverlayTimers[player][action] = null;
-            }
-
-            actionDeniedOverlayTimers[player][action] = Timer.AddTimer(gameObject, deniedActionIconOverlayTime,
-                delegate(Timer timer) {
-                    timer.Stop();
-                    actionDeniedOverlayTimers[player][action] = null;
-                });
-		}
+            });
     }
 
     private void OnGUI(){
