@@ -20,11 +20,11 @@ public class ActionCooldownManager : MonoBehaviour {
 				actionCooldownTimerDictionary[player][action] = null;
 			}
 
-			player.PlayerActionSuccessful += OnPlayerActionSuccessful;
+			player.PlayerActionSuccess += OnPlayerActionSuccess;
 		}
 	}
 
-	private void OnPlayerActionSuccessful(Player player, Action action){
+	private void OnPlayerActionSuccess(Player player, Action action){
 		actionCooldownTimerDictionary[player][action] = Timer.AddTimer(gameObject, action.cooldownTime, 
 			delegate(Timer timer){
 				actionCooldownTimerDictionary[player][action] = null;

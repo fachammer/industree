@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     public Action[] Actions { get { return GetComponent<ActionInvoker>().actions; } }
 
     public delegate void PlayerActionHandler(Player player, Action action);
-    public event PlayerActionHandler PlayerActionSuccessful = delegate(Player player, Action action) {};
+    public event PlayerActionHandler PlayerActionSuccess = delegate(Player player, Action action) {};
     public event PlayerActionHandler PlayerActionFail = delegate(Player player, Action action) {};
 
     private void Awake(){
@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 
         if(credits >= action.cost && actionInvoker.Invoke(this, action, actionDirection)){
             credits -= action.cost;
-            PlayerActionSuccessful(this, action);
+            PlayerActionSuccess(this, action);
             return true;
         }
 
