@@ -39,7 +39,7 @@ public class TreeComponent: Action
 		damagable = GetComponent<Damagable>();
 		polluting = GetComponent<Polluting>();
 		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
-		Timer.Instantiate(timeBetweenClean, OnCleanTimerTick);
+		Timer.AddTimer(gameObject, timeBetweenClean, OnCleanTimerTick);
 	}
 
 	private void Start(){

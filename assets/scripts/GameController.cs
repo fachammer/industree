@@ -4,7 +4,6 @@ using System.Collections;
 public class GameController : MonoBehaviour {
 
 	public Player[] players;
-	public GameObject timer;
 
 	private bool gameStarted = false;
 	private bool gameEnded = false;

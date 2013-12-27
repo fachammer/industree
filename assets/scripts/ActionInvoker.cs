@@ -22,7 +22,7 @@ public class ActionInvoker : MonoBehaviour {
 			return false;
 		}
 
-		actionCooldownTimers[player.Index][action.Index] = Timer.Instantiate(action.cooldownTime, delegate(Timer timer){
+		actionCooldownTimers[player.Index][action.Index] = Timer.AddTimer(gameObject, action.cooldownTime, delegate(Timer timer){
 			timer.Stop();
 			actionCooldownTimers[player.Index][action.Index] = null;
 		});

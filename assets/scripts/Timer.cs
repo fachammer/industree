@@ -45,7 +45,7 @@ public class Timer : MonoBehaviour {
     public void Stop()
     {
         Pause();
-        Destroy(gameObject);
+        Destroy(this);
     }
 
     public void Resume()
@@ -53,11 +53,9 @@ public class Timer : MonoBehaviour {
         enabled = true;
     }
 
-    public static Timer Instantiate(float interval, TickHandler onTick)
+    public static Timer AddTimer(GameObject gameObject, float interval, TickHandler onTick)
     {
-        GameObject timerTemplate = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().timer;
-        Timer timer = ((GameObject)Instantiate(timerTemplate)).GetComponent<Timer>();
-        timer.enabled = true;
+        Timer timer = (Timer) gameObject.AddComponent(typeof(Timer));
         timer.interval = interval;
         timer.Tick += onTick;
         return timer;

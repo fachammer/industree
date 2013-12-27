@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
         gameController.GameResume += OnGameResume;
         gameController.GameEnd += OnGameEnd;
 
-        Timer.Instantiate(creditsUpInterval, OnCreditsUpTimerTick);
+        Timer.AddTimer(gameObject, creditsUpInterval, OnCreditsUpTimerTick);
     }
 
     private void OnGamePause(){

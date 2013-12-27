@@ -40,7 +40,7 @@ public class ActionDeniedGUI : MonoBehaviour {
 				currentActionDeniedOverlayTimer.Stop();
 			}
 
-			actionDeniedOverlayTimers[player.Index][action.Index] = Timer.Instantiate(deniedActionIconOverlayTime,
+			actionDeniedOverlayTimers[player.Index][action.Index] = Timer.AddTimer(gameObject, deniedActionIconOverlayTime,
 				delegate(Timer timer) {
 					drawActionDeniedOverlay[player.Index][action.Index] = false;
 					timer.Stop();

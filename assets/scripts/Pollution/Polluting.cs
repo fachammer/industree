@@ -12,7 +12,7 @@ public class Polluting : MonoBehaviour {
 
 	private void Awake() {
 		pollutables = Array.ConvertAll(GameObject.FindObjectsOfType(typeof(Pollutable)), item => (Pollutable)item);
-        Timer.Instantiate(timeBetweenPollution, OnPollutionTimerTick);
+        Timer.AddTimer(gameObject, timeBetweenPollution, OnPollutionTimerTick);
 	}
 
     private void OnPollutionTimerTick(Timer timer)

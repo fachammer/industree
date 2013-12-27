@@ -27,7 +27,7 @@ public class ActionCooldownGUI : MonoBehaviour {
 
 	private void OnPlayerAction(Player player, Action action, bool actionSuccessful){
 		if(actionSuccessful){
-			actionCooldownOverlayTimers[player.Index][action.Index] = Timer.Instantiate(action.cooldownTime, 
+			actionCooldownOverlayTimers[player.Index][action.Index] = Timer.AddTimer(gameObject, action.cooldownTime, 
 				delegate(Timer timer){
 					actionCooldownOverlayTimers[player.Index][action.Index] = null;
 					timer.Stop();
