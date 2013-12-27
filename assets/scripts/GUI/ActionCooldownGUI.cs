@@ -5,52 +5,30 @@ public class ActionCooldownGUI : MonoBehaviour {
 
 	public Texture2D cooldownActionIconOverlay;
 
-	private Player[] players;
-	private GameGUI gui;
-	private Action[] actions;
-	private Timer[][] actionCooldownOverlayTimers;
+	private ActionsGUI actionsGui;
+	private ActionCooldownManager actionCooldownManager;
 
 	private void Awake(){
-		players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
-		gui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<GameGUI>();
-		actions = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<ActionInvoker>().actions;
+		actionsGui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionsGUI>();
 
-		actionCooldownOverlayTimers = new Timer[players.Length][];
-        for(int i = 0; i < actionCooldownOverlayTimers.Length; i++){
-        	actionCooldownOverlayTimers[i] = new Timer[actions.Length];
-        }
-
-        foreach(Player player in players){
-        	player.PlayerAction += OnPlayerAction;
-        }
-	}
-
-	private void OnPlayerAction(Player player, Action action, bool actionSuccessful){
-		if(actionSuccessful){
-			actionCooldownOverlayTimers[player.Index][action.Index] = Timer.AddTimer(gameObject, action.cooldownTime, 
-				delegate(Timer timer){
-					actionCooldownOverlayTimers[player.Index][action.Index] = null;
-					timer.Stop();
-				});
-		}
+		actionCooldownManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<ActionCooldownManager>();
 	}
 
 	private void OnGUI(){
-		for(int i = 0; i < players.Length; i++){
-			for(int j = 0; j < actions.Length; j++){
-	        	if(actionCooldownOverlayTimers[i][j] != null){
-	        		Rect actionCooldownOverlayRectangle = CalculateCooldownOverlayRectangle(i, j);
+		foreach(var playerEntry in actionCooldownManager.ActionCooldownTimerDictionary){
+			foreach(var actionEntry in playerEntry.Value){
+				Timer actionCooldownTimer = actionEntry.Value;
+				if(actionCooldownTimer != null){
+	        		Rect actionCooldownOverlayRectangle = CalculateCooldownOverlayRectangle(playerEntry.Key, actionEntry.Key);
 	        		GUI.DrawTexture(actionCooldownOverlayRectangle, cooldownActionIconOverlay);
 	        	}
 			}
-        }
+		}
 	}
 
-	private Rect CalculateCooldownOverlayRectangle(int playerIndex, int actionIndex){
-    	Player player = players[playerIndex];
-    	Action action = actions[actionIndex];
-    	Rect actionIconRectangle = gui.ActionSlots[playerIndex][actionIndex];
-    	Timer actionCooldownOverlayTimer = actionCooldownOverlayTimers[playerIndex][actionIndex];
+	private Rect CalculateCooldownOverlayRectangle(Player player, Action action){
+    	Rect actionIconRectangle = actionsGui.ActionSlots[player][action];
+    	Timer actionCooldownOverlayTimer = actionCooldownManager.ActionCooldownTimerDictionary[player][action];
     	float overlayWidth = Mathf.Clamp(
 			(action.cooldownTime - actionCooldownOverlayTimer.TimeSinceLastTick) * 
 				actionIconRectangle.width / 

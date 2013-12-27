@@ -1,59 +1,62 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CreditsGUI : MonoBehaviour {
 
 	public Texture2D creditsIcon;
 	public float creditsTopOffset;
 
-	private Player[] players;
-	private Action[] actions;
-	private Rect[] creditLabelRects;
-	private Rect[] creditIconRects;
+	private Dictionary<Player, Rect> creditLabelRectsDictionary;
+	private Dictionary<Player, Rect> creditIconRectsDictionary;
 
 	private void Awake(){
-		players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
-		actions = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<ActionInvoker>().actions;
+		Player[] players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
 
-		creditLabelRects = new Rect[players.Length];
-		creditIconRects = new Rect[players.Length];
+		creditLabelRectsDictionary = new Dictionary<Player, Rect>();
+		creditIconRectsDictionary = new Dictionary<Player, Rect>();
 
-		for(int i = 0; i < players.Length; i++){
-			creditLabelRects[i] = CalculateCreditsLabelRectangle(i);
-			creditIconRects[i] = CalculateCreditsIconRectangle(i);
+		foreach(var player in players){
+			creditLabelRectsDictionary[player] = CalculateCreditsLabelRectangle(player);
+			creditIconRectsDictionary[player] = CalculateCreditsIconRectangle(player);
 		}
 	}
 
 	private void OnGUI(){
 		GUI.skin.font = GameObject.FindGameObjectWithTag(Tags.style).GetComponent<Style>().font;
 
-		for(int i = 0; i < players.Length; i++){
-	        GUI.Label(creditLabelRects[i], players[i].credits.ToString());        
-	        GUI.DrawTexture(creditIconRects[i], creditsIcon);
-	    }
+		foreach(var creditLabelRectEntry in creditLabelRectsDictionary){
+			Player player = creditLabelRectEntry.Key;
+			Rect creditLabelRect = creditLabelRectEntry.Value;
+			GUI.Label(creditLabelRect, player.credits.ToString());
+		}
+
+		foreach(var creditIconRect in creditIconRectsDictionary.Values){
+			GUI.DrawTexture(creditIconRect, creditsIcon);
+		}
 	}
 
-	private Rect CalculateCreditsLabelRectangle(int playerIndex){
-		Player player = players[playerIndex];
-		float iconSize = actions[0].icon.width;
+	private Rect CalculateCreditsLabelRectangle(Player player){
+		float iconSize = player.Actions[0].icon.width;
 		float iconXOffset = (player.side == Player.Side.left) ? 0 : (Screen.width - iconSize);
-	    return new Rect(iconXOffset, creditsTopOffset, iconSize, 30);
+	    return new Rect(iconXOffset, creditsTopOffset, iconSize, iconSize);
 	}
 
-	private Rect CalculateCreditsIconRectangle(int playerIndex){
-		Player player = players[playerIndex];
-		Rect creditLabelRect = creditLabelRects[playerIndex];
+	private Rect CalculateCreditsIconRectangle(Player player){
+		float iconSize = player.Actions[0].icon.width;
+		float iconXOffset = (player.side == Player.Side.left) ? 0 : (Screen.width - iconSize);
+
 		if (player.side == Player.Side.left) {
         	return new Rect(
-        		creditLabelRect.xMax, 
-        		creditLabelRect.height + creditsIcon.height, 
+        		iconXOffset + iconSize, 
+        		iconSize + creditsIcon.height, 
         		creditsIcon.width, 
         		creditsIcon.height);
         }
         else {
         	return new Rect(
-        		creditLabelRect.xMin - creditsIcon.width, 
-        		creditLabelRect.height + creditsIcon.height, 
+        		iconXOffset - creditsIcon.width, 
+        		iconSize + creditsIcon.height, 
         		creditsIcon.width, 
         		creditsIcon.height);
         }

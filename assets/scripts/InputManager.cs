@@ -9,23 +9,26 @@ public class InputManager : MonoBehaviour
     public string exitButton;
     public string reloadButton;
 
+    private Player[] players;
+
     private float[] previousPlayerSelectInputAxes;
     private float[] previousPlayerActionInputAxes;
 
-    public delegate void PlayerSelectInputHandler(int playerIndex, float selectDirection);
-    public delegate void PlayerActionInputHandler(int playerIndex, float actionDirection);
+    public delegate void PlayerSelectInputHandler(Player player, float selectDirection);
+    public delegate void PlayerActionInputHandler(Player player, float actionDirection);
     public delegate void GamePauseInputHandler();
     public delegate void GameExitInputHandler();
     public delegate void GameReloadInputHandler();
 
-    public event PlayerSelectInputHandler PlayerSelectInput = delegate(int playerIndex, float selectDirection) {};
-    public event PlayerActionInputHandler PlayerActionInput = delegate(int playerIndex, float actionDirection) {};
+    public event PlayerSelectInputHandler PlayerSelectInput = delegate(Player player, float selectDirection) {};
+    public event PlayerActionInputHandler PlayerActionInput = delegate(Player player, float actionDirection) {};
     public event GamePauseInputHandler GamePauseInput = delegate() {}; 
     public event GameExitInputHandler GameExitInput = delegate() {};
     public event GameReloadInputHandler GameReloadInput = delegate() {};
 
-    private void Start()
-    {
+    private void Awake(){
+        players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
+
         previousPlayerSelectInputAxes = new float[playersSelectInputNames.Length];
         previousPlayerActionInputAxes = new float[playersSelectInputNames.Length];
     }
@@ -39,6 +42,7 @@ public class InputManager : MonoBehaviour
     }
 
     private void checkPlayersInput(){
+
         for (int i = 0; i < playersSelectInputNames.Length; i++)
         {
             float playerSelectInputAxis;
@@ -49,12 +53,12 @@ public class InputManager : MonoBehaviour
 
             if (playerSelectDirection != 0)
             {
-                PlayerSelectInput(i, playerSelectDirection);
+                PlayerSelectInput(players[i], playerSelectDirection);
             }
 
             if (playerActionDirection != 0)
             {
-                PlayerActionInput(i, playerActionDirection);
+                PlayerActionInput(players[i], playerActionDirection);
             }
 
             previousPlayerSelectInputAxes[i] = playerSelectInputAxis;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ActionDeniedGUI : MonoBehaviour {
 
@@ -7,55 +8,50 @@ public class ActionDeniedGUI : MonoBehaviour {
 	public float deniedActionIconOverlayTime;
 
 	private Player[] players;
-	private GameGUI gui;
-	private Action[] actions;
-
-	private bool[][] drawActionDeniedOverlay;
-    private Timer[][] actionDeniedOverlayTimers;
+    private Dictionary<Player, Dictionary<Action, Timer>> actionDeniedOverlayTimers;
+	private ActionsGUI actionsGui;
 
     private void Awake(){
+        actionDeniedOverlayTimers = new Dictionary<Player, Dictionary<Action, Timer>>();
     	players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
-    	gui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<GameGUI>();
-    	actions = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<ActionInvoker>().actions;
+    	actionsGui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionsGUI>();
 
     	foreach(Player player in players){
-    		player.PlayerAction += OnPlayerAction;
+            player.PlayerAction += OnPlayerAction;
+
+            actionDeniedOverlayTimers[player] = new Dictionary<Action, Timer>();
+
+            foreach(Action action in player.Actions){
+                actionDeniedOverlayTimers[player][action] = null;
+            }
     	}
-
-    	drawActionDeniedOverlay = new bool[players.Length][];
-    	actionDeniedOverlayTimers = new Timer[players.Length][];
-
-        for(int i = 0; i < drawActionDeniedOverlay.Length; i++){
-        	drawActionDeniedOverlay[i] = new bool[actions.Length];
-        	actionDeniedOverlayTimers[i] = new Timer[actions.Length];
-        }
     }
 
     private void OnPlayerAction(Player player, Action action, bool actionSuccessful){
     	if(!actionSuccessful) {
-			drawActionDeniedOverlay[player.Index][action.Index] = true;
 
-			Timer currentActionDeniedOverlayTimer = actionDeniedOverlayTimers[player.Index][action.Index];
-			if(currentActionDeniedOverlayTimer != null){
-				currentActionDeniedOverlayTimer.Stop();
-			}
+            if(actionDeniedOverlayTimers[player][action] != null){
+                actionDeniedOverlayTimers[player][action].Stop();
+                actionDeniedOverlayTimers[player][action] = null;
+            }
 
-			actionDeniedOverlayTimers[player.Index][action.Index] = Timer.AddTimer(gameObject, deniedActionIconOverlayTime,
-				delegate(Timer timer) {
-					drawActionDeniedOverlay[player.Index][action.Index] = false;
-					timer.Stop();
-				});
+            actionDeniedOverlayTimers[player][action] = Timer.AddTimer(gameObject, deniedActionIconOverlayTime,
+                delegate(Timer timer) {
+                    timer.Stop();
+                    actionDeniedOverlayTimers[player][action] = null;
+                });
 		}
     }
 
-
     private void OnGUI(){
-    	for(int i = 0; i < players.Length; i++){
-    		for(int j = 0; j < actions.Length; j++){
-	        	if(drawActionDeniedOverlay[i][j]){
-	    			GUI.DrawTexture(gui.ActionSlots[i][j], deniedActionIconOverlay);
-	    		}
-    		}
-    	}
+        foreach(var playerEntry in actionDeniedOverlayTimers){
+            Player player = playerEntry.Key;
+            foreach(var actionEntry in playerEntry.Value){
+                Action action = actionEntry.Key;
+                if(actionDeniedOverlayTimers[player][action] != null){
+                    GUI.DrawTexture(actionsGui.ActionSlots[player][action], deniedActionIconOverlay);
+                }
+            }
+        }
     }
 }

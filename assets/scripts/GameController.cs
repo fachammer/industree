@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
 	public bool GamePaused { get { return gamePaused; } }
 	public bool GameWon { get { return gameEnded && gameWon; } }
 	public bool GameLost { get { return gameEnded && !gameWon; } }
+	public InputManager InputManager { get { return inputManager; } }
 
 	public delegate void GameEndHandler(bool win);
 	public delegate void GamePauseHandler();
@@ -28,7 +29,7 @@ public class GameController : MonoBehaviour {
 
 	private void Awake(){
 		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
-		inputManager = GameObject.FindGameObjectWithTag(Tags.inputManager).GetComponent<InputManager>();
+		inputManager = gameObject.GetComponent<InputManager>();
 
 		for(int i = 0; i < players.Length; i++){
 			players[i].Index = i;

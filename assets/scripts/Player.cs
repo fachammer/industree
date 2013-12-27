@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
     public Side side;
 
     private int index;
-    private GameController gameController;
     private ActionInvoker actionInvoker;
 
     public int Index {
@@ -20,34 +19,19 @@ public class Player : MonoBehaviour
         set { index = value; }
     }
 
+    public Action[] Actions { get { return GetComponent<ActionInvoker>().actions; } }
+
     public delegate void PlayerActionHandler(Player player, Action action, bool actionSuccessful);
     public event PlayerActionHandler PlayerAction = delegate(Player player, Action action, bool actionSuccessful) {};
 
     private void Awake(){
-        gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
-        actionInvoker = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<ActionInvoker>();
+        actionInvoker = gameObject.GetComponent<ActionInvoker>();
 
         for(int i = 0; i < actionInvoker.actions.Length; i++){
             actionInvoker.actions[i].Index = i;
         }
 
-        gameController.GamePause += OnGamePause;
-        gameController.GameResume += OnGameResume;
-        gameController.GameEnd += OnGameEnd;
-
         Timer.AddTimer(gameObject, creditsUpInterval, OnCreditsUpTimerTick);
-    }
-
-    private void OnGamePause(){
-        enabled = false;
-    }
-
-    private void OnGameResume(){
-        enabled = true;
-    }
-
-    private void OnGameEnd(bool win){
-        enabled = false;
     }
 
     private void OnCreditsUpTimerTick(Timer timer){

@@ -1,30 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ActionInvoker : MonoBehaviour {
 
 	public Action[] actions;
 
-	private Timer[][] actionCooldownTimers;
+	private Dictionary<Player, Dictionary<Action, Timer>> actionCooldownTimersDictionary;
 
 	private void Awake(){
 		Player[] players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
-		actionCooldownTimers = new Timer[players.Length][];
+		actionCooldownTimersDictionary = new Dictionary<Player, Dictionary<Action, Timer>>();
 
-		for(int i = 0; i < actionCooldownTimers.Length; i++){
-			actionCooldownTimers[i] = new Timer[actions.Length];
+		foreach(var player in players){
+			actionCooldownTimersDictionary[player] = new Dictionary<Action, Timer>();
+
+			foreach(var action in player.Actions){
+				actionCooldownTimersDictionary[player][action] = null;
+			}
 		}
 	}
 
 	public bool Invoke(Player player, Action action, float actionDirection){
 
-		if(actionCooldownTimers[player.Index][action.Index] != null){
+		if(actionCooldownTimersDictionary[player][action] != null){
 			return false;
 		}
 
-		actionCooldownTimers[player.Index][action.Index] = Timer.AddTimer(gameObject, action.cooldownTime, delegate(Timer timer){
+		actionCooldownTimersDictionary[player][action] = Timer.AddTimer(gameObject, action.cooldownTime, delegate(Timer timer){
 			timer.Stop();
-			actionCooldownTimers[player.Index][action.Index] = null;
+			actionCooldownTimersDictionary[player][action] = null;
 		});
 
 		return action.Act(player, actionDirection);
