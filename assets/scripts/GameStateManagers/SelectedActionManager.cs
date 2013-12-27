@@ -11,9 +11,9 @@ public class SelectedActionManager : MonoBehaviour {
 	public Dictionary<Player, Action> SelectedActionDictionary { get { return selectedActionDictionary; } }
 
 	private void Awake(){
-		GameController gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
-		inputManager = gameController.InputManager;
-		Player[] players = gameController.players;
+		GameObject gameControllerObject = GameObject.FindGameObjectWithTag(Tags.gameController);
+		inputManager = gameControllerObject.GetComponent<InputManager>();
+		Player[] players = gameControllerObject.GetComponent<GameController>().players;
 		
 		selectedActionDictionary = new Dictionary<Player, Action>();
 		selectedActionIndices = new Dictionary<Player, int>();

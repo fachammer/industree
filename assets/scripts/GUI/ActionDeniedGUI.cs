@@ -11,6 +11,8 @@ public class ActionDeniedGUI : MonoBehaviour {
     private Dictionary<Player, Dictionary<Action, Timer>> actionDeniedOverlayTimers;
 	private ActionsGUI actionsGui;
 
+    private const int GUI_DEPTH = 0;
+
     private void Awake(){
         actionDeniedOverlayTimers = new Dictionary<Player, Dictionary<Action, Timer>>();
     	players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
@@ -41,6 +43,7 @@ public class ActionDeniedGUI : MonoBehaviour {
     }
 
     private void OnGUI(){
+        GUI.depth = GUI_DEPTH;
         foreach(var playerEntry in actionDeniedOverlayTimers){
             Player player = playerEntry.Key;
             foreach(var actionEntry in playerEntry.Value){

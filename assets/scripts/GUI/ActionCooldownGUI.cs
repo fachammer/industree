@@ -8,6 +8,8 @@ public class ActionCooldownGUI : MonoBehaviour {
 	private ActionsGUI actionsGui;
 	private ActionCooldownManager actionCooldownManager;
 
+	private const int GUI_DEPTH = 1;
+
 	private void Awake(){
 		actionsGui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionsGUI>();
 
@@ -15,6 +17,7 @@ public class ActionCooldownGUI : MonoBehaviour {
 	}
 
 	private void OnGUI(){
+		GUI.depth = GUI_DEPTH;
 		foreach(var playerEntry in actionCooldownManager.ActionCooldownTimerDictionary){
 			foreach(var actionEntry in playerEntry.Value){
 				Timer actionCooldownTimer = actionEntry.Value;

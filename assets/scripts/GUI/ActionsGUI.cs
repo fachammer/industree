@@ -15,9 +15,9 @@ public class ActionsGUI : MonoBehaviour {
     private SelectedActionManager selectedActionManager;
 
 	private void Awake(){
-        GameController gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
-		players = gameController.players;
-        inputManager = gameController.InputManager;
+        GameObject gameControllerObject = GameObject.FindGameObjectWithTag(Tags.gameController);
+		players = gameControllerObject.GetComponent<GameController>().players;
+        inputManager = gameControllerObject.GetComponent<InputManager>();
         selectedActionManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<SelectedActionManager>();
 
         actionSlots = new Dictionary<Player, Dictionary<Action, Rect>>();

@@ -10,6 +10,8 @@ public class CreditsGUI : MonoBehaviour {
 	private Dictionary<Player, Rect> creditLabelRectsDictionary;
 	private Dictionary<Player, Rect> creditIconRectsDictionary;
 
+	private const float CREDITS_ICON_TOP_OFFSET = 30;
+
 	private void Awake(){
 		Player[] players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
 
@@ -49,14 +51,14 @@ public class CreditsGUI : MonoBehaviour {
 		if (player.side == Player.Side.left) {
         	return new Rect(
         		iconXOffset + iconSize, 
-        		iconSize + creditsIcon.height, 
+        		creditsIcon.height + CREDITS_ICON_TOP_OFFSET, 
         		creditsIcon.width, 
         		creditsIcon.height);
         }
         else {
         	return new Rect(
         		iconXOffset - creditsIcon.width, 
-        		iconSize + creditsIcon.height, 
+        		creditsIcon.height + CREDITS_ICON_TOP_OFFSET, 
         		creditsIcon.width, 
         		creditsIcon.height);
         }
