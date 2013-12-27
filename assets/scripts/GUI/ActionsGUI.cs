@@ -14,6 +14,8 @@ public class ActionsGUI : MonoBehaviour {
     public Dictionary<Player, Dictionary<Action, Rect>> ActionSlots { get { return actionSlots; } }
     private SelectedActionManager selectedActionManager;
 
+    private const int GUI_DEPTH = 2;
+
 	private void Awake(){
         GameObject gameControllerObject = GameObject.FindGameObjectWithTag(Tags.gameController);
 		players = gameControllerObject.GetComponent<GameController>().players;
@@ -47,6 +49,7 @@ public class ActionsGUI : MonoBehaviour {
 	}
 
 	private void OnGUI(){
+        GUI.depth = GUI_DEPTH;
         foreach(Player player in players){
             foreach(Action action in player.Actions){
                 DrawPlayerAction(player, action);
