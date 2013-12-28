@@ -5,13 +5,13 @@ public class ActionCooldownGUI : MonoBehaviour {
 
 	public Texture2D cooldownActionIconOverlay;
 
-	private ActionsGUI actionsGui;
+	private ActionIconsGUI actionIconsGui;
 	private ActionCooldownManager actionCooldownManager;
 
 	private const int GUI_DEPTH = 1;
 
 	private void Awake(){
-		actionsGui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionsGUI>();
+		actionIconsGui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionIconsGUI>();
 
 		actionCooldownManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<ActionCooldownManager>();
 	}
@@ -30,7 +30,7 @@ public class ActionCooldownGUI : MonoBehaviour {
 	}
 
 	private Rect CalculateCooldownOverlayRectangle(Player player, Action action){
-    	Rect actionIconRectangle = actionsGui.ActionSlots[player][action];
+    	Rect actionIconRectangle = actionIconsGui.ActionSlots[player][action];
     	Timer actionCooldownOverlayTimer = actionCooldownManager.ActionCooldownTimerDictionary[player][action];
     	float overlayWidth = Mathf.Clamp(
 			(action.cooldownTime - actionCooldownOverlayTimer.TimeSinceLastTick) * 

@@ -2,25 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ActionsGUI : MonoBehaviour {
+public class ActionIconsGUI : MonoBehaviour {
 
 	private Player[] players;
-    private InputManager inputManager;
 
     private Dictionary<Player, Dictionary<Action, Rect>> actionSlots;
 
 	private const float ACTION_TOP_OFFSET = 100;
 
     public Dictionary<Player, Dictionary<Action, Rect>> ActionSlots { get { return actionSlots; } }
-    private SelectedActionManager selectedActionManager;
 
     private const int GUI_DEPTH = 2;
 
 	private void Awake(){
         GameObject gameControllerObject = GameObject.FindGameObjectWithTag(Tags.gameController);
 		players = gameControllerObject.GetComponent<GameController>().players;
-        inputManager = gameControllerObject.GetComponent<InputManager>();
-        selectedActionManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<SelectedActionManager>();
 
         actionSlots = new Dictionary<Player, Dictionary<Action, Rect>>();
 
@@ -31,15 +27,7 @@ public class ActionsGUI : MonoBehaviour {
                 actionSlots[player][action] = calculateActionIconRectangle(player, action);
             }
         }
-
-        inputManager.PlayerActionInput += OnPlayerActionInput;
 	}
-
-	private void OnPlayerActionInput(Player player, float actionDirection){
-        Action action = selectedActionManager.SelectedActionDictionary[player];
-        
-        player.ActIfPossible(action, actionDirection);
-    }
 
 	private Rect calculateActionIconRectangle(Player player, Action action){
 		float iconXOffset = (player.side == Player.Side.left) ? 

@@ -93,6 +93,10 @@ public class Planet : MonoBehaviour {
 		
 		return canPlaceTree;
 	}
+
+	public bool CanPlaceTree(Player player){
+		return placingSystem.canPlaceTree(player.side);
+	}
 	
 	public void setAirPollution()
 	{

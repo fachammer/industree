@@ -20,7 +20,7 @@ public class ActionCooldownManager : MonoBehaviour {
 				actionCooldownTimerDictionary[player][action] = null;
 			}
 
-			player.PlayerActionSuccess += OnPlayerActionSuccess;
+			player.ActionInvoker.PlayerActionSuccess += OnPlayerActionSuccess;
 		}
 	}
 

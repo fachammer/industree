@@ -14,11 +14,11 @@ public class Action: MonoBehaviour
 		set { index = value; }
 	}
 
-    public virtual bool performAction(Player player, float actionDirection){
-		return true;
+    public virtual void Perform(Player player, float actionDirection){
+		return;
 	}
 
-	public bool Act(Player player, float actionDirection){
-		return performAction(player, actionDirection);
+	public virtual bool IsPerformable(Player player, float actionDirection){
+		return true;
 	}
 }

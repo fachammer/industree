@@ -19,11 +19,9 @@ public class Player : MonoBehaviour
         set { index = value; }
     }
 
-    public Action[] Actions { get { return GetComponent<ActionInvoker>().actions; } }
+    public ActionInvoker ActionInvoker { get { return GetComponent<ActionInvoker>(); } }
 
-    public delegate void PlayerActionHandler(Player player, Action action);
-    public event PlayerActionHandler PlayerActionSuccess = delegate(Player player, Action action) {};
-    public event PlayerActionHandler PlayerActionFail = delegate(Player player, Action action) {};
+    public Action[] Actions { get { return ActionInvoker.actions; } }
 
     private void Awake(){
         actionInvoker = gameObject.GetComponent<ActionInvoker>();
@@ -37,17 +35,5 @@ public class Player : MonoBehaviour
 
     private void OnCreditsUpTimerTick(Timer timer){
         credits += creditsPerInterval;
-    }
-
-    public bool ActIfPossible(Action action, float actionDirection){
-
-        if(credits >= action.cost && actionInvoker.Invoke(this, action, actionDirection)){
-            credits -= action.cost;
-            PlayerActionSuccess(this, action);
-            return true;
-        }
-
-        PlayerActionFail(this, action);
-        return false;
     }
 }

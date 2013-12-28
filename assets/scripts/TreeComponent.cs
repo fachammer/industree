@@ -96,9 +96,14 @@ public class TreeComponent: Action
         }
     }
 	
-	public override bool performAction(Player player, float actionDirection){
+	public override void Perform(Player player, float actionDirection){
 		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
-		return planet.placeTree(player);
+		planet.placeTree(player);
+	}
+
+	public override bool IsPerformable(Player player, float actionDirection){
+		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
+		return planet.CanPlaceTree(player);
 	}
 }
 
