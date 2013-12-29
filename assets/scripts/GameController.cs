@@ -30,10 +30,6 @@ public class GameController : MonoBehaviour {
 		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
 		inputManager = GetComponent<InputManager>();
 
-		for(int i = 0; i < players.Length; i++){
-			players[i].Index = i;
-		}
-
 		planet.gameObject.GetComponent<Pollutable>().Pollute += OnPollution;
 		inputManager.GamePauseInput += OnGamePauseInput;
 		inputManager.GameExitInput += OnGameExitInput;

@@ -8,47 +8,46 @@ public class ActionDeniedGUI : MonoBehaviour {
 	public float deniedActionIconOverlayTime;
 
 	private Player[] players;
-    private Dictionary<Player, Dictionary<Action, Timer>> actionDeniedOverlayTimers;
+    private Dictionary<Player, Dictionary<Action, Timer>> actionDeniedOverlayTimerDictionary;
 	private ActionIconsGUI actionIconsGui;
 
     private const int GUI_DEPTH = 0;
 
     private void Awake(){
-        actionDeniedOverlayTimers = new Dictionary<Player, Dictionary<Action, Timer>>();
+        actionDeniedOverlayTimerDictionary = new Dictionary<Player, Dictionary<Action, Timer>>();
     	players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
     	actionIconsGui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionIconsGUI>();
 
     	foreach(Player player in players){
-            player.ActionInvoker.PlayerActionFail += OnPlayerActionFail;
+            player.PlayerActionFailure += OnPlayerActionFailure;
 
-            actionDeniedOverlayTimers[player] = new Dictionary<Action, Timer>();
+            actionDeniedOverlayTimerDictionary[player] = new Dictionary<Action, Timer>();
 
             foreach(Action action in player.Actions){
-                actionDeniedOverlayTimers[player][action] = null;
+                actionDeniedOverlayTimerDictionary[player][action] = null;
             }
     	}
     }
 
-    private void OnPlayerActionFail(Player player, Action action){
-        if(actionDeniedOverlayTimers[player][action] != null){
-            actionDeniedOverlayTimers[player][action].Stop();
-            actionDeniedOverlayTimers[player][action] = null;
+    private void OnPlayerActionFailure(Player player, Action action){
+        if(actionDeniedOverlayTimerDictionary[player][action] != null){
+            actionDeniedOverlayTimerDictionary[player][action].Stop();
         }
 
-        actionDeniedOverlayTimers[player][action] = Timer.AddTimer(gameObject, deniedActionIconOverlayTime,
+        actionDeniedOverlayTimerDictionary[player][action] = Timer.AddTimer(gameObject, deniedActionIconOverlayTime,
             delegate(Timer timer) {
                 timer.Stop();
-                actionDeniedOverlayTimers[player][action] = null;
+                actionDeniedOverlayTimerDictionary[player][action] = null;
             });
     }
 
     private void OnGUI(){
         GUI.depth = GUI_DEPTH;
-        foreach(var playerEntry in actionDeniedOverlayTimers){
+        foreach(var playerEntry in actionDeniedOverlayTimerDictionary){
             Player player = playerEntry.Key;
             foreach(var actionEntry in playerEntry.Value){
                 Action action = actionEntry.Key;
-                if(actionDeniedOverlayTimers[player][action] != null){
+                if(actionEntry.Value != null){
                     GUI.DrawTexture(actionIconsGui.ActionSlots[player][action], deniedActionIconOverlay);
                 }
             }

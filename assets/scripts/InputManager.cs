@@ -10,7 +10,6 @@ public class InputManager : MonoBehaviour
     public string reloadButton;
 
     private Player[] players;
-
     private float[] previousPlayerSelectInputAxes;
     private float[] previousPlayerActionInputAxes;
 
@@ -35,13 +34,13 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        checkPlayersInput();
-        checkPauseInput();
-        checkExitInput();
-        checkReloadInput();
+        CheckPlayersInput();
+        CheckPauseInput();
+        CheckExitInput();
+        CheckReloadInput();
     }
 
-    private void checkPlayersInput(){
+    private void CheckPlayersInput(){
 
         for (int i = 0; i < playersSelectInputNames.Length; i++)
         {
@@ -66,19 +65,19 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void checkPauseInput(){
+    private void CheckPauseInput(){
         if(Input.GetButtonDown(pauseButton)){
             GamePauseInput();
         }
     }
 
-    private void checkExitInput(){
+    private void CheckExitInput(){
         if(Input.GetButtonDown(exitButton)){
             GameExitInput();
         }
     }
 
-    private void checkReloadInput(){
+    private void CheckReloadInput(){
         if(Input.GetButtonDown(reloadButton)){
             GameReloadInput();
         }

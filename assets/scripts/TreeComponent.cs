@@ -66,7 +66,7 @@ public class TreeComponent: Action
 	}
 
 	private void OnCleanTimerTick(Timer timer){
-		player.credits += creditsPerSec[levelable.Level - 1];
+		player.IncreaseCredits(creditsPerSec[levelable.Level - 1]);
 	}
 
     public void Update()

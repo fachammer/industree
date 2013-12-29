@@ -14,9 +14,7 @@ public class Action: MonoBehaviour
 		set { index = value; }
 	}
 
-    public virtual void Perform(Player player, float actionDirection){
-		return;
-	}
+    public virtual void Perform(Player player, float actionDirection){}
 
 	public virtual bool IsPerformable(Player player, float actionDirection){
 		return true;

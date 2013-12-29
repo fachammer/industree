@@ -30,7 +30,7 @@ public class CreditsGUI : MonoBehaviour {
 		foreach(var creditLabelRectEntry in creditLabelRectsDictionary){
 			Player player = creditLabelRectEntry.Key;
 			Rect creditLabelRect = creditLabelRectEntry.Value;
-			GUI.Label(creditLabelRect, player.credits.ToString());
+			GUI.Label(creditLabelRect, player.Credits.ToString());
 		}
 
 		foreach(var creditIconRect in creditIconRectsDictionary.Values){
