@@ -33,11 +33,11 @@ public class ActionCooldownGUI : MonoBehaviour {
     	Rect actionIconRectangle = actionIconsGui.ActionSlots[player][action];
     	Timer actionCooldownOverlayTimer = actionCooldownManager.ActionCooldownTimerDictionary[player][action];
     	float overlayWidth = Mathf.Clamp(
-			(action.cooldownTime - actionCooldownOverlayTimer.TimeSinceLastTick) * 
+			(action.cooldown - actionCooldownOverlayTimer.TimeSinceLastTick) * 
 				actionIconRectangle.width / 
-				action.cooldownTime, 
+				action.cooldown, 
     		0, 
-    		action.cooldownTime * actionIconRectangle.width / action.cooldownTime);
+    		action.cooldown * actionIconRectangle.width / action.cooldown);
     	
     	
         if (player.side == Player.Side.left){

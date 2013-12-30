@@ -39,10 +39,10 @@ public class ActionInvoker : MonoBehaviour {
 		bool isActionSuccessful = 
 			!isActionCoolingDown(action) && 
 			player.Credits >= action.cost && 
-			action.IsPerformable(player, actionDirection);
+			action.IsInvokable(player, actionDirection);
 
 		if(isActionSuccessful){
-			action.Perform(player, actionDirection);
+			action.Invoke(player, actionDirection);
 			setNewCooldownTimer(action);
 			ActionSuccess(this, action);
 		}
@@ -56,7 +56,7 @@ public class ActionInvoker : MonoBehaviour {
 	}
 
 	private void setNewCooldownTimer(Action action){
-		actionCooldownTimersDictionary[action] = Timer.AddTimer(gameObject, action.cooldownTime, delegate(Timer timer){
+		actionCooldownTimersDictionary[action] = Timer.AddTimer(gameObject, action.cooldown, delegate(Timer timer){
 			timer.Stop();
 			actionCooldownTimersDictionary[action] = null;
 		});

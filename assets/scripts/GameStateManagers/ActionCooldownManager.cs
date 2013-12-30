@@ -25,7 +25,7 @@ public class ActionCooldownManager : MonoBehaviour {
 	}
 
 	private void OnPlayerActionSuccess(Player player, Action action){
-		actionCooldownTimerDictionary[player][action] = Timer.AddTimer(gameObject, action.cooldownTime, 
+		actionCooldownTimerDictionary[player][action] = Timer.AddTimer(gameObject, action.cooldown, 
 			delegate(Timer timer){
 				actionCooldownTimerDictionary[player][action] = null;
 				timer.Stop();

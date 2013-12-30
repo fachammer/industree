@@ -6,8 +6,8 @@ using UnityEngine;
 
 // TODO: fix animations
 // TODO: fix tree size
-public class TreeComponent: Action
-{
+public class TreeComponent: MonoBehaviour {
+
     public int[] creditsPerSec = { 1, 2, 3 };
     public int[] reducePollution = { 1, 2, 3 };
     public float timeBetweenClean;
@@ -26,19 +26,15 @@ public class TreeComponent: Action
 	private Levelable levelable;
     private Damagable damagable;
     private Polluting polluting;
-	private Planet planet;
 	
 	public AudioClip soundLevelUp;
 
-	public Damagable Damagable {
-		get { return damagable; }
-	}
+	public Damagable Damagable { get { return damagable; } }
 	
 	private void Awake(){
 		levelable = GetComponent<Levelable>();
 		damagable = GetComponent<Damagable>();
 		polluting = GetComponent<Polluting>();
-		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
 		Timer.AddTimer(gameObject, timeBetweenClean, OnCleanTimerTick);
 	}
 
@@ -69,41 +65,24 @@ public class TreeComponent: Action
 		player.IncreaseCredits(creditsPerSec[levelable.Level - 1]);
 	}
 
-    public void Update()
-    {
-        if (damagable.Destroyed)
-        {
+    public void Update(){
+        if (damagable.Destroyed){
             dieAnimation();
         }
 
         // Plays the animation after the last animation
         // animation.PlayQueued(idleAnim[levelable.Level - 1],QueueMode.CompleteOthers);
-        
     }
 
-    private void dieAnimation()
-    {
+    private void dieAnimation(){
         dieSpeed += 0.1f;
 
-        if (transform.rotation == Quaternion.Euler(-90,0,0))
-        {
+        if (transform.rotation == Quaternion.Euler(-90,0,0)){
             transform.position = down * Time.deltaTime * dieSpeed;
         }
-		
-        else
-        {
+        else{
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(-90, 0, 0), dieSpeed);
         }
     }
-	
-	public override void Perform(Player player, float actionDirection){
-		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
-		planet.placeTree(player);
-	}
-
-	public override bool IsPerformable(Player player, float actionDirection){
-		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
-		return planet.CanPlaceTree(player);
-	}
 }
 

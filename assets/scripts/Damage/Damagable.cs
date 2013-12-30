@@ -8,19 +8,14 @@ public class Damagable : MonoBehaviour {
     private int hitpoints;
     private bool destroyed;
 
-    public int Hitpoints {
-    	get { return hitpoints; }
-    }
+    public int Hitpoints { get { return hitpoints; } }
+    public bool Destroyed { get { return destroyed; } }
 
-    public bool Destroyed {
-    	get { return destroyed; }
-    }
+    public delegate void DamageHandler(Damagable damagedDamagable, int damage);
+    public delegate void DestroyHandler(Damagable destroyedDamagable);
 
-    public delegate void DamagedHandler(Damagable damagedDamagable, int damage);
-    public delegate void DestroyedHandler(Damagable destroyedDamagable);
-
-    public event DamagedHandler Damage = delegate(Damagable damagable, int damage) { };
-    public event DestroyedHandler BeforeDestroy = delegate(Damagable damagable) { };
+    public event DamageHandler Damage = delegate(Damagable damagable, int damage) { };
+    public event DestroyHandler BeforeDestroy = delegate(Damagable damagable) { };
 
     public void Start() {
     	hitpoints = initialHitpoints;
@@ -32,8 +27,8 @@ public class Damagable : MonoBehaviour {
         Damage(this, damage);
 
         if(hitpoints <= 0){
-            destroyed = true;
             BeforeDestroy(this);
+            destroyed = true;
         }
     }
 }

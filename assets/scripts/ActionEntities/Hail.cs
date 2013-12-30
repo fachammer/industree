@@ -5,17 +5,27 @@ using System.Text;
 using UnityEngine;
 
 
-public class Hail:Disaster
-{
+public class Hail :ActionEntity {
+
     public Building currentTarget;
 
     [Range(0, 1)]
     public float probability = 1;
 
-    public override void Update()
-    {
-        base.Update();
+    private Planet planet;
+    private Damaging damaging;
 
+    private void Awake(){
+        planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
+        damaging = GetComponent<Damaging>();
+    }
+
+    private void Start(){
+        GetComponent<SphericalMover>().moveSpeed *= Mathf.Sign(ActionDirection);
+        transform.LookAt(planet.transform.position, Vector3.forward);
+    }
+
+    private void Update(){
         RaycastHit hit;
         if (Physics.Linecast(transform.position, planet.transform.position, out hit, 1 << 10))
         {
@@ -25,20 +35,12 @@ public class Hail:Disaster
 
                 if (probability >= UnityEngine.Random.Range(0f, 1f))
                 {
-                	currentTarget.Damagable.TakeDamage(damage);
+                    damaging.CauseDamage(currentTarget.Damagable);
             	}
               
 			}
         }
 
         Debug.DrawLine(transform.position, planet.transform.position, Color.green);
-
-        move();
-    }
-
-    public void move()
-    {
-        transform.RotateAround(planet.transform.position, Vector3.back, movespeed * Time.deltaTime);
     }
 }
-

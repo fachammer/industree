@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class Thunderstorm:Disaster
-{  
+public class Thunderstorm :ActionEntity {  
     private bool hitted = false;
 
     public GameObject lightning;
@@ -13,33 +12,37 @@ public class Thunderstorm:Disaster
 	
 	public AudioClip soundLightning;
 
-    public override void Update()
-    {
-        base.Update();
+    public float moveSpeed;
 
+    private Planet planet;
+    private Damaging damaging;
+
+    private void Awake(){
+        planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
+        damaging = GetComponent<Damaging>();
+    }
+
+    private void Start(){
+        GetComponent<SphericalMover>().moveSpeed *= Mathf.Sign(ActionDirection);
+        transform.LookAt(planet.transform.position, Vector3.forward);
+    }
+
+    private void Update(){
         RaycastHit hit;
         if (!hitted && Physics.Linecast(transform.position, planet.transform.position,out hit, 1 << 10))
         {
 			if(!hit.collider.transform.parent.parent.parent.GetComponent<Building>().Damagable.Destroyed)
 			{
-	            hit.collider.transform.parent.parent.parent.GetComponent<Building>().Damagable.TakeDamage(damage);
-	            sendLightning(hit.point);
+                damaging.CauseDamage(hit.collider.transform.parent.parent.parent.GetComponent<Damagable>());
+	            SendLightning(hit.point);
 	            hitted = true;
 			}
         }
 		
 		Debug.DrawLine(transform.position,planet.transform.position,Color.green);		
-		
-        move();       
     }
 
-    public void move()
-    {
-        transform.RotateAround(planet.transform.position, Vector3.back, movespeed * Time.deltaTime);
-    }
-
-    public void sendLightning(Vector3 pos)
-    {
+    private void SendLightning(Vector3 pos){
         GameObject lightningTmp =(GameObject)Instantiate(lightning, transform.position, transform.rotation);
 		lightningTmp.transform.localScale = new Vector3(1,1,-1);
 		Destroy(lightningTmp,0.2f);
@@ -47,8 +50,4 @@ public class Thunderstorm:Disaster
 		
 		audio.PlayOneShot(soundLightning);
     }
-	
-	
-
 }
-

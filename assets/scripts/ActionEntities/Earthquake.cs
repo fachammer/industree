@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class Earthquake:Disaster
+public class Earthquake :ActionEntity
 {
     public float duration = 2;
     public float hurtDeltaTime = 0.3f;
@@ -20,15 +20,16 @@ public class Earthquake:Disaster
 
     private GameController gameController;
 
-    public override void Start()
-    {
-        base.Start();
-		
+    private Damaging damaging;
+
+    private void Start(){
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
         
         gameController.GameEnd += OnGameEnd;
         gameController.GamePause += OnGamePause;
         gameController.GameResume += OnGameResume;
+
+        damaging = GetComponent<Damaging>();
 
         Destroy(gameObject, duration);
 
@@ -58,10 +59,7 @@ public class Earthquake:Disaster
         enabled = true;
     }
 
-    public override void Update()
-    {
-        base.Update();
-		
+    private void Update(){		
 		//shake
 		
 		
@@ -70,17 +68,17 @@ public class Earthquake:Disaster
 		shake_intensity-=Time.deltaTime*shake_intensity;
 
         //Hurt
-        if (Time.time >= lastTime + hurtDeltaTime)
-        {
+        if (Time.time >= lastTime + hurtDeltaTime){
 			Building b=buildingList[UnityEngine.Random.Range(0, buildingList.Count - 1)];
 			
-			if(b)
-				b.Damagable.TakeDamage(UnityEngine.Random.Range(0,damage));
+			if(b){
+                damaging.damage = UnityEngine.Random.Range(0, damaging.damage);
+                damaging.CauseDamage(b.Damagable);
+            }
         }
     }
 	
-	public void OnDestroy()
-	{
+	private void OnDestroy(){
 		Camera.main.transform.position = originPosition;
 		Camera.main.transform.rotation = originRotation;
 
