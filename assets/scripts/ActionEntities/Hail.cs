@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 public class Hail :ActionEntity {
 
-    public Building currentTarget;
-
     [Range(0, 1)]
-    public float probability = 1;
+    public float damageProbability;
 
     private Planet planet;
     private Damaging damaging;
+    private Damagable currentDamagable;
 
     private void Awake(){
         planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
@@ -27,20 +21,17 @@ public class Hail :ActionEntity {
 
     private void Update(){
         RaycastHit hit;
-        if (Physics.Linecast(transform.position, planet.transform.position, out hit, 1 << 10))
-        {
-            if (!hit.collider.transform.parent.parent.parent.GetComponent<Building>().Damagable.Destroyed && currentTarget != hit.collider.transform.parent.parent.parent.GetComponent<Building>())
-            {
-                currentTarget=hit.collider.transform.parent.parent.parent.GetComponent<Building>();
+        if (Physics.Linecast(transform.position, planet.transform.position, out hit, Layers.Building)){
 
-                if (probability >= UnityEngine.Random.Range(0f, 1f))
-                {
-                    damaging.CauseDamage(currentTarget.Damagable);
+            Damagable hitDamagable = Utilities.GetMostOuterAncestor(hit.collider.transform).GetComponent<Damagable>();
+            if (!hitDamagable.Destroyed && currentDamagable != hitDamagable){
+        
+                currentDamagable = hitDamagable;
+                bool propabilityHits = UnityEngine.Random.Range(0f, 1f) <= damageProbability;
+                if (propabilityHits){
+                    damaging.CauseDamage(currentDamagable);
             	}
-              
 			}
         }
-
-        Debug.DrawLine(transform.position, planet.transform.position, Color.green);
     }
 }

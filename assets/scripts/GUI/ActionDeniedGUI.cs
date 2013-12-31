@@ -34,7 +34,7 @@ public class ActionDeniedGUI : MonoBehaviour {
             actionDeniedOverlayTimerDictionary[player][action].Stop();
         }
 
-        actionDeniedOverlayTimerDictionary[player][action] = Timer.AddTimer(gameObject, deniedActionIconOverlayTime,
+        actionDeniedOverlayTimerDictionary[player][action] = Timer.AddTimerToGameObject(gameObject, deniedActionIconOverlayTime,
             delegate(Timer timer) {
                 timer.Stop();
                 actionDeniedOverlayTimerDictionary[player][action] = null;

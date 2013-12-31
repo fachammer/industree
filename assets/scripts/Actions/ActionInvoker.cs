@@ -56,7 +56,7 @@ public class ActionInvoker : MonoBehaviour {
 	}
 
 	private void setNewCooldownTimer(Action action){
-		actionCooldownTimersDictionary[action] = Timer.AddTimer(gameObject, action.cooldown, delegate(Timer timer){
+		actionCooldownTimersDictionary[action] = Timer.AddTimerToGameObject(gameObject, action.cooldown, delegate(Timer timer){
 			timer.Stop();
 			actionCooldownTimersDictionary[action] = null;
 		});

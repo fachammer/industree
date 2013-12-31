@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
@@ -8,10 +8,13 @@ public class InputManager : MonoBehaviour
     public string pauseButton;
     public string exitButton;
     public string reloadButton;
+    public GUISkin guiSkin;
 
     private Player[] players;
     private float[] previousPlayerSelectInputAxes;
     private float[] previousPlayerActionInputAxes;
+    private Dictionary<Player, Dictionary<Action, Rect>> actionSlots;
+    private SelectedActionManager selectedActionManager;
 
     public delegate void PlayerSelectInputHandler(Player player, float selectDirection);
     public delegate void PlayerActionInputHandler(Player player, float actionDirection);
@@ -27,21 +30,42 @@ public class InputManager : MonoBehaviour
 
     private void Awake(){
         players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
-
+        selectedActionManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<SelectedActionManager>();
+        
         previousPlayerSelectInputAxes = new float[playersSelectInputNames.Length];
         previousPlayerActionInputAxes = new float[playersSelectInputNames.Length];
     }
 
-    private void Update()
-    {
+    private void Start(){
+        actionSlots = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionIconsGUI>().ActionSlots;
+    }
+
+    private void Update(){
         CheckPlayersInput();
         CheckPauseInput();
         CheckExitInput();
         CheckReloadInput();
     }
 
-    private void CheckPlayersInput(){
+    private void OnGUI(){
+        GUI.skin = guiSkin;
+        foreach(var playerEntry in actionSlots){
+            foreach(var actionEntry in playerEntry.Value){
+                Rect actionSlotRect = actionEntry.Value;
+                if(GUI.Button(actionSlotRect, "")){
+                    int selectionDifference = selectedActionManager.SelectedActionDictionary[playerEntry.Key].Index - actionEntry.Key.Index;
 
+                    for(int i = 0; i < Mathf.Abs(selectionDifference); i++){
+                        PlayerSelectInput(playerEntry.Key, Mathf.Sign(selectionDifference));
+                    }
+
+                    PlayerActionInput(playerEntry.Key, 1);
+                }
+            }
+        }
+    }
+
+    private void CheckPlayersInput(){
         for (int i = 0; i < playersSelectInputNames.Length; i++)
         {
             float playerSelectInputAxis;

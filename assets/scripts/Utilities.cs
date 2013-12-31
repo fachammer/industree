@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class Utilities
 {
-	public static Transform getMostOuterAncestor(Transform transform){
+	public static Transform GetMostOuterAncestor(Transform transform){
 	
 		Transform ancestor = transform.parent;
 		
@@ -11,7 +11,7 @@ public static class Utilities
 			return transform;
 		}
 		
-		while(ancestor != null){
+		while(ancestor.parent != null){
 			ancestor = ancestor.parent;
 		}
 		

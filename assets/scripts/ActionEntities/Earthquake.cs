@@ -1,50 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 
-public class Earthquake :ActionEntity
-{
-    public float duration = 2;
-    public float hurtDeltaTime = 0.3f;
+public class Earthquake :ActionEntity {
 
-    public Vector3 originPosition;
-    public Quaternion originRotation;
-
-    public float shake_intensity;
-
-    public List<Building> buildingList;
-
-    private float lastTime;
-
+    public float hurtDeltaTime;
+    public float shakeIntensity;
+    
     private GameController gameController;
-
     private Damaging damaging;
+    private Vector3 initialCameraPosition;
+    private Building[] buildings;
 
-    private void Start(){
+    private void Awake(){
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+        damaging = GetComponent<Damaging>();
         
         gameController.GameEnd += OnGameEnd;
         gameController.GamePause += OnGamePause;
         gameController.GameResume += OnGameResume;
+    }
 
-        damaging = GetComponent<Damaging>();
-
-        Destroy(gameObject, duration);
-
-        originPosition = Camera.main.transform.position;
-        originRotation = Camera.main.transform.rotation;
-        shake_intensity = .5f;
-
-        lastTime = Time.time;
-
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag(Tags.building))
-        {
-            buildingList.Add(go.GetComponent<Building>());
-        }
-		
-		transform.position = Camera.main.transform.position;
+    private void Start(){
+        initialCameraPosition = Camera.main.transform.position;
+        buildings = Array.ConvertAll(GameObject.FindObjectsOfType(typeof(Building)), obj => (Building) obj);
+        Timer.AddTimerToGameObject(gameObject, hurtDeltaTime, OnDamageTimerTick);
     }
 
     private void OnGameEnd(bool win){
@@ -59,28 +38,27 @@ public class Earthquake :ActionEntity
         enabled = true;
     }
 
-    private void Update(){		
-		//shake
-		
-		
-        Camera.main.transform.position = originPosition + new Vector3(UnityEngine.Random.insideUnitCircle.x,UnityEngine.Random.insideUnitCircle.y,0)*shake_intensity;
-		
-		shake_intensity-=Time.deltaTime*shake_intensity;
-
-        //Hurt
-        if (Time.time >= lastTime + hurtDeltaTime){
-			Building b=buildingList[UnityEngine.Random.Range(0, buildingList.Count - 1)];
-			
-			if(b){
-                damaging.damage = UnityEngine.Random.Range(0, damaging.damage);
-                damaging.CauseDamage(b.Damagable);
-            }
+    private void OnDamageTimerTick(Timer timer){
+        int randomBuildingIndex = UnityEngine.Random.Range(0, buildings.Length);
+        Building building = buildings[randomBuildingIndex];
+            
+        if(building){
+            damaging.damage = UnityEngine.Random.Range(0, damaging.damage);
+            damaging.CauseDamage(building.Damagable);
         }
+    }
+
+    private void Update(){
+        ShakeCamera();
+    }
+
+    private void ShakeCamera(){
+        Camera.main.transform.position = initialCameraPosition + new Vector3(UnityEngine.Random.insideUnitCircle.x, UnityEngine.Random.insideUnitCircle.y, 0) * shakeIntensity;
+        shakeIntensity -= Time.deltaTime * shakeIntensity;
     }
 	
 	private void OnDestroy(){
-		Camera.main.transform.position = originPosition;
-		Camera.main.transform.rotation = originRotation;
+		Camera.main.transform.position = initialCameraPosition;
 
         gameController.GameEnd -= OnGameEnd;
         gameController.GamePause -= OnGamePause;

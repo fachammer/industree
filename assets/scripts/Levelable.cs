@@ -18,7 +18,7 @@ public class Levelable : MonoBehaviour {
     
 	public void Start () {
 		level = initialLevel;
-        Timer.AddTimer(gameObject, levelUpTimes[level - 1], OnLevelUpTick);
+        Timer.AddTimerToGameObject(gameObject, levelUpTimes[level - 1], OnLevelUpTick);
 	}
 
     private void OnLevelUpTick(Timer timer)

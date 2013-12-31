@@ -35,7 +35,7 @@ public class TreeComponent: MonoBehaviour {
 		levelable = GetComponent<Levelable>();
 		damagable = GetComponent<Damagable>();
 		polluting = GetComponent<Polluting>();
-		Timer.AddTimer(gameObject, timeBetweenClean, OnCleanTimerTick);
+		Timer.AddTimerToGameObject(gameObject, timeBetweenClean, OnCleanTimerTick);
 	}
 
 	private void Start(){

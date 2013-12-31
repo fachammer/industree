@@ -1,45 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Tornado :ActionEntity
-{
-    public float duration;
+public class Tornado :ActionEntity {
 
     [Range(0,1)]
-    public float probability;
-
-    public float moveRange;
+    public float damageProbability;
     public float damageInterval;
+    public float collisionRadius;
+    public float moveRange;
 
     private Damaging damaging;
-    private Planet planet;
 
     private void Awake(){
         damaging = GetComponent<Damaging>();
-        planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
-        Timer.AddTimer(gameObject, damageInterval, OnDamageTimerTick);
+        Timer.AddTimerToGameObject(gameObject, damageInterval, OnDamageTimerTick);
     }
 
     private void Start(){
-        
-        transform.LookAt(planet.transform.position);
+        Transform planetTransform = GameObject.FindGameObjectWithTag(Tags.planet).transform;
+        transform.LookAt(planetTransform.position);
         transform.Rotate(new Vector3(-90, 0, 0));
 
         foreach (AnimationState state in animation) {
             state.speed = 2.5f;
         }
-        
-        Destroy(gameObject, duration);
     }
 
     private void OnDamageTimerTick(Timer timer){
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.3f, Layers.Building);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, collisionRadius, Layers.Building);
         foreach (Collider c in colliders){
-            if (UnityEngine.Random.Range(0f, 1f) <= probability){
-                damaging.CauseDamage(c.transform.parent.parent.parent.GetComponent<Damagable>());
+            bool isHit = UnityEngine.Random.Range(0f, 1f) <= damageProbability;
+            if (isHit){
+                damaging.CauseDamage(Utilities.GetMostOuterAncestor(c.transform).GetComponent<Damagable>());
             }
         }   
     }

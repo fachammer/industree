@@ -53,7 +53,7 @@ public class Timer : MonoBehaviour {
         enabled = true;
     }
 
-    public static Timer AddTimer(GameObject gameObject, float interval, TickHandler onTick)
+    public static Timer AddTimerToGameObject(GameObject gameObject, float interval, TickHandler onTick)
     {
         Timer timer = (Timer) gameObject.AddComponent(typeof(Timer));
         timer.interval = interval;

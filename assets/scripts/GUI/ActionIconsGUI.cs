@@ -5,9 +5,7 @@ using System.Collections.Generic;
 public class ActionIconsGUI : MonoBehaviour {
 
 	private Player[] players;
-
     private Dictionary<Player, Dictionary<Action, Rect>> actionSlots;
-
 	private const float ACTION_TOP_OFFSET = 100;
 
     public Dictionary<Player, Dictionary<Action, Rect>> ActionSlots { get { return actionSlots; } }

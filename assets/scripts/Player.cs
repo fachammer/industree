@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
         actionInvoker.ActionSuccess += OnActionSuccess;
         actionInvoker.ActionFailure += OnActionFailure;
 
-        Timer.AddTimer(gameObject, creditsUpInterval, OnCreditsUpTimerTick);
+        Timer.AddTimerToGameObject(gameObject, creditsUpInterval, OnCreditsUpTimerTick);
     }
 
     private void OnActionSuccess(ActionInvoker invoker, Action action){

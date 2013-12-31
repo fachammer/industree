@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Thunderstorm :ActionEntity {  
-    private bool hitted = false;
 
     public GameObject lightning;
+    public float lightningDuration;
     public GameObject lightningSpark;
-	
-	public AudioClip soundLightning;
-
-    public float moveSpeed;
+	public AudioClip lightningSound;
 
     private Planet planet;
     private Damaging damaging;
+    private bool hitBuilding = false;
 
     private void Awake(){
         planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
@@ -29,25 +23,23 @@ public class Thunderstorm :ActionEntity {
 
     private void Update(){
         RaycastHit hit;
-        if (!hitted && Physics.Linecast(transform.position, planet.transform.position,out hit, 1 << 10))
+        if (!hitBuilding && Physics.Linecast(transform.position, planet.transform.position,out hit, Layers.Building))
         {
-			if(!hit.collider.transform.parent.parent.parent.GetComponent<Building>().Damagable.Destroyed)
+            Damagable hitDamagable = Utilities.GetMostOuterAncestor(hit.collider.transform).GetComponent<Damagable>();
+			if(!hitDamagable.Destroyed)
 			{
-                damaging.CauseDamage(hit.collider.transform.parent.parent.parent.GetComponent<Damagable>());
+                damaging.CauseDamage(hitDamagable);
 	            SendLightning(hit.point);
-	            hitted = true;
+	            hitBuilding = true;
 			}
         }
-		
-		Debug.DrawLine(transform.position,planet.transform.position,Color.green);		
     }
 
-    private void SendLightning(Vector3 pos){
-        GameObject lightningTmp =(GameObject)Instantiate(lightning, transform.position, transform.rotation);
-		lightningTmp.transform.localScale = new Vector3(1,1,-1);
-		Destroy(lightningTmp,0.2f);
-        Instantiate(lightningSpark, pos, Quaternion.identity);
+    private void SendLightning(Vector3 position){
+        GameObject lightningInstance = (GameObject)Instantiate(lightning, transform.position, transform.rotation);
+        Instantiate(lightningSpark, position, Quaternion.identity);
+		Destroy(lightningInstance, lightningDuration);
 		
-		audio.PlayOneShot(soundLightning);
+		audio.PlayOneShot(lightningSound);
     }
 }
