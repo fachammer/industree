@@ -66,8 +66,7 @@ public class InputManager : MonoBehaviour
     }
 
     private void CheckPlayersInput(){
-        for (int i = 0; i < playersSelectInputNames.Length; i++)
-        {
+        for (int i = 0; i < playersSelectInputNames.Length; i++){
             float playerSelectInputAxis;
             float playerActionInputAxis;
 
