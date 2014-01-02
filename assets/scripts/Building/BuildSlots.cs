@@ -16,7 +16,7 @@ public class BuildSlots : MonoBehaviour {
 	public GameObject[] BuildSlotGameObjects { get { return buildSlotGameObjects; } }
 
 	private void Awake(){
-		worldCenter = GameObject.FindGameObjectWithTag(Tags.worldCenter).transform.position;
+		worldCenter = GameObject.FindGameObjectWithTag(Tags.planet).transform.position;
 		buildPositions = new Vector3[slotCount];
 		buildSlotGameObjects = new GameObject[slotCount];
 

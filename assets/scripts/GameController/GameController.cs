@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour {
 	private bool gameEnded = false;
 	private bool gamePaused = false;
 	private bool gameWon = false;
-	private Planet planet;
+	private Pollutable pollutable;
 	private InputManager inputManager;
 
 	public bool GameStarted { get { return gameStarted; } }
@@ -27,30 +27,31 @@ public class GameController : MonoBehaviour {
 	public event GameResumeHandler GameResume = delegate() {};
 
 	private void Awake(){
-		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
+		pollutable = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Pollutable>();
 		inputManager = GetComponent<InputManager>();
 
-		planet.gameObject.GetComponent<Pollutable>().Pollute += OnPollution;
+		pollutable.FullPollution += OnFullPollution;
+		pollutable.NoPollution += OnNoPollution;
 		inputManager.GamePauseInput += OnGamePauseInput;
 		inputManager.GameExitInput += OnGameExitInput;
 		inputManager.GameReloadInput += OnGameReloadInput;
 
 		Random.seed = System.Environment.TickCount;
+
 		/*
 		Screen.lockCursor = true;
 		Screen.showCursor = false;
 		*/
 	}
 
-	private void OnPollution(Pollutable pollutable, int pollution){
-		if (pollutable.currentPollution >= planet.air || pollutable.currentPollution <= 0)
-		{       
-			// call EndGame method
-			EndGame();
-			gameWon = pollutable.currentPollution <= 0;
-			// throw GameEnd event
-			GameEnd(gameWon);
-		}
+	private void OnFullPollution(Pollutable pollutable){
+		EndGame();
+		GameEnd(false);
+	}
+
+	private void OnNoPollution(Pollutable pollutable){
+		EndGame();
+		GameEnd(true);
 	}
 
 	private void OnGamePauseInput(){

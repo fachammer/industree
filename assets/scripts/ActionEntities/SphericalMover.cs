@@ -5,10 +5,10 @@ public class SphericalMover : MonoBehaviour {
 
 	public float moveSpeed;
 
-	private Planet planet;
+	private GameObject planet;
 
 	private void Awake () {
-		planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
+		planet = GameObject.FindGameObjectWithTag(Tags.planet);
 	}
 
 	private void Update () {

@@ -4,12 +4,21 @@ using System.Collections;
 public class Pollutable : MonoBehaviour {
 
     public int currentPollution;
+    public int maxPollution;
 
-    public delegate void PollutedHandler(Pollutable pollutable, int pollution);
-    public event PollutedHandler Pollute = delegate(Pollutable pollutable, int pollution){};
+    public delegate void PollutionHandler(Pollutable pollutable);
+
+    public event PollutionHandler FullPollution = delegate(Pollutable pollutable) {};
+    public event PollutionHandler NoPollution = delegate(Pollutable pollutable) {};
 
     public void IncreasePollution(int pollution){
     	currentPollution += pollution;
-    	Pollute(this, pollution);
+
+    	if(currentPollution >= maxPollution){
+    		FullPollution(this);
+    	}
+    	else if(currentPollution <= 0){
+    		NoPollution(this);
+    	}
     }
 }

@@ -5,12 +5,12 @@ public class Hail :ActionEntity {
     [Range(0, 1)]
     public float damageProbability;
 
-    private Planet planet;
+    private GameObject planet;
     private Damaging damaging;
     private Damagable currentDamagable;
 
     private void Awake(){
-        planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
+        planet = GameObject.FindGameObjectWithTag(Tags.planet);
         damaging = GetComponent<Damaging>();
     }
 

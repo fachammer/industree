@@ -12,8 +12,6 @@ public class InputManager : MonoBehaviour
     private Player[] players;
     private float[] previousPlayerSelectInputAxes;
     private float[] previousPlayerActionInputAxes;
-    private Dictionary<Player, Dictionary<Action, Rect>> actionSlots;
-    private SelectedActionManager selectedActionManager;
 
     public delegate void PlayerSelectInputHandler(Player player, float selectDirection);
     public delegate void PlayerActionInputHandler(Player player, float actionDirection);
@@ -29,14 +27,9 @@ public class InputManager : MonoBehaviour
 
     private void Awake(){
         players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
-        selectedActionManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<SelectedActionManager>();
         
         previousPlayerSelectInputAxes = new float[playersSelectInputNames.Length];
         previousPlayerActionInputAxes = new float[playersSelectInputNames.Length];
-    }
-
-    private void Start(){
-        actionSlots = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionIconsGUI>().ActionSlots;
     }
 
     private void Update(){

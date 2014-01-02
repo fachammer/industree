@@ -6,7 +6,7 @@ public class InstantiateTornadoAction : InstantiateOnPositionAction {
     public float xRange;
 
 	protected override Vector3 GetInitialActionEntityPosition(Player player, float actionDirection){
-		Planet planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
+		GameObject planet = GameObject.FindGameObjectWithTag(Tags.planet);
         Vector3 position = new Vector3(UnityEngine.Random.Range(-xRange, xRange), 60, planet.transform.position.z);
         RaycastHit hit;
 

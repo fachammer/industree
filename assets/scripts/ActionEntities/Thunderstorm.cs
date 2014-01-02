@@ -7,12 +7,12 @@ public class Thunderstorm :ActionEntity {
     public GameObject lightningSpark;
 	public AudioClip lightningSound;
 
-    private Planet planet;
+    private GameObject planet;
     private Damaging damaging;
     private bool hitBuilding = false;
 
     private void Awake(){
-        planet = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Planet>();
+        planet = GameObject.FindGameObjectWithTag(Tags.planet);
         damaging = GetComponent<Damaging>();
     }
 

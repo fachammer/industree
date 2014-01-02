@@ -10,7 +10,6 @@ public class BilanceGUI : MonoBehaviour {
 	public float bilanceTopOffset;
 
 	private Pollutable pollutable;
-	private Planet planet;
 
 	private Rect bilanceAirRectangle;
     private Rect bilancePollutionRectangle;
@@ -18,10 +17,8 @@ public class BilanceGUI : MonoBehaviour {
     private Texture2D bilancePollutionTexture;
 
 	private void Awake(){
-		GameObject planetObject = GameObject.FindGameObjectWithTag(Tags.planet);
-		pollutable = planetObject.GetComponent<Pollutable>();
-		planet = planetObject.GetComponent<Planet>();
-		
+		pollutable = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Pollutable>();
+
 		bilanceAirRectangle = new Rect(
 			(Screen.width - bilanceSize.x) / 2, 
 			bilanceTopOffset, 
@@ -38,8 +35,8 @@ public class BilanceGUI : MonoBehaviour {
 	}
 
 	private void OnGUI(){
-		float pollution =  Mathf.Clamp(pollutable.currentPollution, 0, planet.air);
-        bilancePollutionRectangle.width = bilanceAirRectangle.width * pollution / planet.air;
+		float pollution =  Mathf.Clamp(pollutable.currentPollution, 0, pollutable.maxPollution);
+        bilancePollutionRectangle.width = bilanceAirRectangle.width * pollution / pollutable.maxPollution;
 
 		GUI.DrawTexture(bilanceAirRectangle, bilanceAirTexture, ScaleMode.StretchToFill);
         GUI.DrawTexture(bilancePollutionRectangle, bilancePollutionTexture, ScaleMode.StretchToFill);
