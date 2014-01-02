@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class Building : MonoBehaviour
-{
-    public int initialHitPoints;
+public class Building : MonoBehaviour{
 
     public float[] minLevelUpTimes;
     public float[] maxLevelUpTimes;

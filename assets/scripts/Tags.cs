@@ -11,4 +11,5 @@ public class Tags
     public static string gameController = "GameController";
     public static string gui = "Gui";
     public static string gameStateManager = "GameStateManager";
+    public static string worldCenter = "WorldCenter";
 }

@@ -8,7 +8,6 @@ public class InputManager : MonoBehaviour
     public string pauseButton;
     public string exitButton;
     public string reloadButton;
-    public GUISkin guiSkin;
 
     private Player[] players;
     private float[] previousPlayerSelectInputAxes;
@@ -45,24 +44,6 @@ public class InputManager : MonoBehaviour
         CheckPauseInput();
         CheckExitInput();
         CheckReloadInput();
-    }
-
-    private void OnGUI(){
-        GUI.skin = guiSkin;
-        foreach(var playerEntry in actionSlots){
-            foreach(var actionEntry in playerEntry.Value){
-                Rect actionSlotRect = actionEntry.Value;
-                if(GUI.Button(actionSlotRect, "")){
-                    int selectionDifference = selectedActionManager.SelectedActionDictionary[playerEntry.Key].Index - actionEntry.Key.Index;
-
-                    for(int i = 0; i < Mathf.Abs(selectionDifference); i++){
-                        PlayerSelectInput(playerEntry.Key, Mathf.Sign(selectionDifference));
-                    }
-
-                    PlayerActionInput(playerEntry.Key, 1);
-                }
-            }
-        }
     }
 
     private void CheckPlayersInput(){

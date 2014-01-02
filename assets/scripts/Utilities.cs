@@ -47,5 +47,11 @@ public static class Utilities
 			texture.height),
 			texture);
 	}
+
+	public static bool RandomBool(){
+		if(UnityEngine.Random.Range(0, 2) == 0)
+			return true;
+		return false;
+	}
 }
 

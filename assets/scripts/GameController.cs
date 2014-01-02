@@ -34,6 +34,12 @@ public class GameController : MonoBehaviour {
 		inputManager.GamePauseInput += OnGamePauseInput;
 		inputManager.GameExitInput += OnGameExitInput;
 		inputManager.GameReloadInput += OnGameReloadInput;
+
+		Random.seed = System.Environment.TickCount;
+		/*
+		Screen.lockCursor = true;
+		Screen.showCursor = false;
+		*/
 	}
 
 	private void OnPollution(Pollutable pollutable, int pollution){
