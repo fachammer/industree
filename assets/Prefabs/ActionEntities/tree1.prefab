@@ -430,11 +430,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 400056}
   - 111: {fileID: 11100000}
-  - 114: {fileID: 11400000}
   - 82: {fileID: 8200000}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400006}
+  - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: tree1
   m_TagString: Tree
@@ -798,7 +798,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 3
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -858,13 +858,13 @@ Animation:
   m_Animation: {fileID: 7400000, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
   m_Animations:
   - {fileID: 7400000, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
+  - {fileID: 7400008, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
+  - {fileID: 7400010, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
+  - {fileID: 7400012, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
   - {fileID: 7400002, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
-  - {fileID: 7400002, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
-  - {fileID: 7400002, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
-  - {fileID: 7400002, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
-  - {fileID: 7400002, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
+  - {fileID: 7400006, guid: 2f1ef60fe2dbdd3498323337725a62c0, type: 3}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 1
 --- !u!114 &11400000
@@ -887,14 +887,16 @@ MonoBehaviour:
   maxLevelUpTimes:
   - 10
   - 20
-  idleAnim: []
+  plantAnim: plant
+  idleAnim:
+  - idle1
+  - idle2
+  - idle3
   growAnim:
-  - levelup 01
-  - levelup 12
-  - levelup 23
+  - levelup12
+  - levelup23
   player: {fileID: 0}
-  down: {x: 0, y: 0, z: 0}
-  soundLevelUp: {fileID: 8300000, guid: a28dba6b7da779046b094688dda6d59f, type: 3}
+  levelUpSound: {fileID: 8300000, guid: a28dba6b7da779046b094688dda6d59f, type: 3}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

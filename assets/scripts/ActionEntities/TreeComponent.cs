@@ -14,19 +14,19 @@ public class TreeComponent: MonoBehaviour {
 	public float[] minLevelUpTimes;
 	public float[] maxLevelUpTimes;
 
+    public String plantAnim;
     public String[] idleAnim;
     public String[] growAnim;
 
     public Player player;
 
-    private float dieSpeed = 0;
-    public Vector3 down;
+    private float dieSpeed = 0f;
 	
 	private Levelable levelable;
     private Damagable damagable;
     private Polluting polluting;
 	
-	public AudioClip soundLevelUp;
+	public AudioClip levelUpSound;
 
 	public Damagable Damagable { get { return damagable; } }
 	
@@ -44,18 +44,21 @@ public class TreeComponent: MonoBehaviour {
 		for(int i = 0; i < levelable.levelUpTimes.Length; i++){
 			levelable.levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
+        polluting.pollution = -reducePollution[0];
+
+        animation.Play(plantAnim);
+        audio.PlayOneShot(levelUpSound);
 	}
 
 	private void OnLevelUp(Levelable levelable){
-		// animation.Play(growAnim[levelable.Level]);		
-		audio.PlayOneShot(soundLevelUp);
+        polluting.pollution = -reducePollution[levelable.Level - 2];
 
-		polluting.pollution = -reducePollution[levelable.Level - 1];
+		animation.Play(growAnim[levelable.Level - 2]);		
+		audio.PlayOneShot(levelUpSound);
 	}
 
 	private void OnTreeDestroy(Damagable damagable){
 		Destroy(gameObject, 2);
-        down = -transform.up;
         levelable.LevelUp -= OnLevelUp;
         damagable.BeforeDestroy -= OnTreeDestroy;
 	}
@@ -70,14 +73,14 @@ public class TreeComponent: MonoBehaviour {
         }
 
         // Plays the animation after the last animation
-        // animation.PlayQueued(idleAnim[levelable.Level - 1],QueueMode.CompleteOthers);
+        animation.PlayQueued(idleAnim[levelable.Level - 1], QueueMode.CompleteOthers);
     }
 
     private void dieAnimation(){
         dieSpeed += 0.1f;
 
         if (transform.rotation == Quaternion.Euler(-90,0,0)){
-            transform.position = down * Time.deltaTime * dieSpeed;
+            transform.position = -transform.up * Time.deltaTime * dieSpeed;
         }
         else{
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(-90, 0, 0), dieSpeed);

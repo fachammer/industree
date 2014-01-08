@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a2a3340571fb3e4a836e18bfe791708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialCredits: 500
+  initialCredits: 5000
   creditsUpInterval: 1
   creditsPerInterval: 1
   side: 1
