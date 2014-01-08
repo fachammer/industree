@@ -21,10 +21,12 @@ public class GameController : MonoBehaviour {
 	public delegate void GameEndHandler(bool win);
 	public delegate void GamePauseHandler();
 	public delegate void GameResumeHandler();
+    public delegate void GameStartHandler();
 
 	public event GameEndHandler GameEnd = delegate(bool win) {};
 	public event GamePauseHandler GamePause = delegate() {};
 	public event GameResumeHandler GameResume = delegate() {};
+    public event GameStartHandler GameStart = delegate() { };
 
 	private void Awake(){
 		pollutable = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Pollutable>();
@@ -100,5 +102,6 @@ public class GameController : MonoBehaviour {
 
 	public void StartGame(){
 		gameStarted = true;
+        GameStart();
 	}
 }

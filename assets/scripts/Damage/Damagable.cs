@@ -8,7 +8,10 @@ public class Damagable : MonoBehaviour {
     private int hitpoints;
     private bool destroyed;
 
-    public int Hitpoints { get { return hitpoints; } }
+    public int Hitpoints { 
+        get { return hitpoints; }
+        set { hitpoints = value; }
+    }
     public bool Destroyed { get { return destroyed; } }
 
     public delegate void DamageHandler(Damagable damagedDamagable, int damage);

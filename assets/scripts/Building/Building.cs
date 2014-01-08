@@ -11,6 +11,7 @@ public class Building : MonoBehaviour{
 
     public GameObject[] buildingLevelModels;
     public int[] pollutionLevels;
+    public int[] hitpointLevels;
 
     public float destroyDelay;
 
@@ -36,7 +37,9 @@ public class Building : MonoBehaviour{
         damagable.BeforeDestroy += OnBuildingDestroy;
     }
 	
-	private void Start(){	
+	private void Start(){
+        damagable.Hitpoints = hitpointLevels[0];
+        polluting.pollution = pollutionLevels[0];
 		for(int i = 0; i < minLevelUpTimes.Length; i++){
 	        levelable.levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
@@ -56,6 +59,7 @@ public class Building : MonoBehaviour{
 
     private void OnLevelUp(Levelable levelable)
     {
+        damagable.Hitpoints = hitpointLevels[levelable.Level - 1];
         polluting.pollution = pollutionLevels[levelable.Level - 1];
 
         // Destroy children and add new model as current model

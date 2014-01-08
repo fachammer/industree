@@ -6,18 +6,22 @@ using UnityEngine;
 
 public class CameraMovement:MonoBehaviour
 {
-    public GameObject edgeLeft;
-    public GameObject edgeRight;
+    public Renderer cameraAnchor;
 
-    public float speed = 5;
+    public float speed;
 
-    public void Update()
+    private void Awake()
     {
-        this.GetComponent<Camera>().orthographicSize += speed * Time.deltaTime;
+        GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().GameStart += OnGameStart;
+    }
 
-        if (edgeLeft.GetComponentInChildren<Renderer>().isVisible && edgeRight.GetComponentInChildren<Renderer>().isVisible){
-			GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().StartGame();	
-            Destroy(this);
-		}
+    private void OnGameStart()
+    {
+        Destroy(this);
+    }
+
+    private void Update()
+    {
+        GetComponent<Camera>().orthographicSize += speed * Time.deltaTime;
     }
 }
