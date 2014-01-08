@@ -5,7 +5,6 @@ using System.Text;
 using UnityEngine;
 
 // TODO: fix animations
-// TODO: fix tree size
 public class TreeComponent: MonoBehaviour {
 
     public int[] creditsPerSec = { 1, 2, 3 };

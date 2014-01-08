@@ -23,11 +23,8 @@ public class Thunderstorm :ActionEntity {
 
     private void Update(){
         RaycastHit hit;
-        Debug.DrawLine(transform.position, planet.transform.position);
         if (!hitBuilding && Physics.Linecast(transform.position, planet.transform.position, out hit, Layers.Building))
         {
-            Debug.Log(hit.collider.gameObject);
-            
             Damagable hitDamagable = Utilities.GetMostOuterAncestor(hit.collider.transform).GetComponent<Damagable>();
 			if(!hitDamagable.Destroyed)
 			{
