@@ -20,6 +20,7 @@ public class TreeComponent: MonoBehaviour {
 
     public Player player;
 
+    private float[] levelUpTimes;
     private float dieSpeed = 0f;
 	
 	private Levelable levelable;
@@ -38,12 +39,16 @@ public class TreeComponent: MonoBehaviour {
 	}
 
 	private void Start(){
-		levelable.LevelUp += OnLevelUp;
+		levelable.LeveledUp += OnLevelUp;
 		damagable.BeforeDestroy += OnTreeDestroy;
 
-		for(int i = 0; i < levelable.levelUpTimes.Length; i++){
-			levelable.levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
+        levelUpTimes = new float[minLevelUpTimes.Length];
+		for(int i = 0; i < levelUpTimes.Length; i++){
+			levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
+
+        Timer.AddTimerToGameObject(gameObject, levelUpTimes[0], OnLevelUpTimerTick);
+
         polluting.pollution = -reducePollution[0];
 
         animation.Play(plantAnim);
@@ -59,13 +64,27 @@ public class TreeComponent: MonoBehaviour {
 
 	private void OnTreeDestroy(Damagable damagable){
 		Destroy(gameObject, 2);
-        levelable.LevelUp -= OnLevelUp;
+        levelable.LeveledUp -= OnLevelUp;
         damagable.BeforeDestroy -= OnTreeDestroy;
 	}
 
 	private void OnCleanTimerTick(Timer timer){
 		player.IncreaseCredits(creditsPerSec[levelable.Level - 1]);
 	}
+
+    private void OnLevelUpTimerTick(Timer timer)
+    {
+        levelable.LevelUp();
+
+        if (levelable.Level < levelable.maxLevel)
+        {
+            timer.interval = levelUpTimes[levelable.Level - 1];
+        }
+        else
+        {
+            timer.Stop();
+        }
+    }
 
     public void Update(){
         if (damagable.Destroyed){

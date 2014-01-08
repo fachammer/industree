@@ -15,6 +15,7 @@ public class Building : MonoBehaviour{
 
     public float destroyDelay;
 
+    private float[] levelUpTimes;
     private float dyingSpeed = 0;
 
     private Polluting polluting;
@@ -33,20 +34,38 @@ public class Building : MonoBehaviour{
         polluting = GetComponent<Polluting>();
         levelable = GetComponent<Levelable>();
         damagable = GetComponent<Damagable>();
-        levelable.LevelUp += OnLevelUp;
+        levelable.LeveledUp += OnLevelUp;
         damagable.BeforeDestroy += OnBuildingDestroy;
     }
 	
 	private void Start(){
         damagable.Hitpoints = hitpointLevels[0];
         polluting.pollution = pollutionLevels[0];
-		for(int i = 0; i < minLevelUpTimes.Length; i++){
-	        levelable.levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
+
+        levelUpTimes = new float[minLevelUpTimes.Length];
+		for(int i = 0; i < levelUpTimes.Length; i++){
+	        levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
+
+        Timer.AddTimerToGameObject(gameObject, levelUpTimes[0], OnLevelUpTimerTick);
 
         GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[0], transform.position, transform.rotation);
         newGameObject.transform.parent = transform;
 	}
+
+    private void OnLevelUpTimerTick(Timer timer)
+    {
+        levelable.LevelUp();
+
+        if (levelable.Level < levelable.maxLevel)
+        {
+            timer.interval = levelUpTimes[levelable.Level - 1];
+        }
+        else
+        {
+            timer.Stop();
+        }
+    }
 
     private void Update(){
 
@@ -72,7 +91,7 @@ public class Building : MonoBehaviour{
     }
 
     private void OnBuildingDestroy(Damagable damagable){
-    	levelable.LevelUp -= OnLevelUp;
+    	levelable.LeveledUp -= OnLevelUp;
     	damagable.BeforeDestroy -= OnBuildingDestroy;
         Destroy(gameObject, destroyDelay);
     }
