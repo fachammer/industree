@@ -60,6 +60,8 @@ public class InputManager : MonoBehaviour
             previousPlayerSelectInputAxes[i] = playerSelectInputAxis;
             previousPlayerActionInputAxes[i] = playerActionInputAxis;
         }
+
+
     }
 
     private void CheckPauseInput(){

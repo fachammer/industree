@@ -11,28 +11,33 @@ public class StartScreen:MonoBehaviour {
 
     public Vector2 positionLogo;
     public Vector2 positionDescription;
+
+    public Button playButton;
+    public Button exitButton;
 	
 	public void Start(){
 		Screen.lockCursor = true;
 		Screen.showCursor = false;
+        playButton.ButtonDown += OnPlayButtonDown;
+        exitButton.ButtonDown += OnExitButtonDown;
 	}
 
-    public void Update(){		
-        //Start game when space is pressed
-        if(Input.GetKeyDown(KeyCode.Space)){
-            Application.LoadLevel(1);
-        }
+    private void OnPlayButtonDown(Button button)
+    {
+        Application.LoadLevel(1);
+    }
 
-        //Ends the game on Esc
-        if (Input.GetKeyDown(KeyCode.Escape)){
-            Application.Quit();
-        }
+    private void OnExitButtonDown(Button button)
+    {
+        Application.Quit();
     }
 
     //Shows the Description and the logo
     public void OnGUI(){
+        /*
         GUI.DrawTexture(new Rect(Screen.width-logo.width*1.8f,positionLogo.y,logo.width,logo.height),logo);
         GUI.DrawTexture(new Rect(Screen.width-description.width*1.8f, logo.height*1.4f, description.width, description.height), description);
+         * */
     }
 }
 

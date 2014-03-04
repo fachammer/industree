@@ -4,11 +4,11 @@ public class SelectedActionGUI : MonoBehaviour {
 
 	public Texture2D selectedActionIconOverlay;
 
-	private ActionIconsGUI actionIconsGui;
+	private ActionIconsManager actionIconsManager;
 	private SelectedActionManager selectedActionManager;
 
 	private void Awake(){		
-		actionIconsGui = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionIconsGUI>();
+		actionIconsManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<ActionIconsManager>();
 		selectedActionManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<SelectedActionManager>();
 	}
 
@@ -16,7 +16,7 @@ public class SelectedActionGUI : MonoBehaviour {
 		foreach(var selectedActionEntry in selectedActionManager.SelectedActionDictionary){
 			Player player = selectedActionEntry.Key;
 			Action action = selectedActionEntry.Value;
-			GUI.DrawTexture(actionIconsGui.ActionSlots[player][action], selectedActionIconOverlay);
+			GUI.DrawTexture(actionIconsManager.ActionSlots[player][action], selectedActionIconOverlay);
 		}
 	}
 }

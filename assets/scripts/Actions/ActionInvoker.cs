@@ -6,17 +6,15 @@ public class ActionInvoker : MonoBehaviour {
 
 	public Action[] actions;
 
-	private InputManager inputManager;
+    private PlayerActionInterface playerActionInterface;
 	private Dictionary<Action, Timer> actionCooldownTimersDictionary;
-	private SelectedActionManager selectedActionManager;
 
 	public delegate void PlayerActionHandler(ActionInvoker invoker, Action action);
     public event PlayerActionHandler ActionSuccess = delegate(ActionInvoker invoker, Action action) {};
     public event PlayerActionHandler ActionFailure = delegate(ActionInvoker invoker, Action action) {};
 
 	private void Awake(){
-		inputManager = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<InputManager>();
-		selectedActionManager = GameObject.FindGameObjectWithTag(Tags.gameStateManager).GetComponent<SelectedActionManager>();
+        playerActionInterface = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<PlayerActionInterface>();
 		actionCooldownTimersDictionary = new Dictionary<Action, Timer>();
 
 		int i = 0;
@@ -25,12 +23,11 @@ public class ActionInvoker : MonoBehaviour {
 			actionCooldownTimersDictionary[action] = null;
 		}
 
-		inputManager.PlayerActionInput += OnPlayerActionInput;
+        playerActionInterface.PlayerAction += OnPlayerAction;
 	}
 
-	private void OnPlayerActionInput(Player player, float actionDirection){
+	private void OnPlayerAction(Player player, Action action, float actionDirection){
 		if(player.ActionInvoker == this){
-	        Action action = selectedActionManager.SelectedActionDictionary[player];
 	        Invoke(player, action, actionDirection);
 	    }
     }
