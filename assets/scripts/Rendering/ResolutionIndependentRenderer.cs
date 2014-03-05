@@ -15,7 +15,9 @@ namespace assets.scripts.Rendering
 
         public static void Label(Rect rectangle, string text, GUIStyle style)
         {
-            GUI.Label(CalculateRealRectangle(rectangle), text, style);
+            GUIStyle guiStyle = new GUIStyle(style);
+            guiStyle.fontSize = (int)(guiStyle.fontSize / 100f * Screen.height * 20f / 26f);
+            GUI.Label(CalculateRealRectangle(rectangle), text, guiStyle);
         }
 
         public static bool Button(Rect rectangle, GUIContent guiContent, GUIStyle style)

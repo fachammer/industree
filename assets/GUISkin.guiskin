@@ -235,10 +235,10 @@ MonoBehaviour:
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 0}
-    m_FontSize: 0
+    m_Font: {fileID: 12800000, guid: c8164850570325041b1e435bc71b9112, type: 3}
+    m_FontSize: 5
     m_FontStyle: 0
-    m_Alignment: 0
+    m_Alignment: 4
     m_WordWrap: 1
     m_RichText: 1
     m_TextClipping: 1
@@ -246,7 +246,7 @@ MonoBehaviour:
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
-    m_StretchWidth: 1
+    m_StretchWidth: 0
     m_StretchHeight: 0
   m_textField:
     m_Name: textfield
