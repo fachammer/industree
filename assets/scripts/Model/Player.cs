@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public int creditsPerInterval;
     public Side side;
     public Action[] actions;
+    public int index;
 
     private int credits;
     private Action selectedAction;
@@ -47,10 +48,12 @@ public class Player : MonoBehaviour
 
     public void SelectNextAction()
     {
-        if(selectedAction.index < actions.Length){
+        if(selectedAction.index < actions.Length - 1)
+        {
             selectedAction = actions[selectedAction.index + 1];
         }
-        else{
+        else
+        {
             selectedAction = actions[0];
         } 
     }
@@ -73,5 +76,12 @@ public class Player : MonoBehaviour
 
     public void IncreaseCredits(int creditsAmount){
         credits += creditsAmount;
+    }
+
+    public static Player[] GetAll()
+    {
+        Player[] players = Array.ConvertAll(GameObject.FindGameObjectsWithTag(Tags.player), (gameObject) => gameObject.GetComponent<Player>());
+        Array.Sort<Player>(players, (p1, p2) => p1.index - p2.index);
+        return players;
     }
 }

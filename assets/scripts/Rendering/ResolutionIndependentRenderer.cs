@@ -10,8 +10,12 @@ namespace assets.scripts.Rendering
     {
         public static void DrawTexture(Rect rectangle, Texture texture)
         {
-            Rect realRectangle = CalculateRealRectangle(rectangle);
-            GUI.DrawTexture(realRectangle, texture);
+            GUI.DrawTexture(CalculateRealRectangle(rectangle), texture);
+        }
+
+        public static void Label(Rect rectangle, string text, GUIStyle style)
+        {
+            GUI.Label(CalculateRealRectangle(rectangle), text, style);
         }
 
         public static bool Button(Rect rectangle, GUIContent guiContent, GUIStyle style)

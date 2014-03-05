@@ -14,4 +14,5 @@ public class Tags
     public static string worldCenter = "WorldCenter";
     public static string view = "View";
     public static string userInterface = "UserInterface";
+    public static string player = "Player";
 }

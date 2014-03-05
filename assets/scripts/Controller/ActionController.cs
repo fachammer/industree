@@ -7,6 +7,8 @@ namespace assets.scripts.Controller
 {
     public class ActionController
     {
+        private static ActionController instance;
+
         public ActionController(ActionView actionView){
             actionView.ActionInput += OnActionInput;
         }
@@ -27,6 +29,16 @@ namespace assets.scripts.Controller
             {
                 player.FailAction(action);
             }
+        }
+
+        public static ActionController GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new ActionController(ActionView.Get());
+            }
+
+            return instance;
         }
     }
 }

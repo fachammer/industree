@@ -41,6 +41,7 @@ MonoBehaviour:
   cost: 25
   cooldown: 2
   icon: {fileID: 2800000, guid: 09d53bda158152a4a96d5acb1cdfebb5, type: 3}
+  index: 1
   actionGameEntity: {fileID: 100026, guid: a666ed9183d90c64686f599cd08557ff, type: 2}
 --- !u!1001 &100100000
 Prefab:

@@ -1,14 +1,127 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400000}
+  - 114: {fileID: 11400002}
+  - 114: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: userInterface
+  m_TagString: UserInterface
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400000
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5fd19c6eceee80488e86682e7a62da0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playersSelectInputNames:
+  - Player1Select
+  - Player2Select
+  playersActionInputNames:
+  - Player1Action
+  - Player2Action
+  pauseButton: GamePause
+  exitButton: GameExit
+  reloadButton: GameReload
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee170044ea5306b42affd1b73b174e1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  templateButton: {fileID: 100000, guid: 5fd1ca2543f8f7e4da29c4fe3b51f29f, type: 2}
+  buttonRectangles:
+  - rectangles:
+    - serializedVersion: 2
+      x: 0
+      y: .200000003
+      width: .0799999982
+      height: .119999997
+    - serializedVersion: 2
+      x: 0
+      y: .319999993
+      width: .0799999982
+      height: .119999997
+    - serializedVersion: 2
+      x: 0
+      y: .439999998
+      width: .0799999982
+      height: .119999997
+    - serializedVersion: 2
+      x: 0
+      y: .560000002
+      width: .0799999982
+      height: .119999997
+    - serializedVersion: 2
+      x: 0
+      y: .680000007
+      width: .0799999982
+      height: .119999997
+  - rectangles:
+    - serializedVersion: 2
+      x: .920000017
+      y: .200000003
+      width: .0799999982
+      height: .119999997
+    - serializedVersion: 2
+      x: .920000017
+      y: .319999993
+      width: .0799999982
+      height: .119999997
+    - serializedVersion: 2
+      x: .920000017
+      y: .439999998
+      width: .0799999982
+      height: .119999997
+    - serializedVersion: 2
+      x: .920000017
+      y: .560000002
+      width: .0799999982
+      height: .119999997
+    - serializedVersion: 2
+      x: .920000017
+      y: .680000007
+      width: .0799999982
+      height: .119999997
 --- !u!1001 &100100000
 Prefab:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 0}
+  m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
   m_IsExploded: 1

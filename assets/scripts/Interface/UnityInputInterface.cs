@@ -14,14 +14,14 @@ public class UnityInputInterface : MonoBehaviour
     private float[] previousPlayerSelectInputAxes;
     private float[] previousPlayerActionInputAxes;
 
-    public event System.Action<Player, float> PlayerActionSelectInput = (Player player, float selectDirection) => {};
-    public event System.Action<Player, float> PlayerActionInput = (Player player, float actionDirection) => {};
+    public event System.Action<Player, float> PlayerActionSelectInput = (player, selectDirection) => {};
+    public event System.Action<Player, float> PlayerActionInput = (player, actionDirection) => {};
     public event System.Action GamePauseInput = () => {}; 
     public event System.Action GameExitInput = () => {};
     public event System.Action GameReloadInput = () => {};
 
     private void Awake(){
-        players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
+        players = Player.GetAll();
         
         previousPlayerSelectInputAxes = new float[playersSelectInputNames.Length];
         previousPlayerActionInputAxes = new float[playersSelectInputNames.Length];

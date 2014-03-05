@@ -6,6 +6,7 @@ public class CreditsGUI : MonoBehaviour {
 
 	public Texture2D creditsIcon;
 	public float creditsTopOffset;
+    public GUISkin guiSkin;
 
 	private Dictionary<Player, Rect> creditLabelRectsDictionary;
 	private Dictionary<Player, Rect> creditIconRectsDictionary;
@@ -25,7 +26,7 @@ public class CreditsGUI : MonoBehaviour {
 	}
 
 	private void OnGUI(){
-		GUI.skin.font = GameObject.FindGameObjectWithTag(Tags.style).GetComponent<Style>().font;
+        GUI.skin = guiSkin;
 
 		foreach(var creditLabelRectEntry in creditLabelRectsDictionary){
 			Player player = creditLabelRectEntry.Key;

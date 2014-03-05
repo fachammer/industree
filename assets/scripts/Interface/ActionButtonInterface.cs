@@ -46,8 +46,7 @@ public class ActionButtonInterface : MonoBehaviour
         {
             foreach (Action action in player.actions)
             {
-                int playerIndex = player.side == Player.Side.left ? 0 : 1;
-                actionButtons[player][action].boundingRectangle = buttonRectangles[playerIndex][action.index];
+                actionButtons[player][action].boundingRectangle = buttonRectangles[player.index][action.index];
             }
         }
     }

@@ -43,5 +43,10 @@ namespace assets.scripts.View
         {
              ResolutionIndependentRenderer.DrawTexture(actionButtonInterface.GetButtonRectangleFromPlayerAndAction(player, action), action.icon);
         }
+
+        public static ActionView Get()
+        {
+            return GameObject.FindGameObjectWithTag(Tags.view).GetComponent<ActionView>();
+        }
     }
 }
