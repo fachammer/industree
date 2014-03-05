@@ -16,7 +16,7 @@ public class ActionCooldownManager : MonoBehaviour {
 		foreach(var player in players){
 			actionCooldownTimerDictionary[player] = new Dictionary<Action, Timer>();
 
-			foreach(var action in player.Actions){
+			foreach(var action in player.actions){
 				actionCooldownTimerDictionary[player][action] = null;
 			}
 

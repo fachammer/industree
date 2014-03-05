@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour {
 	private bool gamePaused = false;
 	private bool gameWon = false;
 	private Pollutable pollutable;
-	private InputManager inputManager;
+	private UnityInputInterface inputManager;
 
 	public bool GameStarted { get { return gameStarted; } }
 	public bool GameEnded { get { return gameEnded; } }
@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
 
 	private void Awake(){
 		pollutable = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Pollutable>();
-		inputManager = GetComponent<InputManager>();
+		inputManager = UnityInputInterface.Get();
 
 		pollutable.FullPollution += OnFullPollution;
 		pollutable.NoPollution += OnNoPollution;

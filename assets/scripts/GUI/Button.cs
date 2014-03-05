@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using assets.scripts.Rendering;
 
 public class Button : MonoBehaviour {
 
@@ -17,7 +18,7 @@ public class Button : MonoBehaviour {
 
     void OnGUI()
     {
-        bool buttonPressed = GUI.Button(boundingRectangle, hasTexture ? new GUIContent(buttonTexture) : new GUIContent(buttonText), guiSkin.button);
+        bool buttonPressed = ResolutionIndependentRenderer.Button(boundingRectangle, hasTexture ? new GUIContent(buttonTexture) : new GUIContent(buttonText), guiSkin.button);
         if (buttonPressed)
         {
             ButtonDown(this);

@@ -39,13 +39,13 @@ public class CreditsGUI : MonoBehaviour {
 	}
 
 	private Rect CalculateCreditsLabelRectangle(Player player){
-		float iconSize = player.Actions[0].icon.width;
+		float iconSize = player.actions[0].icon.width;
 		float iconXOffset = (player.side == Player.Side.left) ? 0 : (Screen.width - iconSize);
 	    return new Rect(iconXOffset, creditsTopOffset, iconSize, iconSize);
 	}
 
 	private Rect CalculateCreditsIconRectangle(Player player){
-		float iconSize = player.Actions[0].icon.width;
+		float iconSize = player.actions[0].icon.width;
 		float iconXOffset = (player.side == Player.Side.left) ? 0 : (Screen.width - iconSize);
 
 		if (player.side == Player.Side.left) {

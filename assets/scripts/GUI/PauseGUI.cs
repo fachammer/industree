@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using assets.scripts.Miscellaneous;
 
 public class PauseGUI : MonoBehaviour {
 

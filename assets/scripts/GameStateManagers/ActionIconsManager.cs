@@ -21,7 +21,7 @@ public class ActionIconsManager : MonoBehaviour {
         {
             actionSlots[player] = new Dictionary<Action, Rect>();
 
-            foreach (Action action in player.Actions)
+            foreach (Action action in player.actions)
             {
                 actionSlots[player][action] = calculateActionIconRectangle(player, action);
             }
@@ -33,6 +33,6 @@ public class ActionIconsManager : MonoBehaviour {
         float iconXOffset = (player.side == Player.Side.left) ?
             0 :
             (Screen.width - action.icon.width);
-        return new Rect(iconXOffset, ACTION_TOP_OFFSET + action.icon.width * action.Index, action.icon.width, action.icon.height);
+        return new Rect(iconXOffset, ACTION_TOP_OFFSET + action.icon.width * action.index, action.icon.width, action.icon.height);
     }
 }

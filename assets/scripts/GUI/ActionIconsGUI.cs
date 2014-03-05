@@ -16,7 +16,7 @@ public class ActionIconsGUI : MonoBehaviour {
 	private void OnGUI(){
         GUI.depth = GUI_DEPTH;
         foreach(Player player in actionIconsManager.ActionSlots.Keys){
-            foreach(Action action in player.Actions){
+            foreach(Action action in player.actions){
                 DrawPlayerAction(player, action);
             }
         }

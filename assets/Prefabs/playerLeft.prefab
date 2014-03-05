@@ -36,16 +36,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a2a3340571fb3e4a836e18bfe791708, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e5ec214b1fed7447817224a57c0c721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   initialCredits: 5000
   creditsUpInterval: 1
   creditsPerInterval: 1
   side: 0
+  actions:
+  - {fileID: 11400002, guid: b6e9b1c3bf05dab438c5895d9af1e6e1, type: 2}
+  - {fileID: 11400000, guid: 0184e52682ab0fb48bcd5a7049357140, type: 2}
+  - {fileID: 11400002, guid: 3b38b48bdeb16dd4ca8d138dddf20443, type: 2}
+  - {fileID: 11400002, guid: 07d4ebd34d7b67742bb18752bc5eba22, type: 2}
+  - {fileID: 11400000, guid: ac23a9f465f22be488059fec37361905, type: 2}
 --- !u!114 &11400002
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}

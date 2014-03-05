@@ -23,7 +23,7 @@ public class ActionDeniedGUI : MonoBehaviour {
 
             actionDeniedOverlayTimerDictionary[player] = new Dictionary<Action, Timer>();
 
-            foreach(Action action in player.Actions){
+            foreach(Action action in player.actions){
                 actionDeniedOverlayTimerDictionary[player][action] = null;
             }
     	}
