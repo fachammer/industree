@@ -15,7 +15,7 @@ public class ActionDeniedGUI : MonoBehaviour {
 
     private void Awake(){
         actionDeniedOverlayTimerDictionary = new Dictionary<Player, Dictionary<Action, Timer>>();
-    	players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
+    	players = Player.GetAll();
         actionButtonInterface = ActionButtonInterface.Get();
 
     	foreach(Player player in players){
@@ -34,7 +34,7 @@ public class ActionDeniedGUI : MonoBehaviour {
             actionDeniedOverlayTimerDictionary[player][action].Stop();
         }
 
-        actionDeniedOverlayTimerDictionary[player][action] = Timer.AddTimerToGameObject(gameObject, deniedActionIconOverlayTime,
+        actionDeniedOverlayTimerDictionary[player][action] = Timer.Start(deniedActionIconOverlayTime,
             delegate(Timer timer) {
                 timer.Stop();
                 actionDeniedOverlayTimerDictionary[player][action] = null;

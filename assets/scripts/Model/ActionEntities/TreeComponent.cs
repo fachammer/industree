@@ -35,7 +35,7 @@ public class TreeComponent: MonoBehaviour {
 		levelable = GetComponent<Levelable>();
 		damagable = GetComponent<Damagable>();
 		polluting = GetComponent<Polluting>();
-		Timer.AddTimerToGameObject(gameObject, timeBetweenClean, OnCleanTimerTick);
+		Timer.Start(timeBetweenClean, OnCleanTimerTick);
 	}
 
 	private void Start(){
@@ -47,7 +47,7 @@ public class TreeComponent: MonoBehaviour {
 			levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
 
-        Timer.AddTimerToGameObject(gameObject, levelUpTimes[0], OnLevelUpTimerTick);
+        Timer.Start(levelUpTimes[0], OnLevelUpTimerTick);
 
         polluting.pollution = -reducePollution[0];
 

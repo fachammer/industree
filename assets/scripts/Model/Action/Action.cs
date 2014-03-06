@@ -5,7 +5,7 @@ public class Action : MonoBehaviour
 {
     public int cost;
     public float cooldown;
-    public Texture2D icon;
+    public Texture icon;
 
     public int index;
     private Timer cooldownTimer;
@@ -14,7 +14,7 @@ public class Action : MonoBehaviour
 
     private void StartCooldown()
     {
-        cooldownTimer = Timer.AddTimerToGameObject(gameObject, cooldown, StopCooldownTimer);
+        cooldownTimer = Timer.Start(cooldown, StopCooldownTimer);
     }
 
     private void StopCooldownTimer(Timer timer)
@@ -27,6 +27,15 @@ public class Action : MonoBehaviour
     {
         StartCooldown();
         PerformInvoke(player, actionDirection);
+    }
+
+    public float GetRemainingCooldown()
+    {
+        if (cooldownTimer != null)
+        {
+            return cooldown - cooldownTimer.TimeSinceLastTick;
+        }
+        return 0;
     }
 
     protected virtual void PerformInvoke(Player player, float actionDirection){ }

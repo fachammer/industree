@@ -23,7 +23,7 @@ public class Earthquake :ActionEntity {
     private void Start(){
         initialCameraPosition = Camera.main.transform.position;
         buildings = Array.ConvertAll(GameObject.FindObjectsOfType(typeof(Building)), obj => (Building) obj);
-        Timer.AddTimerToGameObject(gameObject, hurtDeltaTime, OnDamageTimerTick);
+        Timer.Start(hurtDeltaTime, OnDamageTimerTick);
     }
 
     private void OnGameEnd(bool win){

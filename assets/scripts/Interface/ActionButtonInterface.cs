@@ -16,7 +16,7 @@ public class ActionButtonInterface : MonoBehaviour
 
     private void Awake()
     {
-        players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
+        players = Player.GetAll();
 
         actionButtons = new Dictionary<Player, Dictionary<Action, Button>>();
 
@@ -41,6 +41,11 @@ public class ActionButtonInterface : MonoBehaviour
     }
 
     private void Update()
+    {
+        SetActionButtonRectangles();
+    }
+
+    private void SetActionButtonRectangles()
     {
         foreach (Player player in players)
         {

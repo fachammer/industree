@@ -10,7 +10,10 @@ namespace assets.scripts.Rendering
     {
         public static void DrawTexture(Rect rectangle, Texture texture)
         {
-            GUI.DrawTexture(CalculateRealRectangle(rectangle), texture, ScaleMode.StretchToFill);
+            if (texture != null)
+            {
+                GUI.DrawTexture(CalculateRealRectangle(rectangle), texture, ScaleMode.StretchToFill);
+            }
         }
 
         public static void Label(Rect rectangle, string text, GUIStyle style)

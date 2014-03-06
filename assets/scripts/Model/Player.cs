@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
         credits = initialCredits;
         selectedAction = actions[0];
 
-        Timer.AddTimerToGameObject(gameObject, creditsUpInterval, OnCreditsUpTimerTick);
+        Timer.Start(creditsUpInterval, OnCreditsUpTimerTick);
 
         for(int i = 0; i < actions.Length; i++)
         {

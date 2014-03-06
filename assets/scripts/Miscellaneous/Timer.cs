@@ -8,9 +8,7 @@ public class Timer : MonoBehaviour {
     private float timer;
     private GameController gameController;
 
-    public float TimeSinceLastTick {
-        get { return timer; }
-    }
+    public float TimeSinceLastTick { get { return timer; } }
 
     public delegate void TickHandler(Timer timer);
     public event TickHandler Tick = delegate(Timer timer) {};
@@ -53,11 +51,16 @@ public class Timer : MonoBehaviour {
         enabled = true;
     }
 
-    public static Timer AddTimerToGameObject(GameObject gameObject, float interval, TickHandler onTick)
+    public static Timer Start(float interval, TickHandler onTick)
     {
-        Timer timer = (Timer) gameObject.AddComponent(typeof(Timer));
+        Timer timer = (Timer) Timer.GetGameObject().AddComponent(typeof(Timer));
         timer.interval = interval;
         timer.Tick += onTick;
         return timer;
+    }
+
+    private static GameObject GetGameObject()
+    {
+        return GameObject.FindGameObjectWithTag(Tags.timer);
     }
 }

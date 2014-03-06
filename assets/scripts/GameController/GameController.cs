@@ -3,8 +3,6 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
-	public Player[] players;
-
 	private bool gameStarted = false;
 	private bool gameEnded = false;
 	private bool gamePaused = false;
@@ -104,4 +102,9 @@ public class GameController : MonoBehaviour {
 		gameStarted = true;
         GameStart();
 	}
+
+    public static GameController Get()
+    {
+        return GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+    }
 }

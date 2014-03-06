@@ -15,7 +15,7 @@ namespace assets.scripts.View
 
         private void Awake()
         {
-            players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
+            players = Player.GetAll();
 
             unityInputInterface = UnityInputInterface.Get();
             actionButtonInterface = ActionButtonInterface.Get();

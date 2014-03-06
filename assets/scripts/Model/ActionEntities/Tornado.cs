@@ -13,7 +13,7 @@ public class Tornado :ActionEntity {
 
     private void Awake(){
         damaging = GetComponent<Damaging>();
-        Timer.AddTimerToGameObject(gameObject, damageInterval, OnDamageTimerTick);
+        Timer.Start(damageInterval, OnDamageTimerTick);
     }
 
     private void Start(){

@@ -15,4 +15,5 @@ public class Tags
     public static string view = "View";
     public static string userInterface = "UserInterface";
     public static string player = "Player";
+    public static string light = "Light";
 }

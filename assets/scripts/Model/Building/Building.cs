@@ -47,7 +47,7 @@ public class Building : MonoBehaviour{
 	        levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
 
-        Timer.AddTimerToGameObject(gameObject, levelUpTimes[0], OnLevelUpTimerTick);
+        Timer.Start(levelUpTimes[0], OnLevelUpTimerTick);
 
         GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[0], transform.position, transform.rotation);
         newGameObject.transform.parent = transform;
