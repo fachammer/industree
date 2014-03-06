@@ -9,14 +9,14 @@ public class ActionDeniedGUI : MonoBehaviour {
 
 	private Player[] players;
     private Dictionary<Player, Dictionary<Action, Timer>> actionDeniedOverlayTimerDictionary;
-	private ActionIconsManager actionIconsManager;
+    private ActionButtonInterface actionButtonInterface;
 
     private const int GUI_DEPTH = 0;
 
     private void Awake(){
         actionDeniedOverlayTimerDictionary = new Dictionary<Player, Dictionary<Action, Timer>>();
     	players = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().players;
-    	actionIconsManager = GameObject.FindGameObjectWithTag(Tags.gui).GetComponent<ActionIconsManager>();
+        actionButtonInterface = ActionButtonInterface.Get();
 
     	foreach(Player player in players){
             player.PlayerActionFailure += OnPlayerActionFailure;
@@ -48,7 +48,7 @@ public class ActionDeniedGUI : MonoBehaviour {
             foreach(var actionEntry in playerEntry.Value){
                 Action action = actionEntry.Key;
                 if(actionEntry.Value != null){
-                    GUI.DrawTexture(actionIconsManager.ActionSlots[player][action], deniedActionIconOverlay);
+                    GUI.DrawTexture(actionButtonInterface.GetButtonRectangleFromPlayerAndAction(player, action), deniedActionIconOverlay);
                 }
             }
         }

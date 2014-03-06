@@ -11,6 +11,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
+  - 114: {fileID: 11400006}
   m_Layer: 0
   m_Name: view
   m_TagString: View
@@ -88,6 +89,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedActionIconOverlay: {fileID: 2800000, guid: 3d2aa43571d857f4b89968910e8f0b68,
     type: 3}
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3580e882a3bb1a340bc83bc09feba8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pollutionBilanceRectangle:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: .100000001
+  airColor: {r: .480294734, g: .779411793, b: .275086492, a: 1}
+  pollutionColor: {r: .20588237, g: .184688598, b: .184688598, a: 1}
+  pollutionDecorationRectangle:
+    serializedVersion: 2
+    x: .25
+    y: 0
+    width: .5
+    height: .25
+  pollutionDecoration: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
