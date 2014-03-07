@@ -11,20 +11,26 @@ namespace assets.scripts.Controller
     {
         private static SelectActionController instance;
 
-        public SelectActionController(SelectActionView selectActionView)
+        private GameController gameController;
+
+        public SelectActionController(SelectActionView selectActionView, GameController gameController)
         {
             selectActionView.ActionSelectInput += OnActionSelectInput;
+            this.gameController = gameController;
         }
 
         private void OnActionSelectInput(Player player, float selectDirection)
         {
-            if (selectDirection < 0)
+            if (!gameController.GameEnded && !gameController.GamePaused)
             {
-                player.SelectNextAction();
-            }
-            else if(selectDirection > 0)
-            {
-                player.SelectPreviousAction();
+                if (selectDirection < 0)
+                {
+                    player.SelectNextAction();
+                }
+                else if (selectDirection > 0)
+                {
+                    player.SelectPreviousAction();
+                }
             }
         }
 
@@ -32,7 +38,7 @@ namespace assets.scripts.Controller
         {
             if (instance == null)
             {
-                instance = new SelectActionController(SelectActionView.Get());
+                instance = new SelectActionController(SelectActionView.Get(), GameController.Get());
             }
 
             return instance;

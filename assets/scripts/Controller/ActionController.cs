@@ -9,25 +9,31 @@ namespace assets.scripts.Controller
     {
         private static ActionController instance;
 
-        public ActionController(ActionView actionView){
+        private GameController gameController;
+
+        public ActionController(ActionView actionView, GameController gameController){
             actionView.ActionInput += OnActionInput;
+            this.gameController = gameController;
         }
 
         private void OnActionInput(Player player, Action action, float actionDirection)
         {
-            bool canActionSucceed =
-                !action.IsCoolingDown &&
-                player.Credits >= action.cost &&
-                action.IsInvokable(player, actionDirection);
+            if (!gameController.GameEnded && !gameController.GamePaused)
+            {
+                bool canActionSucceed =
+                    !action.IsCoolingDown &&
+                    player.Credits >= action.cost &&
+                    action.IsInvokable(player, actionDirection);
 
-            if (canActionSucceed)
-            {
-                action.Invoke(player, actionDirection);
-                player.SucceedAction(action);
-            }
-            else
-            {
-                player.FailAction(action);
+                if (canActionSucceed)
+                {
+                    action.Invoke(player, actionDirection);
+                    player.SucceedAction(action);
+                }
+                else
+                {
+                    player.FailAction(action);
+                }
             }
         }
 
@@ -35,7 +41,7 @@ namespace assets.scripts.Controller
         {
             if (instance == null)
             {
-                instance = new ActionController(ActionView.Get());
+                instance = new ActionController(ActionView.Get(), GameController.Get());
             }
 
             return instance;

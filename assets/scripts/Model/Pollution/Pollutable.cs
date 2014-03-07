@@ -21,4 +21,9 @@ public class Pollutable : MonoBehaviour {
     		NoPollution(this);
     	}
     }
+
+    public static Pollutable Get()
+    {
+        return GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Pollutable>();
+    }
 }

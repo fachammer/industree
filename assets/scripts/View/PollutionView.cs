@@ -22,9 +22,7 @@ namespace assets.scripts.View
 
         private void Awake()
         {
-            pollutable = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Pollutable>();
-
-            
+            pollutable = Pollutable.Get();
         }
 
         private void Update()

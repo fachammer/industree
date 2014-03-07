@@ -3,20 +3,21 @@ using UnityEngine;
 
 public class Tornado :ActionEntity {
 
-    [Range(0,1)]
+    [Range(0, 1)]
     public float damageProbability;
     public float damageInterval;
     public float collisionRadius;
     public float moveRange;
 
     private Damaging damaging;
+    private Timer damageTimer;
 
     private void Awake(){
         damaging = GetComponent<Damaging>();
-        Timer.Start(damageInterval, OnDamageTimerTick);
     }
 
     private void Start(){
+        damageTimer = Timer.Start(damageInterval, OnDamageTimerTick);
         Transform planetTransform = GameObject.FindGameObjectWithTag(Tags.planet).transform;
         transform.LookAt(planetTransform.position);
         transform.Rotate(new Vector3(-90, 0, 0));
@@ -39,6 +40,11 @@ public class Tornado :ActionEntity {
     private void Update(){
         float moveSpeed = GetComponent<SphericalMover>().moveSpeed;
         GetComponent<SphericalMover>().moveSpeed = Mathf.Lerp(-moveRange, moveRange, Mathf.Sin(Time.time / moveSpeed));
+    }
+
+    private void OnDestroy()
+    {
+        damageTimer.Stop();
     }
 }
 

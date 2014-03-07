@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour {
 	private bool gamePaused = false;
 	private bool gameWon = false;
 	private Pollutable pollutable;
-	private UnityInputInterface inputManager;
+	private UnityInputInterface unityInputInterface;
 
 	public bool GameStarted { get { return gameStarted; } }
 	public bool GameEnded { get { return gameEnded; } }
@@ -27,14 +27,14 @@ public class GameController : MonoBehaviour {
     public event GameStartHandler GameStart = delegate() { };
 
 	private void Awake(){
-		pollutable = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<Pollutable>();
-		inputManager = UnityInputInterface.Get();
+        pollutable = Pollutable.Get();
+		unityInputInterface = UnityInputInterface.Get();
 
 		pollutable.FullPollution += OnFullPollution;
 		pollutable.NoPollution += OnNoPollution;
-		inputManager.GamePauseInput += OnGamePauseInput;
-		inputManager.GameExitInput += OnGameExitInput;
-		inputManager.GameReloadInput += OnGameReloadInput;
+		unityInputInterface.GamePauseInput += OnGamePauseInput;
+		unityInputInterface.GameExitInput += OnGameExitInput;
+		unityInputInterface.GameReloadInput += OnGameReloadInput;
 
 		Random.seed = System.Environment.TickCount;
 
@@ -46,27 +46,34 @@ public class GameController : MonoBehaviour {
 
 	private void OnFullPollution(Pollutable pollutable){
 		EndGame();
+        gameWon = false;
 		GameEnd(false);
 	}
 
 	private void OnNoPollution(Pollutable pollutable){
 		EndGame();
+        gameWon = true;
 		GameEnd(true);
 	}
 
 	private void OnGamePauseInput(){
-		if(gamePaused){
-			// resume game
-			ResumeGame();
-			// throw resume event
-			GameResume();
-		}
-		else {
-			// pause game
-			PauseGame();
-			// throw pause event
-			GamePause();
-		}
+        if (!gameEnded)
+        {
+            if (gamePaused)
+            {
+                // resume game
+                ResumeGame();
+                // throw resume event
+                GameResume();
+            }
+            else
+            {
+                // pause game
+                PauseGame();
+                // throw pause event
+                GamePause();
+            }
+        }
 	}
 
 	private void OnGameExitInput(){

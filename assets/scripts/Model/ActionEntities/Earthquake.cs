@@ -10,6 +10,7 @@ public class Earthquake :ActionEntity {
     private Damaging damaging;
     private Vector3 initialCameraPosition;
     private Building[] buildings;
+    private Timer damageTimer;
 
     private void Awake(){
         gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
@@ -23,7 +24,7 @@ public class Earthquake :ActionEntity {
     private void Start(){
         initialCameraPosition = Camera.main.transform.position;
         buildings = Array.ConvertAll(GameObject.FindObjectsOfType(typeof(Building)), obj => (Building) obj);
-        Timer.Start(hurtDeltaTime, OnDamageTimerTick);
+        damageTimer = Timer.Start(hurtDeltaTime, OnDamageTimerTick);
     }
 
     private void OnGameEnd(bool win){
@@ -63,6 +64,8 @@ public class Earthquake :ActionEntity {
         gameController.GameEnd -= OnGameEnd;
         gameController.GamePause -= OnGamePause;
         gameController.GameResume -= OnGameResume;
+
+        damageTimer.Stop();
 	}
 
 }

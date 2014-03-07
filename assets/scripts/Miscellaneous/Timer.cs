@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Timer : MonoBehaviour {
 
@@ -25,7 +26,16 @@ public class Timer : MonoBehaviour {
 
         if (timer >= interval)
         {
-            Tick(this);
+            try
+            {
+                Tick(this);
+            }
+            catch(Exception e)
+            {
+                Debug.LogWarning("Exception in tick procedure. Stopping timer. Exception: " + e);
+                Stop();
+            }
+
             timer = 0f;
         }
     }
