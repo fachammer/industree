@@ -2,65 +2,53 @@
 using System.Collections;
 using System.Collections.Generic;
 using assets.scripts.Rendering;
+using assets.scripts.Controller;
 
 namespace assets.scripts.View
 {
-    public class ActionDeniedView : MonoBehaviour
+    [RequireComponent(typeof(ActionView))]
+    public class ActionDeniedView : View<ActionDeniedViewData>
     {
-        public Texture deniedActionIconOverlay;
-        public float deniedActionIconOverlayTime;
-
-        private Player[] players;
-        private Dictionary<Player, Dictionary<Action, Timer>> actionDeniedOverlayTimerDictionary;
-        private ActionButtonInterface actionButtonInterface;
-
-        private const int GUI_DEPTH = 0;
+        private ActionInvoker actionInvoker;
+        private Timer actionDeniedOverlayTimer;
+        private ActionView actionView;
+        private Action action;
 
         private void Awake()
         {
-            actionDeniedOverlayTimerDictionary = new Dictionary<Player, Dictionary<Action, Timer>>();
-            players = Player.GetAll();
-            actionButtonInterface = ActionButtonInterface.Get();
+            actionInvoker = transform.parent.GetComponent<ActionInvoker>();
+            actionInvoker.ActionFailure += OnPlayerActionFailure;
+            actionView = GetComponent<ActionView>();
+            action = GetComponent<Action>();
+        }
 
-            foreach (Player player in players)
+        private void OnPlayerActionFailure(Player player, Action action, float actionDirection)
+        {
+            if (this.action == action)
             {
-                player.PlayerActionFailure += OnPlayerActionFailure;
-
-                actionDeniedOverlayTimerDictionary[player] = new Dictionary<Action, Timer>();
-
-                foreach (Action action in player.actions)
-                {
-                    actionDeniedOverlayTimerDictionary[player][action] = null;
-                }
+                HandleActionFailure();
             }
         }
 
-        private void OnPlayerActionFailure(Player player, Action action)
+        private void HandleActionFailure()
         {
-            if (actionDeniedOverlayTimerDictionary[player][action] != null)
+            if (actionDeniedOverlayTimer != null)
             {
-                actionDeniedOverlayTimerDictionary[player][action].Stop();
+                actionDeniedOverlayTimer.Stop();
             }
 
-            actionDeniedOverlayTimerDictionary[player][action] = Timer.Start(deniedActionIconOverlayTime,
+            actionDeniedOverlayTimer = Timer.Start(data.overlayTime,
                 (timer) => {
                     timer.Stop();
-                    actionDeniedOverlayTimerDictionary[player][action] = null;
+                    actionDeniedOverlayTimer = null;
                 });
         }
 
-        private void OnGUI()
+        protected override void Draw()
         {
-            GUI.depth = GUI_DEPTH;
-            foreach (Player player in players)
+            if (actionDeniedOverlayTimer != null)
             {
-                foreach (Action action in player.actions)
-                {
-                    if (actionDeniedOverlayTimerDictionary[player][action] != null)
-                    {
-                        ResolutionIndependentRenderer.DrawTexture(actionButtonInterface.GetButtonRectangleFromPlayerAndAction(player, action), deniedActionIconOverlay);
-                    }
-                }
+                ResolutionIndependentRenderer.DrawTexture(actionView.data.bounds, data.deniedOverlay);
             }
         }
     }

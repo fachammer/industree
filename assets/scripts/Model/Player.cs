@@ -8,47 +8,28 @@ public class Player : MonoBehaviour
 {
     public enum Side { left, right };
     
-    public int initialCredits;
-    public int creditsUpInterval;
-    public int creditsPerInterval;
     public Side side;
-    public Action[] actions;
     public int index;
 
-    private int credits;
+    private Action[] actions;
     private Action selectedAction;
 
-    public int Credits { get { return credits; } }
+
+    public Action[] Actions { get { return actions; } }
 
     public Action SelectedAction { get { return selectedAction; } }
 
-    public event Action<Player, Action> PlayerActionSuccess = (player, action) => { };
-    public event Action<Player, Action> PlayerActionFailure = (player, action) => { };
-
     private void Awake(){
-        credits = initialCredits;
+
+        actions = transform.GetComponentsInChildren<Action>();
+        Array.Sort<Action>(actions, (a, b) => a.index - b.index);
+
         selectedAction = actions[0];
-
-        Timer.Start(creditsUpInterval, OnCreditsUpTimerTick);
-
-        for(int i = 0; i < actions.Length; i++)
-        {
-            actions[i].index = i;
-        }
-    }
-
-    public void SucceedAction(Action action){
-        credits -= action.cost;
-        PlayerActionSuccess(this, action);
-    }
-
-    public void FailAction(Action action){
-        PlayerActionFailure(this, action);
     }
 
     public void SelectNextAction()
     {
-        if(selectedAction.index < actions.Length - 1)
+        if (selectedAction.index < actions.Length - 1)
         {
             selectedAction = actions[selectedAction.index + 1];
         }
@@ -68,14 +49,6 @@ public class Player : MonoBehaviour
         {
             selectedAction = actions[actions.Length - 1];
         } 
-    }
-
-    private void OnCreditsUpTimerTick(Timer timer){
-        credits += creditsPerInterval;
-    }
-
-    public void IncreaseCredits(int creditsAmount){
-        credits += creditsAmount;
     }
 
     public static Player[] GetAll()

@@ -1,28 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-using assets.scripts.Rendering;
+﻿using System;
+using UnityEngine;
 
-public class Button : MonoBehaviour {
-
-    public GUISkin guiSkin;
-    public Rect boundingRectangle;
-
-    public Texture buttonTexture;
-    public string buttonText;
-    public bool hasTexture;
-
-    private Rect buttonRectangle;
-
-    public delegate void ButtonHandler(Button button);
-    public event ButtonHandler ButtonDown = delegate(Button button) { };
-
-    void OnGUI()
+namespace assets.scripts.Controls
+{
+    public class Button : MonoBehaviour
     {
-        bool buttonPressed = ResolutionIndependentRenderer.Button(boundingRectangle, hasTexture ? new GUIContent(buttonTexture) : new GUIContent(buttonText), guiSkin.button);
-        if (buttonPressed)
-        {
-            ButtonDown(this);
-            Debug.Log("Button pressed");
-        }
+        public event System.Action ButtonDown = () => { };
     }
 }

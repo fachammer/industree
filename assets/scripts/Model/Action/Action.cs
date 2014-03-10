@@ -1,13 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-public class Action : MonoBehaviour
+public abstract class Action : MonoBehaviour
 {
     public int cost;
     public float cooldown;
-    public Texture icon;
-
     public int index;
+
     private Timer cooldownTimer;
 
     public bool IsCoolingDown { get { return cooldownTimer != null; } }
@@ -38,7 +37,7 @@ public class Action : MonoBehaviour
         return 0;
     }
 
-    protected virtual void PerformInvoke(Player player, float actionDirection){ }
+    protected abstract void PerformInvoke(Player player, float actionDirection);
 
     public virtual bool IsInvokable(Player player, float actionDirection) { return true; }
 }

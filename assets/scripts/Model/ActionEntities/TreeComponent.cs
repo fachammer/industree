@@ -69,7 +69,7 @@ public class TreeComponent: MonoBehaviour {
 	}
 
 	private void OnCleanTimerTick(Timer timer){
-		player.IncreaseCredits(creditsPerSec[levelable.Level - 1]);
+		player.GetComponent<CreditsManager>().IncreaseCredits(creditsPerSec[levelable.Level - 1]);
 	}
 
     private void OnLevelUpTimerTick(Timer timer)

@@ -23,8 +23,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.07499695, y: 37.5845833, z: 1.31381989}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!114 &11400000
@@ -45,7 +45,7 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
-  buttonTexture: {fileID: 0}
+  buttonTexture: {fileID: 2800000, guid: f3bb46ef9ea80ac478280c15fe2c1782, type: 3}
   buttonText: 
   hasTexture: 0
 --- !u!1001 &100100000

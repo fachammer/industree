@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour {
 	private bool gamePaused = false;
 	private bool gameWon = false;
 	private Pollutable pollutable;
-	private UnityInputInterface unityInputInterface;
+	private GameControllerInput gameControllerInput;
 
 	public bool GameStarted { get { return gameStarted; } }
 	public bool GameEnded { get { return gameEnded; } }
@@ -28,13 +28,13 @@ public class GameController : MonoBehaviour {
 
 	private void Awake(){
         pollutable = Pollutable.Get();
-		unityInputInterface = UnityInputInterface.Get();
+        gameControllerInput = GetComponent<GameControllerInput>();
 
 		pollutable.FullPollution += OnFullPollution;
 		pollutable.NoPollution += OnNoPollution;
-		unityInputInterface.GamePauseInput += OnGamePauseInput;
-		unityInputInterface.GameExitInput += OnGameExitInput;
-		unityInputInterface.GameReloadInput += OnGameReloadInput;
+		gameControllerInput.GamePauseInput += OnGamePauseInput;
+		gameControllerInput.GameExitInput += OnGameExitInput;
+		gameControllerInput.GameReloadInput += OnGameReloadInput;
 
 		Random.seed = System.Environment.TickCount;
 

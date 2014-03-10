@@ -16,4 +16,5 @@ public class Tags
     public static string userInterface = "UserInterface";
     public static string player = "Player";
     public static string light = "Light";
+    public static string dataMaster = "DataMaster";
 }

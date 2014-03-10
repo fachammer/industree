@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using assets.scripts.Controls;
 
 public class StartScreen:MonoBehaviour {
 
@@ -22,12 +23,12 @@ public class StartScreen:MonoBehaviour {
         exitButton.ButtonDown += OnExitButtonDown;
 	}
 
-    private void OnPlayButtonDown(Button button)
+    private void OnPlayButtonDown()
     {
         Application.LoadLevel(1);
     }
 
-    private void OnExitButtonDown(Button button)
+    private void OnExitButtonDown()
     {
         Application.Quit();
     }

@@ -6,14 +6,8 @@ using UnityEngine;
 
 namespace assets.scripts.View
 {
-    public class PollutionView : MonoBehaviour
+    public class PollutionView : View<PollutionViewData>
     {
-        public Rect pollutionBilanceRectangle;
-        public Color airColor;
-        public Color pollutionColor;
-        public Rect pollutionDecorationRectangle;
-        public Texture pollutionDecoration;
-
         private Pollutable pollutable;
         private Texture airTexture;
         private Texture pollutionTexture;
@@ -29,19 +23,19 @@ namespace assets.scripts.View
         {
             float pollution = Mathf.Clamp(pollutable.currentPollution, 0, pollutable.maxPollution);
 
-            airRectangle = new Rect(pollutionBilanceRectangle);
-            pollutionRectangle = new Rect(pollutionBilanceRectangle);
-            airRectangle.width = pollutionBilanceRectangle.width * (1 - pollution / pollutable.maxPollution);
+            airRectangle = new Rect(data.pollutionBilanceRectangle);
+            pollutionRectangle = new Rect(data.pollutionBilanceRectangle);
+            airRectangle.width = data.pollutionBilanceRectangle.width * (1 - pollution / pollutable.maxPollution);
 
-            airTexture = Utilities.MakeTexture2DWithColor(airColor);
-            pollutionTexture = Utilities.MakeTexture2DWithColor(pollutionColor);
+            airTexture = Utilities.MakeTexture2DWithColor(data.airColor);
+            pollutionTexture = Utilities.MakeTexture2DWithColor(data.pollutionColor);
         }
 
-        private void OnGUI()
+        protected override void Draw()
         { 
             ResolutionIndependentRenderer.DrawTexture(pollutionRectangle, pollutionTexture);
             ResolutionIndependentRenderer.DrawTexture(airRectangle, airTexture);
-            ResolutionIndependentRenderer.DrawTexture(pollutionDecorationRectangle, pollutionDecoration); 
+            ResolutionIndependentRenderer.DrawTexture(data.pollutionDecorationRectangle, data.pollutionDecoration); 
         }
     }
 }

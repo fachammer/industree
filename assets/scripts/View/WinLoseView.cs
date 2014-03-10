@@ -4,13 +4,8 @@ using assets.scripts.Rendering;
 
 namespace assets.scripts.View
 {
-    public class WinLoseView : MonoBehaviour
+    public class WinLoseView : View<WinLoseViewData>
     {
-
-        public Rect dialogRectangle;
-        public Texture2D winDialog;
-        public Texture2D loseDialog;
-
         private GameController gameController;
 
         private void Awake()
@@ -18,17 +13,17 @@ namespace assets.scripts.View
             gameController = GameController.Get();
         }
 
-        private void OnGUI()
+        protected override void Draw()
         {
             if (gameController.GameEnded)
             {
                 if (gameController.GameWon)
                 {
-                    ResolutionIndependentRenderer.DrawTexture(dialogRectangle, winDialog);
+                    ResolutionIndependentRenderer.DrawTexture(data.dialogRectangle, data.winDialog);
                 }
                 else
                 {
-                    ResolutionIndependentRenderer.DrawTexture(dialogRectangle, loseDialog);
+                    ResolutionIndependentRenderer.DrawTexture(data.dialogRectangle, data.loseDialog);
                 }
             }
         }

@@ -13,9 +13,13 @@ namespace assets.scripts.Controller
 
         private GameController gameController;
 
-        public SelectActionController(SelectActionView selectActionView, GameController gameController)
+        public SelectActionController(SelectedActionView[] selectActionViews, GameController gameController)
         {
-            selectActionView.ActionSelectInput += OnActionSelectInput;
+            foreach (SelectedActionView selectActionView in selectActionViews)
+            {
+                selectActionView.ActionSelectInput += OnActionSelectInput;
+            }
+            
             this.gameController = gameController;
         }
 
@@ -38,7 +42,7 @@ namespace assets.scripts.Controller
         {
             if (instance == null)
             {
-                instance = new SelectActionController(SelectActionView.Get(), GameController.Get());
+                instance = new SelectActionController(SelectedActionView.GetAll(), GameController.Get());
             }
 
             return instance;

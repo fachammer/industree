@@ -5,31 +5,19 @@ using assets.scripts.Rendering;
 
 namespace assets.scripts.View
 {
-    public class CreditsView : MonoBehaviour
+    public class CreditsView : View<CreditsViewData>
     {
-        public GUISkin guiSkin;
-        public Texture creditIcon;
-        public Rect[] creditIconRectangles;
-        public Rect[] creditRectangles;
-
-        private Player[] players;
+        private CreditsManager creditsManager;
 
         private void Awake()
         {
-            players = Player.GetAll();
+            creditsManager = GetComponent<CreditsManager>();
         }
 
-        private void OnGUI()
+        protected override void Draw()
         {
-            foreach(Player player in players){
-                DrawCredits(player);
-            }
-        }
-
-        private void DrawCredits(Player player)
-        {
-            ResolutionIndependentRenderer.Label(creditRectangles[player.index], player.Credits.ToString(), guiSkin.label);
-            ResolutionIndependentRenderer.DrawTexture(creditIconRectangles[player.index], creditIcon);
+            ResolutionIndependentRenderer.Label(data.creditRectangle, creditsManager.Credits.ToString(), data.guiSkin.label);
+            ResolutionIndependentRenderer.DrawTexture(data.creditIconRectangle, data.creditIcon);
         }
     }
 }

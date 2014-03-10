@@ -4,11 +4,8 @@ using assets.scripts.Rendering;
 
 namespace assets.scripts.View
 {
-    public class PauseView : MonoBehaviour
+    public class PauseView : View<PauseViewData>
     {
-        public Rect pauseDialogRectangle;
-        public Texture pauseDialog;
-
         private GameController gameController;
 
         private void Awake()
@@ -16,11 +13,11 @@ namespace assets.scripts.View
             gameController = GameController.Get();
         }
 
-        private void OnGUI()
+        protected override void Draw()
         {
             if (gameController.GamePaused && !gameController.GameEnded)
             {
-                ResolutionIndependentRenderer.DrawTexture(pauseDialogRectangle, pauseDialog);
+                ResolutionIndependentRenderer.DrawTexture(data.pauseDialogRectangle, data.pauseDialog);
             }
         }
     }

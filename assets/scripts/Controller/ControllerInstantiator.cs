@@ -12,7 +12,6 @@ namespace assets.scripts.Controller
 
         void Awake()
         {
-            ActionController.GetInstance();
             SelectActionController.GetInstance();
         }
     }
