@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace assets.scripts.View
 {
-    public abstract class ViewData :  MonoBehaviour
+    [System.Serializable]
+    public class ViewData :  DataObject
     {
         public int guiDepth;
         public GUISkin guiSkin;

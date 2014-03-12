@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace assets.scripts.View
 {
+    [System.Serializable]
     public class WinLoseViewData : ViewData
     {
         public Rect dialogRectangle;

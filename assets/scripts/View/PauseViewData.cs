@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace assets.scripts.View
 {
+    [System.Serializable]
     public class PauseViewData : ViewData
     {
         public Rect pauseDialogRectangle;
