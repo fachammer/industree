@@ -1,15 +1,13 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityTest.UnitTestRunner;
 
 namespace UnityTest
 {
 	[Serializable]
-	public class UnitTestView : EditorWindow
+	public partial class UnitTestView : EditorWindow
 	{
 		private static class Styles
 		{
@@ -24,7 +22,15 @@ namespace UnityTest
 			}
 		}
 
-		private List<IUnitTestEngine> testEngines = new List<IUnitTestEngine> ();
+		private static List<IUnitTestEngine> testEngines = null;
+		private static IEnumerable<IUnitTestEngine> TestEngines {
+			get
+			{
+				if(testEngines==null || testEngines.Count == 0)
+					InstantiateUnitTestEngines ();
+				return testEngines;
+			}
+		}
 
 		[SerializeField]
 		private List<UnitTestResult> testList = new List<UnitTestResult> ();
@@ -40,11 +46,8 @@ namespace UnityTest
 		#endregion
 
 		#region runner steering vars
-		private bool isCompiling;
 		private Vector2 testListScroll, testInfoScroll, toolbarScroll;
 		private bool shouldUpdateTestList;
-		private string[] testsToRunList;
-		private bool readyToRun;
 		#endregion
 		
 		#region runner options vars
@@ -52,9 +55,7 @@ namespace UnityTest
 		private bool runOnRecompilation;
 		private bool horizontalSplit = true;
 		private bool autoSaveSceneBeforeRun;
-		private bool runTestOnANewScene = true;
-		private bool notifyOnSlowRun;
-		private float slowTestThreshold = 1f;
+		private bool runTestOnANewScene;
 		#endregion
 
 		#region test filter vars
@@ -73,13 +74,13 @@ namespace UnityTest
 		private readonly GUIContent guiRerunFailedTestsIcon = new GUIContent (Icons.runFailedImg, "Rerun failed tests");
 		private readonly GUIContent guiOptionButton = new GUIContent ("Options", Icons.gearImg);
 		private readonly GUIContent guiRunOnRecompile = new GUIContent ("Run on recompile", "Run on recompile");
+		private readonly GUIContent guiShowDetailsBelowTests = new GUIContent ("Show details below tests", "Show run details below test list");
 		private readonly GUIContent guiRunTestsOnNewScene = new GUIContent ("Run tests on a new scene", "Run tests on a new scene");
 		private readonly GUIContent guiAutoSaveSceneBeforeRun = new GUIContent ("Autosave scene", "The runner will automaticall save current scene changes before it starts");
-		private readonly GUIContent guiShowDetailsBelowTests = new GUIContent ("Show details below tests", "Show run details below test list");
-		private readonly GUIContent guiNotifyWhenSlow = new GUIContent ("Notify when test is slow", "When test will run longer that set threshold, it will be marked as slow");
-		private readonly GUIContent guiSlowTestThreshold = new GUIContent ("Slow test threshold");
 		#endregion
 
+		static bool shouldRunTestOnANewScene { get { return EditorPrefs.GetBool ("UTR-runTestOnANewScene"); } }
+		static bool shouldAutoSaveSceneBeforeRun { get { return EditorPrefs.GetBool ("UTR-autoSaveSceneBeforeRun"); } }
 
 		public UnitTestView ()
 		{
@@ -91,19 +92,15 @@ namespace UnityTest
 				runTestOnANewScene = EditorPrefs.GetBool ("UTR-runTestOnANewScene");
 				autoSaveSceneBeforeRun = EditorPrefs.GetBool ("UTR-autoSaveSceneBeforeRun");
 				horizontalSplit = EditorPrefs.GetBool ("UTR-horizontalSplit");
-				notifyOnSlowRun = EditorPrefs.GetBool ("UTR-notifyOnSlowRun");
-				slowTestThreshold = EditorPrefs.GetFloat ("UTR-slowTestThreshold");
 				filtersFoldout = EditorPrefs.GetBool ("UTR-filtersFoldout");
 				showFailed = EditorPrefs.GetBool ("UTR-showFailed");
 				showIgnored = EditorPrefs.GetBool ("UTR-showIgnored");
 				showNotRun = EditorPrefs.GetBool ("UTR-showNotRun");
 				showSucceeded = EditorPrefs.GetBool ("UTR-showSucceeded");
 			}
-			
-			InstantiateUnitTestEngines();
 		}
 
-		private void InstantiateUnitTestEngines()
+		private static void InstantiateUnitTestEngines()
 		{
 			var type = typeof(IUnitTestEngine);
 			var types =
@@ -112,6 +109,7 @@ namespace UnityTest
 						 .Where(type.IsAssignableFrom)
 						 .Where(t => !t.IsInterface);
 			IEnumerable<IUnitTestEngine> instances = types.Select(t => Activator.CreateInstance(t)).Cast<IUnitTestEngine>();
+			testEngines = new List<IUnitTestEngine> ();
 			testEngines.AddRange(instances);
 		}
 
@@ -121,9 +119,7 @@ namespace UnityTest
 			EditorPrefs.SetBool("UTR-runTestOnANewScene", runTestOnANewScene);
 			EditorPrefs.SetBool("UTR-autoSaveSceneBeforeRun", autoSaveSceneBeforeRun);
 			EditorPrefs.SetBool("UTR-horizontalSplit", horizontalSplit);
-			EditorPrefs.SetBool("UTR-notifyOnSlowRun", notifyOnSlowRun);
-			EditorPrefs.SetFloat("UTR-slowTestThreshold", slowTestThreshold);
-			EditorPrefs.GetBool("UTR-filtersFoldout", filtersFoldout);
+			EditorPrefs.SetBool("UTR-filtersFoldout", filtersFoldout);
 			EditorPrefs.SetBool("UTR-showFailed", showFailed);
 			EditorPrefs.SetBool("UTR-showIgnored", showIgnored);
 			EditorPrefs.SetBool("UTR-showNotRun", showNotRun);
@@ -132,6 +128,14 @@ namespace UnityTest
 
 		public void OnEnable ()
 		{
+			RefreshTests ();
+			shouldUpdateTestList = true;
+		}
+
+		public void Awake ()
+		{
+			GetRenderer ().Reset ();
+			testList.Clear ();
 			RefreshTests ();
 			shouldUpdateTestList = true;
 		}
@@ -207,6 +211,21 @@ namespace UnityTest
 			EditorGUILayout.EndVertical ();
 		}
 
+		private string[] GetAllVisibleTests ()
+		{
+			return FilterResults (testList).Select (result => result.Test.FullName).ToArray ();
+		}
+
+		private string[] GetAllSelectedTests ()
+		{
+			return GetRenderer ().GetSelectedTests ();
+		}
+
+		private string[] GetAllFailedTests ()
+		{
+			return FilterResults (testList).Where (result => result.IsError || result.IsFailure).Select (result => result.Test.FullName).ToArray ();
+		}
+
 		private void RenderToolbar ()
 		{
 			if (rendererList.Count > 1)
@@ -271,8 +290,6 @@ namespace UnityTest
 																horizontalSplit ? GUILayout.MinWidth (0) : GUILayout.MinWidth (200));
 
 			var filteredResults = FilterResults (testList);
-			GetRenderer().notifyOnSlowRun = notifyOnSlowRun;
-			GetRenderer().slowTestThreshold = slowTestThreshold;
 			if (rendererList.ElementAtOrDefault(selectedRenderer) == null)
 				selectedRenderer = 0;
 			shouldUpdateTestList = rendererList[selectedRenderer].RenderTests (filteredResults, RunTests);
@@ -312,12 +329,10 @@ namespace UnityTest
 			EditorGUI.BeginChangeCheck ();
 			runOnRecompilation = EditorGUILayout.Toggle (guiRunOnRecompile, runOnRecompilation);
 			runTestOnANewScene = EditorGUILayout.Toggle (guiRunTestsOnNewScene, runTestOnANewScene);
-			if (runTestOnANewScene)
-				autoSaveSceneBeforeRun = EditorGUILayout.Toggle (guiAutoSaveSceneBeforeRun, autoSaveSceneBeforeRun);
+			EditorGUI.BeginDisabledGroup (!runTestOnANewScene);
+			autoSaveSceneBeforeRun = EditorGUILayout.Toggle (guiAutoSaveSceneBeforeRun, autoSaveSceneBeforeRun);
+			EditorGUI.EndDisabledGroup ();
 			horizontalSplit = EditorGUILayout.Toggle (guiShowDetailsBelowTests, horizontalSplit);
-			notifyOnSlowRun = EditorGUILayout.Toggle(guiNotifyWhenSlow, notifyOnSlowRun);
-			if (notifyOnSlowRun)
-				slowTestThreshold = EditorGUILayout.FloatField(guiSlowTestThreshold, slowTestThreshold);
 			if (EditorGUI.EndChangeCheck())
 				SaveOptions();
 			EditorGUILayout.Space ();
@@ -344,33 +359,18 @@ namespace UnityTest
 			return results;
 		}
 
-		private string[] GetAllVisibleTests ()
-		{
-			return FilterResults (testList).Select (result => result.Test.FullName).ToArray ();
-		}
-
-		private string[] GetAllSelectedTests()
-		{
-			return GetRenderer().GetSelectedTests();
-		}
-
-		private string[] GetAllFailedTests ()
-		{
-			return FilterResults (testList).Where (result => result.IsError || result.IsFailure).Select (result => result.Test.FullName).ToArray ();
-		}
-
 		private void RefreshTests ()
 		{
 			var newTestResults = new List<UnitTestResult> ();
 			var allTests = new List<UnitTestResult> ();
-			foreach (var unitTestEngine in testEngines)
+			foreach (var unitTestEngine in TestEngines)
 			{
-				allTests.AddRange (unitTestEngine.GetTests (true));
+				allTests.AddRange (unitTestEngine.GetTests ());
 			}
 
 			foreach (var result in testList)
 			{
-				var test = allTests.SingleOrDefault (testResult => testResult.Test == result.Test);
+				var test = allTests.SingleOrDefault (testResult => testResult.Test.Equals (result.Test));
 				if (test != null)
 				{
 					newTestResults.Add (result);
@@ -381,187 +381,6 @@ namespace UnityTest
 			testList = newTestResults;
 		}
 
-		private void UpdateTestInfo(ITestResult result)
-		{
-			FindTestResultByName(result.FullName).Update(result);
-		}
-
-		private UnitTestResult FindTestResultByName (string name)
-		{
-			var idx = testList.FindIndex(testResult => testResult.Test.FullName == name);
-			return testList.ElementAt (idx);
-		}
-
-		public void Update ()
-		{
-			if (readyToRun)
-			{
-				readyToRun = false;
-				StartTestRun();
-			}
-
-			if (shouldUpdateTestList)
-			{
-				shouldUpdateTestList = false;
-				Repaint ();
-			}
-			if (EditorApplication.isCompiling && !isCompiling)
-			{
-				isCompiling = true;
-			}
-			if (isCompiling && !EditorApplication.isCompiling)
-			{
-				isCompiling = false;
-				OnRecompile ();
-			}
-		}
-
-		public void OnRecompile ()
-		{
-			RefreshTests ();
-			if (runOnRecompilation && IsCompilationCompleted())
-				RunTests (GetAllVisibleTests ());
-		}
-
-		private bool IsCompilationCompleted ()
-		{
-			return File.Exists (Path.GetFullPath ("Library/ScriptAssemblies/CompilationCompleted.txt"));
-		}
-
-		private void RunTests (string[] tests)
-		{
-			if (readyToRun)
-			{
-				Debug.LogWarning ("Tests are already running");
-				return;
-			}
-			testsToRunList = tests;
-			readyToRun = true;
-		}
-
-		private void StartTestRun ()
-		{
-			var okToRun = true;
-			if (runTestOnANewScene && !UnityEditorInternal.InternalEditorUtility.inBatchMode)
-			{
-				if (autoSaveSceneBeforeRun)
-					EditorApplication.SaveScene ();
-				okToRun = EditorApplication.SaveCurrentSceneIfUserWantsTo ();
-			}
-			if (okToRun)
-			{
-				var currentScene = EditorApplication.currentScene;
-				if (runTestOnANewScene || UnityEditorInternal.InternalEditorUtility.inBatchMode)
-					EditorApplication.NewScene ();
-				var callbackList = new TestRunnerCallbackList ();
-				callbackList.Add (new TestRunnerEventListener (this));
-				try
-				{
-					foreach (var unitTestEngine in testEngines)
-					{
-						unitTestEngine.RunTests (testsToRunList,
-												callbackList);
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.LogException (e);
-					callbackList.RunFinishedException (e);
-				}
-				finally
-				{
-					EditorUtility.ClearProgressBar();
-					if (runTestOnANewScene && !UnityEditorInternal.InternalEditorUtility.inBatchMode)
-						EditorApplication.OpenScene (currentScene);
-					if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
-						EditorApplication.Exit(0);
-					shouldUpdateTestList = true;
-				}
-			}
-		}
 		
-		[MenuItem ("Unity Test Tools/Unit Test Runner %#&u")]
-		public static void ShowWindow ()
-		{
-			GetWindow (typeof (UnitTestView)).Show ();
-		}
-
-		[MenuItem("Unity Test Tools/Run all unit tests")]
-		public static void RunAllTestsBatch()
-		{
-			var window = GetWindow(typeof(UnitTestView)) as UnitTestView;
-			window.RefreshTests ();
-			window.RunTests (new string[0]);
-		}
-
-		[MenuItem("Assets/Unity Test Tools/Load tests from this file")]
-		static void LoadTestsFromFile(MenuCommand command)
-		{
-			if (!ValidateLoadTestsFromFile() && Selection.objects.Any())
-			{
-				Debug.Log ("Not all selected files are script files");
-			}
-			var window = GetWindow(typeof(UnitTestView)) as UnitTestView;
-			foreach (var o in Selection.objects)
-			{
-				window.selectedRenderer = window.AddNewRenderer((o as MonoScript).GetClass());
-			}
-			window.toolbarScroll = new Vector2(float.MaxValue, 0);
-		}
-
-		private int AddNewRenderer (Type classFilter)
-		{
-			var elem = rendererList.SingleOrDefault (hierarchyRenderer => hierarchyRenderer.filterString == classFilter.FullName);
-			if ( elem == null)
-			{
-				elem = new GroupedByHierarchyRenderer (classFilter);
-				rendererList.Add(elem);
-			}
-			return rendererList.IndexOf (elem);
-		}
-
-		[MenuItem("Assets/Unity Test Tools/Load tests from this file", true)]
-		static bool ValidateLoadTestsFromFile()
-		{
-			return Selection.objects.All (o => o is MonoScript);
-		}
-
-		private class TestRunnerEventListener : ITestRunnerCallback
-		{
-			private UnitTestView unitTestView;
-
-			public TestRunnerEventListener(UnitTestView unitTestView)
-			{
-				this.unitTestView = unitTestView;
-			}
-
-			public void TestStarted (string fullName)
-			{
-				EditorUtility.DisplayProgressBar("Unit Tests Runner",
-													fullName,
-													1);
-			}
-
-			public void TestFinished(ITestResult result)
-			{
-				unitTestView.UpdateTestInfo(result);
-			}
-
-			public void RunStarted (string suiteName, int testCount)
-			{
-			}
-
-			public void RunFinished ()
-			{
-				var resultWriter = new XmlResultWriter("UnitTestResults.xml");
-				resultWriter.SaveTestResult ("Unit Tests", unitTestView.testList.ToArray ());
-				EditorUtility.ClearProgressBar();
-			}
-
-			public void RunFinishedException (Exception exception)
-			{
-				RunFinished ();
-			}
-		}
 	}
 }

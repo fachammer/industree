@@ -47,8 +47,6 @@ namespace UnityTest
 		[SerializeField] private List<string> selectedGroups = new List<string>();
 		[SerializeField] private List<string> hiddenGroups = new List<string>();
 		[SerializeField] private bool showHidden;
-		[SerializeField] public bool notifyOnSlowRun;
-		[SerializeField] public float slowTestThreshold;
 		[SerializeField] public string filterString;
 
 		private Action<string[]> RunTest;
@@ -62,16 +60,22 @@ namespace UnityTest
 		private GUIContent guiOpenInEditor = new GUIContent ("Open in editor");
 		private GUIContent guiHideGroup = new GUIContent("Hide group");
 		private GUIContent guiUnhideGroup = new GUIContent ("Unhide group");
-		private GUIContent guiStopWatch = new GUIContent(Icons.stopwatchImg, "Test run too long");
 		#endregion
 		
-		public GroupedByHierarchyRenderer ()
+		public GroupedByHierarchyRenderer ():this(null)
 		{
-			filterString = "";
 		}
 		public GroupedByHierarchyRenderer (Type filter)
 		{
-			filterString = filter.FullName;
+			filterString = "";
+			if(filter!=null)
+				filterString = filter.FullName;
+		}
+
+		public void Reset ()
+		{
+			selectedTests.Clear ();
+			selectedGroups.Clear ();
 		}
 
 		public bool RenderTests(IEnumerable<UnitTestResult> tests, Action<string[]> runTests)
@@ -84,22 +88,30 @@ namespace UnityTest
 
 		public void RenderInfo ()
 		{
-			string printedName = null;
+			string text = null;
 			if (selectedTests.Count == 1)
 			{
-				printedName = "";
-				if(!string.IsNullOrEmpty(selectedTests.Single ().Message))
-					printedName += selectedTests.Single().Message.Trim();
-				if (!string.IsNullOrEmpty(selectedTests.Single().StackTrace))
+				var test = selectedTests.Single ();
+				text = test.Name;
+				if (test.Executed)
+					text += " (" + test.Duration.ToString("##0.###") + "s)";
+				if (!test.IsSuccess)
 				{
-					var stackTrace = StackTraceFilter.Filter (selectedTests.Single ().StackTrace).Trim ();
-					printedName += "\n\n---EXCEPTION---\n" + stackTrace;
+					text += "\n";
+					if (!string.IsNullOrEmpty (test.Message))
+					{
+						text += "---\n";
+						text += test.Message.Trim ();
+					}
+					if (!string.IsNullOrEmpty (test.StackTrace))
+					{
+						var stackTrace = StackTraceFilter.Filter (test.StackTrace).Trim ();
+						text += "\n---EXCEPTION---\n" + stackTrace;
+					}
 				}
-				printedName = printedName.Trim();
+				text = text.Trim();
 			}
-
-			EditorGUILayout.SelectableLabel (
-										printedName, Styles.info);
+			EditorGUILayout.SelectableLabel (text, Styles.info);
 		}
 
 		public void RenderOptions ()
@@ -177,21 +189,20 @@ namespace UnityTest
 
 		private bool PrintFoldoutAndCheckIfCollapsed (string fullName, string displayName, IEnumerable<UnitTestResult> unitTestResult)
 		{
-			var resultState = TestResultState.NotRunnable;
+			Texture resultState = Icons.unknownImg;
 			if (unitTestResult.Any(t => t.ResultState == TestResultState.Failure || t.ResultState == TestResultState.Error))
-				resultState = TestResultState.Failure;
+				resultState = GuiHelper.GetIconForResult (TestResultState.Failure);
 			else if (unitTestResult.Any (t => t.ResultState == TestResultState.Success))
-				resultState = TestResultState.Success;
+				resultState = GuiHelper.GetIconForResult (TestResultState.Success);
 			else if( unitTestResult.All (t=>t.IsIgnored))
-				resultState = TestResultState.Ignored;
+				resultState = GuiHelper.GetIconForResult (TestResultState.Ignored);
 
-			var isClassFolded = PrintFoldout (fullName,
-										displayName, resultState);
+			var isClassFolded = PrintFoldout (fullName, displayName, resultState);
 			return isClassFolded;
 
 		}
 
-		private bool PrintFoldout (string fullName, string displayName, TestResultState resultState)
+		private bool PrintFoldout (string fullName, string displayName, Texture resultIcon)
 		{
 			if(hiddenGroups.Contains (fullName))
 			{
@@ -201,10 +212,10 @@ namespace UnityTest
 					return true;
 			}
 
-			EditorGUIUtility.SetIconSize(new Vector2(16,16));
+			EditorGUIUtility.SetIconSize(new Vector2(15,15));
 			GUILayout.BeginHorizontal (GUILayout.Height (18));
 			Indent ();
-			var foldoutGUIContent = new GUIContent(displayName, GuiHelper.GetIconForCategoryResult(resultState), fullName);
+			var foldoutGUIContent = new GUIContent (displayName, resultIcon, fullName);
 
 			var style = IsGroupSelected (fullName) ? Styles.selectedFoldout : Styles.foldout;
 			var rect = GUILayoutUtility.GetRect (foldoutGUIContent, style, GUILayout.MaxHeight (16));
@@ -215,18 +226,16 @@ namespace UnityTest
 				{
 					PrintFoldoutContextMenu (fullName);
 				}
-				if (Event.current.type == EventType.mouseDown && Event.current.button == 0 && Event.current.control)
+				if (Event.current.type == EventType.mouseDown && Event.current.button == 0)
 				{
 					SelectGroup (fullName);
-					Event.current.Use ();
+					//Event.current.Use ();
 				}
 			}
 
 			bool isClassFolded = foldMarkers.Contains (fullName);
 			EditorGUI.BeginChangeCheck ();
-			isClassFolded = !EditorGUI.Foldout (rect,
-												!isClassFolded,
-												foldoutGUIContent, true, style);
+			isClassFolded = !EditorGUI.Foldout (rect, !isClassFolded, foldoutGUIContent, false, style);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				if (isClassFolded)
@@ -243,11 +252,13 @@ namespace UnityTest
 
 		private void PrintTest(string printedName, UnitTestResult test)
 		{
-			EditorGUIUtility.SetIconSize(new Vector2(16, 16));
+			EditorGUIUtility.SetIconSize(new Vector2(15, 15));
 			GUILayout.BeginHorizontal (GUILayout.Height (18));
 			
 			var foldoutGUIContent = new GUIContent (printedName,
-													test.Executed ? GuiHelper.GetIconForTestResult (test.ResultState) : Icons.unknownImg,
+			                                        test.Executed || test.IsIgnored || test.ResultState == TestResultState.NotRunnable 
+			                                        ? GuiHelper.GetIconForResult (test.ResultState) 
+			                                        : Icons.unknownImg,
 													test.Test.FullName);
 
 			Indent ();
@@ -272,13 +283,6 @@ namespace UnityTest
 
 			var style = IsTestSelected (test) ? Styles.selectedLabel : Styles.label;
 			EditorGUI.LabelField(rect, foldoutGUIContent, style);
-
-			if (notifyOnSlowRun && test.Duration > slowTestThreshold)
-			{
-				var labelRect = style.CalcSize (foldoutGUIContent);
-				var iconRect = new Rect (rect.xMin + labelRect.x, rect.yMin, 20, 20);
-				GUI.Label(iconRect, guiStopWatch);
-			}
 			
 			GUILayout.EndHorizontal();
 			EditorGUIUtility.SetIconSize(Vector2.zero);
@@ -306,7 +310,7 @@ namespace UnityTest
 				selectedTests.Clear ();
 				selectedGroups.Clear ();
 			}
-			if (Event.current.control && IsTestSelected(test))
+			if (Event.current.control && IsTestSelected (test))
 				selectedTests.Remove (test);
 			else
 				selectedTests.Add (test);

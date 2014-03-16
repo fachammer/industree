@@ -1,6 +1,6 @@
 ﻿using UnityTest;
 
-public interface ITestResult 
+public interface ITestResult
 {
 	TestResultState ResultState { get; }
 	string Message { get; }

@@ -13,6 +13,8 @@ namespace UnityTest
 		{
 			public static readonly GUIStyle selectedTestStyle;
 			public static readonly GUIStyle testStyle;
+			public static readonly GUIStyle selectedTestGroupStyle;
+			public static readonly GUIStyle testGroupStyle;
 			public static readonly GUIStyle iconStyle;
 			public static GUIStyle buttonLeft; 
 			public static GUIStyle buttonMid;
@@ -20,9 +22,18 @@ namespace UnityTest
 
 			static Styles ()
 			{
-				testStyle = new GUIStyle (EditorStyles.label);
+				 testStyle = new GUIStyle (EditorStyles.label);
 				selectedTestStyle = new GUIStyle (EditorStyles.label);
 				selectedTestStyle.active.textColor = selectedTestStyle.normal.textColor = selectedTestStyle.onActive.textColor = new Color (0.3f, 0.5f, 0.85f);
+				testGroupStyle = new GUIStyle(EditorStyles.foldout);
+				selectedTestGroupStyle = new GUIStyle (EditorStyles.foldout);
+				selectedTestGroupStyle.active.textColor
+					= selectedTestGroupStyle.normal.textColor
+					= selectedTestGroupStyle.onNormal.textColor
+					= selectedTestGroupStyle.focused.textColor
+					= selectedTestGroupStyle.onFocused.textColor 
+					= selectedTestGroupStyle.onActive.textColor 
+					= new Color (0.3f, 0.5f, 0.85f);
 				iconStyle = new GUIStyle(EditorStyles.label);
 				iconStyle.fixedWidth = 24;
 				buttonLeft = GUI.skin.FindStyle (GUI.skin.button.name + "left");
@@ -31,17 +42,13 @@ namespace UnityTest
 			}
 		}
 
-		private Action<IList<GameObject>> RunTest;
+		private Action<IList<TestComponent>> RunTest;
 		private TestManager testManager;
 		private bool showDetails;
 
 		#region runner options vars
 		[SerializeField] private bool showOptions;
-		[SerializeField] private bool showTestRunnerObjectOnScene = true;
-		[SerializeField] private bool addNewGameObjectUnderSelectedTest = false;
-		[SerializeField] private bool focusOnSelection = true;
-		[SerializeField] private bool hideTestsInHierarchy;
-		[SerializeField] private bool keepTestComponentObjectsOnTop = true;
+		[SerializeField] private bool addNewGameObjectUnderSelectedTest;
 		[SerializeField] internal bool blockUIWhenRunning = true;
 		#endregion
 
@@ -57,7 +64,9 @@ namespace UnityTest
 		#region runner steering vars
 		[SerializeField] private Vector2 testListScroll;
 		[SerializeField] public bool forceRepaint;
+		[SerializeField] private List<TestResult> foldedGroups = new List<TestResult> ();
 		private List<TestResult> selectedTests = new List<TestResult>();
+
 		#endregion
 
 		#region GUI Contents
@@ -76,11 +85,9 @@ namespace UnityTest
 		private readonly GUIContent guiDelete = new GUIContent ("Delete");
 		private readonly GUIContent guiAddGOUderTest = new GUIContent ("Add GOs under test", "Add new GameObject under selected test");
 		private readonly GUIContent guiBlockUI = new GUIContent ("Block UI when running", "Block UI when running tests");
-		private readonly GUIContent guiHideTestInHierarchy = new GUIContent ("Hide tests in hierarchy", "Hide tests in hierarchy");
-		private readonly GUIContent guiHideTestRunner = new GUIContent ("Hide Test Runner", "Hides Test Runner object in hierarchy");
 		#endregion
 
-		public IntegrationTestRunnerRenderer (Action<IList<GameObject>> RunTest)
+		public IntegrationTestRunnerRenderer (Action<IList<TestComponent>> RunTest)
 		{
 			testManager = new TestManager ();
 			this.RunTest = RunTest;
@@ -88,11 +95,7 @@ namespace UnityTest
 			if (EditorPrefs.HasKey ("ITR-addNewGameObjectUnderSelectedTest"))
 			{
 				addNewGameObjectUnderSelectedTest = EditorPrefs.GetBool ("ITR-addNewGameObjectUnderSelectedTest");
-				focusOnSelection = EditorPrefs.GetBool ("ITR-focusOnSelection");
-				hideTestsInHierarchy = EditorPrefs.GetBool ("ITR-hideTestsInHierarchy");
-				keepTestComponentObjectsOnTop = EditorPrefs.GetBool ("ITR-keepTestComponentObjectsOnTop");
 				showOptions = EditorPrefs.GetBool ("ITR-showOptions");
-				showTestRunnerObjectOnScene = EditorPrefs.GetBool ("ITR-showTestRunnerObjectOnScene");
 				blockUIWhenRunning = EditorPrefs.GetBool ("ITR-blockUIWhenRunning");
 				showAdvancedFilter = EditorPrefs.GetBool ("ITR-showAdvancedFilter");
 				filterString = EditorPrefs.GetString ("ITR-filterString");
@@ -101,16 +104,16 @@ namespace UnityTest
 				showIgnoredTest = EditorPrefs.GetBool ("ITR-showIgnoredTest");
 				showNotRunnedTest = EditorPrefs.GetBool ("ITR-showNotRunnedTest");
 			}
+
+#if !(UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2)
+			Undo.undoRedoPerformed += InvalidateTestList;
+#endif
 		}
 
 		private  void SaveSettings()
 		{
 			EditorPrefs.SetBool("ITR-addNewGameObjectUnderSelectedTest", addNewGameObjectUnderSelectedTest);
-			EditorPrefs.SetBool("ITR-focusOnSelection", focusOnSelection);
-			EditorPrefs.SetBool("ITR-hideTestsInHierarchy", hideTestsInHierarchy);
-			EditorPrefs.SetBool("ITR-keepTestComponentObjectsOnTop", keepTestComponentObjectsOnTop);
 			EditorPrefs.SetBool("ITR-showOptions", showOptions);
-			EditorPrefs.SetBool("ITR-showTestRunnerObjectOnScene", showTestRunnerObjectOnScene);
 			EditorPrefs.SetBool("ITR-blockUIWhenRunning", blockUIWhenRunning);
 			EditorPrefs.SetBool ("ITR-showAdvancedFilter", showAdvancedFilter);
 			EditorPrefs.SetString ("ITR-filterString", filterString);
@@ -120,17 +123,19 @@ namespace UnityTest
 			EditorPrefs.SetBool ("ITR-showNotRunnedTest", showNotRunnedTest);
 		}
 
-		private void DrawTest (TestResult testInfo)
+		private void DrawTest ( TestResult testInfo, int indent )
 		{
-			EditorGUIUtility.SetIconSize (new Vector2 (16, 16));
+			EditorGUILayout.BeginHorizontal ();
+			GUILayout.Space (--indent * 15 +10);
+			EditorGUIUtility.SetIconSize (new Vector2 (15, 15));
 			Color tempColor = GUI.color;
 			if (testInfo.isRunning)
 			{
-				var frame = Mathf.Abs(Mathf.Cos (Time.realtimeSinceStartup*4)) * 0.6f + 0.4f;
+				var frame = Mathf.Abs (Mathf.Cos (Time.realtimeSinceStartup * 4)) * 0.6f + 0.4f;
 				GUI.color = new Color (1, 1, 1, frame);
 			}
 
-			var label = new GUIContent (testInfo.name, GetIconBasedOnResultType (testInfo).image);
+			var label = new GUIContent (testInfo.Name, GetIconBasedOnResultType (testInfo).image);
 			var labelRect = GUILayoutUtility.GetRect (label, EditorStyles.label, GUILayout.ExpandWidth (true));
 
 			if (labelRect.Contains (Event.current.mousePosition)
@@ -151,6 +156,72 @@ namespace UnityTest
 
 			if (testInfo.isRunning) GUI.color = tempColor;
 			EditorGUIUtility.SetIconSize (Vector2.zero);
+
+			if (testInfo.resultType == TestResult.ResultType.Timeout)
+			{
+				GUILayout.Label (guiTimeoutIcon,
+								GUILayout.Width (24)
+								);
+				GUILayout.FlexibleSpace ();
+			}
+
+			EditorGUILayout.EndHorizontal ();
+		}
+
+		private bool DrawTestGroup ( TestResult testInfo, int indent )
+		{
+			EditorGUILayout.BeginHorizontal ();
+			GUILayout.Space (--indent * 15);
+			EditorGUIUtility.SetIconSize (new Vector2 (15, 15));
+			Color tempColor = GUI.color;
+			if (testInfo.isRunning)
+			{
+				var frame = Mathf.Abs (Mathf.Cos (Time.realtimeSinceStartup * 4)) * 0.6f + 0.4f;
+				GUI.color = new Color (1, 1, 1, frame);
+			}
+
+			var label = new GUIContent (testInfo.Name, GetIconBasedOnResultType (testInfo).image);
+			var labelRect = GUILayoutUtility.GetRect (label, EditorStyles.label, GUILayout.ExpandWidth (true));
+
+			if (labelRect.Contains (Event.current.mousePosition)
+				&& Event.current.type == EventType.MouseDown
+				&& Event.current.button == 0)
+			{
+				SelectTest (testInfo);
+			}
+			else if (labelRect.Contains (Event.current.mousePosition)
+					&& Event.current.type == EventType.ContextClick)
+			{
+				Event.current.Use ();
+				DrawContextTestMenu (testInfo);
+			}
+			
+			bool isClassFolded = foldedGroups.Contains (testInfo);
+			EditorGUI.BeginChangeCheck ();
+			isClassFolded = !EditorGUI.Foldout (labelRect, !isClassFolded, label
+												,selectedTests.Contains (testInfo) ? Styles.selectedTestGroupStyle : Styles.testGroupStyle
+								);
+			if (EditorGUI.EndChangeCheck ())
+			{
+				if (isClassFolded)
+					foldedGroups.Add (testInfo);
+				else
+					foldedGroups.Remove (testInfo);
+			}
+
+			if (testInfo.isRunning) GUI.color = tempColor;
+			EditorGUIUtility.SetIconSize (Vector2.zero);
+
+			if (testInfo.resultType == TestResult.ResultType.Timeout)
+			{
+				GUILayout.Label (guiTimeoutIcon,
+								GUILayout.Width (24)
+								);
+				GUILayout.FlexibleSpace ();
+			}
+
+			EditorGUILayout.EndHorizontal ();
+			return !isClassFolded;
 		}
 
 		private void SelectTest (TestResult testToSelect)
@@ -170,10 +241,10 @@ namespace UnityTest
 			if (!EditorApplication.isPlayingOrWillChangePlaymode && selectedTests.Count == 1)
 			{
 				var selectedTest = selectedTests.Single ();
-				TestManager.SelectInHierarchy(selectedTest.go, hideTestsInHierarchy);
+				testManager.SelectInHierarchy(selectedTest);
 				EditorApplication.RepaintHierarchyWindow ();
 			}
-			Selection.objects = selectedTests.Select(result => result.go).ToArray();
+			Selection.objects = selectedTests.Select (result => result.GameObject).ToArray ();
 			forceRepaint = true;
 			GUI.FocusControl("");
 		}
@@ -182,6 +253,24 @@ namespace UnityTest
 		{
 			if (result == null) 
 				return Icons.guiUnknownImg;
+			
+			if (result.TestComponent.IsTestGroup ())
+			{
+				var childrenResults = testManager.GetChildrenTestsResults (result.TestComponent);
+				if (childrenResults.Any (t => t.resultType == TestResult.ResultType.Failed 
+											|| t.resultType == TestResult.ResultType.FailedException
+											|| t.resultType == TestResult.ResultType.Timeout))
+					result.resultType = TestResult.ResultType.Failed;
+				else if (childrenResults.Any (t => t.resultType == TestResult.ResultType.Success))
+					result.resultType = TestResult.ResultType.Success;
+				else if (childrenResults.All (t => t.TestComponent.ignored))
+					result.resultType = TestResult.ResultType.Ignored;
+				else
+					result.resultType = TestResult.ResultType.NotRun;
+
+				result.isRunning = childrenResults.Any (t => t.isRunning);
+			}		
+
 			if (result.isRunning)
 				return Icons.guiUnknownImg;
 
@@ -226,23 +315,30 @@ namespace UnityTest
 			if (GUILayout.Button (guiRunAllTests,
 								Styles.buttonLeft,
 								layoutOptions
-								) && !isRunning)
+								) && !EditorApplication.isPlayingOrWillChangePlaymode)
 			{
 				RunTest (GetVisibleNotIgnoredTests ());
 			}
 			if (GUILayout.Button(guiRunSelectedTests,
 								Styles.buttonMid,
 								layoutOptions
-								) && !isRunning)
+								) && !EditorApplication.isPlayingOrWillChangePlaymode)
 			{
-				RunTest(selectedTests.Select (t=>t.go).ToList ());
+				RunTest(selectedTests.Select (t=>t.TestComponent).ToList ());
 			}
 			if (GUILayout.Button (guiCreateNewTest,
 								Styles.buttonRight,
 								layoutOptions
-								) && !isRunning)
+								) && !EditorApplication.isPlayingOrWillChangePlaymode )
 			{
-				SelectTest (testManager.AddTest ());
+				var test = testManager.AddTest ();
+				if (selectedTests.Count == 1
+					&& Selection.activeGameObject != null
+					&& Selection.activeGameObject.GetComponent<TestComponent> ())
+				{
+					test.GameObject.transform.parent = Selection.activeGameObject.transform.parent;
+				}
+				SelectTest (test);
 			}
 			GUILayout.FlexibleSpace ();
 
@@ -304,6 +400,13 @@ namespace UnityTest
 
 		public void PrintTestList ()
 		{
+			if (!testManager.AnyTestsOnScene ())
+			{
+				GUILayout.Label ("No tests found on the scene",
+								EditorStyles.boldLabel);
+				GUILayout.FlexibleSpace ();
+				return;
+			}
 			GUILayout.Box ("",
 							new[] {GUILayout.ExpandWidth (true), GUILayout.Height (1)});
 			GUILayout.Space (5);
@@ -311,32 +414,33 @@ namespace UnityTest
 			testListScroll = EditorGUILayout.BeginScrollView (testListScroll,
 															new[] {GUILayout.ExpandHeight (true)});
 
-			foreach (var testInfo in GetFilteredTestsResults ())
-			{
-				EditorGUILayout.BeginHorizontal();
+			DrawGroup (null, 0);
 
-				DrawTest (testInfo);
-				
-				if (testInfo.resultType == TestResult.ResultType.Timeout)
-				{
-					GUILayout.Label(guiTimeoutIcon,
-									GUILayout.Width(24)
-									);
-					GUILayout.FlexibleSpace();
-				}
-				
-				EditorGUILayout.EndHorizontal ();
-			}
 			EditorGUILayout.EndScrollView ();
 		}
 
-		private List<TestResult> GetFilteredTestsResults ()
+		private void DrawGroup ( TestComponent parent, int indent )
 		{
-			return testManager.GetAllTestsResults ().Where (IsNotFiltered).ToList ();
+			++indent;
+			foreach (var test in testManager.GetChildrenTestsResults (parent))
+			{
+				if (test.TestComponent.IsTestGroup ())
+				{
+					if (DrawTestGroup (test, indent))
+						DrawGroup (test.TestComponent, indent);
+				}
+				else
+				{
+					if (IsNotFiltered (test))
+						DrawTest (test, indent);
+				}
+			}
 		}
 
 		public void PrintSelectedTestDetails ()
 		{
+			if (!testManager.AnyTestsOnScene ()) return;
+
 			if (Event.current.type == EventType.Layout)
 			{
 				if (showDetails != selectedTests.Any ())
@@ -379,11 +483,11 @@ namespace UnityTest
 			if(selectedTests.Count > 1)
 				m.AddItem(guiRunSelected,
 						false,
-						data => RunTest(selectedTests.Select (t=>t.go).ToList ()),
+						data => RunTest(selectedTests.Select (t=>t.TestComponent).ToList ()),
 						"");
 			m.AddItem (guiRun,
 						false,
-						data => RunTest(new List<GameObject> { localTest.go}),
+						data => RunTest(new List<TestComponent> { localTest.TestComponent}),
 						"");
 			m.AddItem (guiRunAll,
 						false,
@@ -408,26 +512,19 @@ namespace UnityTest
 			if (selectedTests.Count > 1)
 				testsToDelete = selectedTests;
 
-			if (EditorUtility.DisplayDialog ("",
-											"Are you sure you want to delete " + 
-											((testsToDelete.Count > 1) ? (testsToDelete.Count + " tests?"):(testsToDelete.Single().name + "?")),
-											"Delete",
-											"Cancel"))
+			foreach (var t in testsToDelete)
 			{
-				foreach (var t in testsToDelete)
-				{	
-#if !UNITY_4_0 && !UNITY_4_0_1 && !UNITY_4_1 && !UNITY_4_2
-					Undo.DestroyObjectImmediate ((t as TestResult).go);
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2
+				Undo.RegisterSceneUndo ("Destroy Tests");
+				GameObject.DestroyImmediate (t.TestComponent.gameObject);
 #else
-					Undo.RegisterSceneUndo ("Destroy Objects");
-					GameObject.DestroyImmediate (t.go);
+				Undo.DestroyObjectImmediate (t.TestComponent.gameObject);
 #endif
-				}
-
-				testManager.DeleteTest(testsToDelete);
-				selectedTests.Clear ();
-				forceRepaint = true;
 			}
+
+			TestManager.InvalidateTestList ();
+			selectedTests.Clear ();
+			forceRepaint = true;
 		}
 
 		public void OnHierarchyWindowItemOnGui (int id, Rect rect)
@@ -436,7 +533,8 @@ namespace UnityTest
 			if (o is GameObject)
 			{
 				var go = o as GameObject;
-				if (TestManager.AnyTestsOnScene() && go.GetComponent<TestComponent>() != null)
+				var tc = go.GetComponent<TestComponent> ();
+				if (testManager.AnyTestsOnScene() &&  tc != null)
 				{
 					if (!EditorApplication.isPlayingOrWillChangePlaymode
 						&& rect.Contains (Event.current.mousePosition)
@@ -447,11 +545,11 @@ namespace UnityTest
 					}
 
 					EditorGUIUtility.SetIconSize (new Vector2 (15, 15));
+					var icon = GetIconBasedOnResultType (testManager.GetResultFor (go));
 					EditorGUI.LabelField (new Rect (rect.xMax - 18,
 													rect.yMin - 2,
 													rect.width,
-													rect.height),
-										GetIconBasedOnResultType (testManager.GetResultFor(go)));
+													rect.height), icon);
 					EditorGUIUtility.SetIconSize (Vector2.zero);
 				}
 			}
@@ -459,57 +557,13 @@ namespace UnityTest
 
 		public void PrintOptions ()
 		{
+			var style = EditorStyles.toggle;
 			EditorGUILayout.BeginVertical ();
 			EditorGUI.BeginChangeCheck();
-
-			var style = EditorStyles.toggle;
-
-			//Temporary disabled
-			//focusOnSelection = EditorGUILayoutExt.ToggleLeft((new GUIContent("Focus on selected test", "Focus on selected test")),
-			//												focusOnSelection,
-			//												style);
-
-			addNewGameObjectUnderSelectedTest = EditorGUILayout.Toggle(guiAddGOUderTest,
-																		addNewGameObjectUnderSelectedTest,
-																		style);
-
-			blockUIWhenRunning = EditorGUILayout.Toggle(guiBlockUI,
-														blockUIWhenRunning,
-														style);
-			
-			EditorGUI.BeginChangeCheck ();
-			hideTestsInHierarchy = EditorGUILayout.Toggle(guiHideTestInHierarchy,
-															hideTestsInHierarchy,
-															style);
-			if (EditorGUI.EndChangeCheck ())
-			{
-				TestManager.ShowOrHideTestInHierarchy(hideTestsInHierarchy);
-				if (selectedTests.Count == 1)
-					TestManager.SelectInHierarchy(selectedTests.Single().go, hideTestsInHierarchy);
-				EditorApplication.RepaintHierarchyWindow();
-			}
-			EditorGUI.BeginChangeCheck();
-			showTestRunnerObjectOnScene = !EditorGUILayout.Toggle(guiHideTestRunner,
-																	!showTestRunnerObjectOnScene,
-																	style);
-			if (EditorGUI.EndChangeCheck ())
-				ShowTestRunnerObjectOnScene(showTestRunnerObjectOnScene);
-
-			if (EditorGUI.EndChangeCheck ())
-				SaveSettings ();
-
+			addNewGameObjectUnderSelectedTest = EditorGUILayout.Toggle(guiAddGOUderTest, addNewGameObjectUnderSelectedTest, style);
+			blockUIWhenRunning = EditorGUILayout.Toggle(guiBlockUI, blockUIWhenRunning, style);
+			if (EditorGUI.EndChangeCheck ()) SaveSettings ();
 			EditorGUILayout.EndVertical ();
-		}
-
-		private void ShowTestRunnerObjectOnScene (bool show)
-		{
-			var tr = TestRunner.GetTestRunner ();
-			if (show)
-				tr.gameObject.hideFlags = 0;
-			else
-				tr.gameObject.hideFlags |= HideFlags.HideInHierarchy;
-			tr.hideFlags = HideFlags.NotEditable;
-			EditorUtility.SetDirty(tr.gameObject);
 		}
 
 		public void SelectInHierarchy (IEnumerable<GameObject> go)
@@ -517,13 +571,7 @@ namespace UnityTest
 			selectedTests.Clear();
 			selectedTests.AddRange(go.Select (o=>testManager.GetResultFor (o)));
 			if (selectedTests.Count () == 1)
-				TestManager.SelectInHierarchy (selectedTests.Single ().go,
-												hideTestsInHierarchy);
-
-			if (focusOnSelection && SceneView.currentDrawingSceneView != null)
-			{
-				SceneView.lastActiveSceneView.FrameSelected ();
-			}
+				testManager.SelectInHierarchy (selectedTests.Single ());
 		}
 
 		public void InvalidateTestList ()
@@ -539,8 +587,12 @@ namespace UnityTest
 
 		public void OnHierarchyChange(bool isRunning)
 		{
-			if (isRunning
-				|| EditorApplication.isPlayingOrWillChangePlaymode)
+			if (!testManager.AnyTestsOnScene ()) return;
+
+			//create a test runner if it doesn't exist
+			TestRunner.GetTestRunner ();
+
+			if (isRunning || EditorApplication.isPlayingOrWillChangePlaymode)
 				return;
 
 			if (addNewGameObjectUnderSelectedTest
@@ -552,19 +604,17 @@ namespace UnityTest
 					&& go.GetComponent<TestComponent>() == null
 					&& go.GetComponent<TestRunner>() == null)
 				{
-					go.transform.parent = selectedTests.Single().go.transform;
+					go.transform.parent = selectedTests.Single ().GameObject.transform;
 				}
 			}
 
-			if (keepTestComponentObjectsOnTop)
+			//make tests are not places under a go that is not a test itself
+			foreach (var test in TestRunner.FindAllTestsOnScene ())
 			{
-				foreach (var test in TestManager.GetAllTestGameObjects())
+				if (test.gameObject.transform.parent != null && test.gameObject.transform.parent.gameObject.GetComponent<TestComponent> () == null)
 				{
-					if (test.transform.parent != null)
-					{
-						test.transform.parent = null;
-						Debug.LogWarning("Tests need to be on top of hierarchy.");
-					}
+					test.gameObject.transform.parent = null;
+					Debug.LogWarning("Tests need to be on top of hierarchy or directly under another test.");
 				}
 			}
 
@@ -572,7 +622,7 @@ namespace UnityTest
 				&& Selection.gameObjects.All(o => o is GameObject && o.GetComponent<TestComponent>()))
 			{
 				selectedTests.Clear ();
-				selectedTests.AddRange (Selection.gameObjects.Select (go=>testManager.GetResultFor (go)));
+				selectedTests.AddRange (Selection.gameObjects.Select (go => testManager.GetResultFor (go)).ToList ());
 				forceRepaint = true;
 			}
 		}
@@ -580,17 +630,17 @@ namespace UnityTest
 		public void OnTestRunFinished ()
 		{
 			if(selectedTests.Count==1)
-				TestManager.SelectInHierarchy(selectedTests.Single().go, hideTestsInHierarchy);
+				testManager.SelectInHierarchy(selectedTests.Single());
 		}
 
-		public List<TestResult> GetTestResultsForGO (IList<GameObject> tests)
+		public List<TestResult> GetTestResultsForTestComponent ( IList<TestComponent> tests )
 		{
-			return testManager.GetAllTestsResults ().Where (t => tests.Contains (t.go)).ToList ();
+			return testManager.GetAllTestsResults ().Where (t => tests.Contains (t.TestComponent)).ToList ();
 		}
 
 		private bool IsNotFiltered (TestResult testInfo)
 		{
-			if (!testInfo.name.ToLower ().Contains (filterString.Trim ().ToLower ())) return false;
+			if (!testInfo.Name.ToLower ().Contains (filterString.Trim ().ToLower ())) return false;
 			if (!showSucceededTest && testInfo.resultType == TestResult.ResultType.Success) return false;
 			if (!showFailedTest && (testInfo.resultType == TestResult.ResultType.Failed
 				|| testInfo.resultType == TestResult.ResultType.FailedException
@@ -600,14 +650,14 @@ namespace UnityTest
 			return true;
 		}
 
-		public List<GameObject> GetVisibleNotIgnoredTests ()
+		public List<TestComponent> GetVisibleNotIgnoredTests ()
 		{
-			return testManager.GetAllTestsResults ().Where (tr => tr.TestComponent.ignored != true).Where (IsNotFiltered).Select (result => result.go).ToList ();
+			return testManager.GetAllTestsResults ().Where (tr => tr.TestComponent.ignored != true).Where (IsNotFiltered).Select (result => result.TestComponent).ToList ();
 		}
 
-		public List<GameObject> GetVisibleTestsIncludingIgnored ()
+		public List<TestComponent> GetVisibleTestsIncludingIgnored ()
 		{
-			return testManager.GetAllTestsResults ().Where (IsNotFiltered).Select (result => result.go).ToList ();
+			return testManager.GetAllTestsResults ().Where (IsNotFiltered).Select (result => result.TestComponent).ToList ();
 		}
 	}
 }

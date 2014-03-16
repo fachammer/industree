@@ -38,10 +38,18 @@ namespace UnityTest
 
 		public override void OnInspectorGUI ()
 		{
+			var component = (TestComponent)target;
+			if (component.IsTestGroup ())
+			{
+				component.name = EditorGUILayout.TextField (guiTestName, component.name);
+				serializedObject.ApplyModifiedProperties ();
+				TestManager.InvalidateTestList ();
+				return;
+			}
+				
 			serializedObject.Update();
 			if (!serializedObject.isEditingMultipleObjects)
 			{
-				var component = (TestComponent) target;
 				component.name = EditorGUILayout.TextField (guiTestName, component.name);
 				component.includedPlatforms = (TestComponent.IncludedPlatforms)EditorGUILayout.EnumMaskField (guiIncludePlatforms, component.includedPlatforms, EditorStyles.popup);
 			}
@@ -49,11 +57,11 @@ namespace UnityTest
 			EditorGUILayout.PropertyField( ignored, guiIgnore);
 			EditorGUILayout.PropertyField( succeedAssertions, guiSuccedOnAssertions);
 			EditorGUILayout.PropertyField (expectException, guiExpectException);
-			if (expectException.boolValue)
-			{
-				EditorGUILayout.PropertyField (expectedExceptionList, guiExpectExceptionList);
-				EditorGUILayout.PropertyField (succeedWhenExceptionIsThrown, guiSucceedWhenExceptionIsThrown);
-			}
+
+			EditorGUI.BeginDisabledGroup (!expectException.boolValue);
+			EditorGUILayout.PropertyField (expectedExceptionList, guiExpectExceptionList);
+			EditorGUILayout.PropertyField (succeedWhenExceptionIsThrown, guiSucceedWhenExceptionIsThrown);
+			EditorGUI.EndDisabledGroup ();
 			
 			if (serializedObject.ApplyModifiedProperties() || GUI.changed)
 			{

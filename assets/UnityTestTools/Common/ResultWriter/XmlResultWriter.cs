@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using UnityEngine;
 
 namespace UnityTest
 {
@@ -9,27 +11,26 @@ namespace UnityTest
 	{
 		private StringBuilder resultWriter = new StringBuilder();
 		private int indend = 0;
-		private string filePath;
+		private string suiteName;
+		private ITestResult[] results;
 
-		private const string nUnitVersion = "2.6.2-Unity";
-
-		#region Constructors
-
-		public XmlResultWriter(string filePath)
+		public XmlResultWriter (string suiteName, ITestResult[] results)
 		{
-			this.filePath = filePath;
+			this.suiteName = suiteName;
+			this.results = results;
 		}
 
-		#endregion
-
-		public void SaveTestResult(string resultsName, ITestResult[] results)
+		private const string nUnitVersion = "2.6.2-Unity";
+		
+		public string GetTestResult()
 		{
-			InitializeXmlFile(resultsName, new ResultSummarizer(results));
+			InitializeXmlFile(suiteName, new ResultSummarizer(results));
 			foreach (var result in results)
 			{
 				WriteResultElement(result);
 			}
 			TerminateXmlFile();
+			return resultWriter.ToString ();
 		}
 
 		private void InitializeXmlFile ( string resultsName, ResultSummarizer summaryResults )
@@ -110,19 +111,82 @@ namespace UnityTest
 			resultWriter.AppendLine ("<!--This file represents the results of running a test suite-->");
 		}
 
+		static string GetEnvironmentUserName ()
+		{
+			#if !UNITY_WP8 && !UNITY_METRO
+			return Environment.UserName;
+			#else
+			return "";
+			#endif
+		}
+		
+		static string GetEnvironmentMachineName ()
+		{
+			#if !UNITY_WP8 && !UNITY_METRO
+			return Environment.MachineName;
+			#else
+			return "";
+			#endif
+		}
+		
+		static string GetEnvironmentUserDomainName ()
+		{
+			#if !UNITY_WP8 && !UNITY_METRO
+			return Environment.UserDomainName;
+			#else
+			return "";
+			#endif
+		}
+
+		static string GetEnvironmentVersion ()
+		{
+			#if !UNITY_METRO
+			return Environment.Version.ToString ();
+			#else
+			return "";
+			#endif
+		}
+
+		static string GetEnvironmentOSVersion ()
+		{
+			#if !UNITY_METRO
+			return Environment.OSVersion.ToString ();
+			#else
+			return "";
+			#endif
+		}
+
+		static string GetEnvironmentOSVersionPlatform ()
+		{
+			#if !UNITY_METRO
+			return Environment.OSVersion.Platform.ToString ();
+			#else
+			return "";
+			#endif
+		}
+
+		static string EnvironmentGetCurrentDirectory ()
+		{
+			#if !UNITY_METRO
+			return Environment.CurrentDirectory;
+			#else
+			return "";
+			#endif
+		}
+		
 		private void WriteEnvironment ()
 		{
 			var attributes = new Dictionary<string, string>
-				{
-					{"nunit-version", nUnitVersion},
-					{"clr-version", Environment.Version.ToString ()},
-					{"os-version", Environment.OSVersion.ToString ()},
-					{"platform", Environment.OSVersion.Platform.ToString ()},
-					{"cwd", Environment.CurrentDirectory},
-					{"machine-name", Environment.MachineName},
-					{"user", Environment.UserName},
-					{"user-domain", Environment.UserDomainName}
-				};
+			{
+				{"nunit-version", nUnitVersion},
+				{"clr-version", GetEnvironmentVersion ()},
+				{"os-version", GetEnvironmentOSVersion ()},
+				{"platform", GetEnvironmentOSVersionPlatform ()},
+				{"cwd", EnvironmentGetCurrentDirectory ()},
+				{"machine-name", GetEnvironmentMachineName ()},
+				{"user", GetEnvironmentUserName ()},
+				{"user-domain", GetEnvironmentUserDomainName ()}
+			};
 			WriteOpeningElement ("environment", attributes, true);
 		}
 
@@ -182,20 +246,6 @@ namespace UnityTest
 			WriteClosingElement ("results");
 			WriteClosingElement ("test-suite");
 			WriteClosingElement ("test-results");
-
-			try
-			{
-				using (var fs = System.IO.File.OpenWrite (filePath))
-				using (var sw = new System.IO.StreamWriter(fs, Encoding.UTF8))
-				{
-					sw.Write (resultWriter.ToString());
-				}
-			}
-			catch (Exception e)
-			{
-				UnityEngine.Debug.LogError ("Error while opening file " + filePath);
-				UnityEngine.Debug.LogException (e);
-			}
 		}
 
 		#region Element Creation Helpers
@@ -258,5 +308,26 @@ namespace UnityTest
 			resultWriter.AppendFormat ("<![CDATA[{0}]]>", text);
 			resultWriter.AppendLine ();
 		}
+
+#if !UNITY_METRO 
+		public void WriteToFile (string resultDestiantion, string resultFileName)
+		{
+			try
+			{
+				var path = System.IO.Path.Combine (resultDestiantion, resultFileName);
+				Debug.Log ("Saving results in " + path);
+				using (var fs = System.IO.File.OpenWrite (path))
+				using (var sw = new System.IO.StreamWriter (fs, Encoding.UTF8))
+				{
+					sw.Write (GetTestResult ());
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.LogError ("Error while opening file");
+				Debug.LogException (e);
+			}
+		}
+#endif
 	}
 }

@@ -10,44 +10,24 @@ namespace UnityTest
 {
 	public static class GuiHelper
 	{
-		public static Texture GetIconForTestResult (TestResultState resultState)
+		public static Texture GetIconForResult (TestResultState resultState)
 		{
 			switch (resultState)
 			{
+				case TestResultState.Success:
+					return Icons.successImg;
 				case TestResultState.Failure:
 				case TestResultState.Error:
 					return Icons.failImg;
-				case TestResultState.Success:
-					return Icons.successImg;
 				case TestResultState.Ignored:
 				case TestResultState.Skipped:
 					return Icons.ignoreImg;
 				case TestResultState.Inconclusive:
-					return Icons.inconclusiveImg;
 				case TestResultState.Cancelled:
-				default:
-					return Icons.unknownImg;
-			}
-		}
-
-		public static Texture GetIconForCategoryResult (TestResultState resultState)
-		{
-			switch (resultState)
-			{
-				case TestResultState.Failure:
-				case TestResultState.Error:
-					return Icons.failImg;
-				case TestResultState.Success:
-					return Icons.successImg;
-				case TestResultState.Cancelled:
-				case TestResultState.Inconclusive:
 				case TestResultState.NotRunnable:
-				case TestResultState.Skipped:
-					return Icons.unknownImg;
-				case TestResultState.Ignored:
-					return Icons.ignoreImg;
+					return Icons.inconclusiveImg;
 				default:
-					return null;
+					return Icons.unknownImg;
 			}
 		}
 
@@ -94,14 +74,17 @@ namespace UnityTest
 			if (!openError || sourceFileLine == 0 || string.IsNullOrEmpty (sourceFilePath))
 			{
 				var sp = GetSequencePointOfTest(test);
-				sourceFileLine = sp.StartLine;
-				sourceFilePath = sp.Document.Url;
+				if (sp != null)
+				{
+					sourceFileLine = sp.StartLine;
+					sourceFilePath = sp.Document.Url;
+				}
 			}
 
 			OpenInEditorInternal(sourceFilePath, sourceFileLine);
 		}
 
-		public static SequencePoint GetSequencePointOfTest(UnitTestResult test)
+		private static SequencePoint GetSequencePointOfTest(UnitTestResult test)
 		{
 			var readerParameters = new ReaderParameters
 				{
@@ -110,14 +93,27 @@ namespace UnityTest
 					ReadingMode = ReadingMode.Immediate
 				};
 
-			var assemblyDefinition = AssemblyDefinition.ReadAssembly (test.AssemblyPath,
-																	readerParameters);
-
+			var assemblyDefinition = AssemblyDefinition.ReadAssembly (test.AssemblyPath, readerParameters);
 			var classModule = assemblyDefinition.MainModule.Types.Single (t => t.FullName == test.Test.FullClassName);
-			var method = classModule.Methods.Single (t => t.Name == test.Test.MethodName);
-			var sp = method.Body.Instructions.First (i => i.SequencePoint != null).SequencePoint;
 
-			return sp;
+			var methods = classModule.Methods;
+			MethodDefinition method = null;
+			while(classModule.BaseType != null)
+			{
+				methods = classModule.Methods;
+				if(methods.Any(t => t.Name == test.Test.MethodName))
+				{
+					method = classModule.Methods.First(t => t.Name == test.Test.MethodName);
+					break;
+				}
+				classModule = classModule.BaseType as TypeDefinition;
+			}
+			if(method !=null)
+			{
+				var sp = method.Body.Instructions.First (i => i.SequencePoint != null).SequencePoint;
+				return sp;
+			}
+			return null;
 		}
 
 		private static void OpenInEditorInternal (string filename, int line)

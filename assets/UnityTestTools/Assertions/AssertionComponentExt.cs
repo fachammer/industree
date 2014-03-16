@@ -9,14 +9,5 @@ namespace UnityTest
 		{
 			return assertion.Action.GetParameterType();
 		}
-		public static Type GetSecondArgumentType(this AssertionComponent assertion)
-		{
-			Type secondArgument = null;
-			if (assertion.Action is ComparerBase)
-			{
-				secondArgument = (assertion.Action as ComparerBase).GetSecondParameterType();
-			}
-			return secondArgument;
-		}
 	}
 }

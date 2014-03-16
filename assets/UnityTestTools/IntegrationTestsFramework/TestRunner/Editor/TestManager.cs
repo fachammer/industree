@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 namespace UnityTest
@@ -22,23 +21,30 @@ namespace UnityTest
 			return testList.ToList();
 		}
 
+		public IList<TestResult> GetChildrenTestsResults ( TestComponent tc )
+		{
+			TryToReload ();
+			if(tc==null)
+				return testList.Where (t => t.GameObject != null && t.GameObject.transform.parent == null).ToList ();
+			else
+				return testList.Where (t => t.GameObject != null && t.GameObject.transform.parent == tc.gameObject.transform).ToList ();
+		}
+
 		private void TryToReload ()
 		{
 			if (reloadTestList && nextIvalidateTime <= DateTime.Now)
 			{
-				var foundTestList = GetAllTestGameObjects ();
-
+				var foundTestList = TestRunner.FindAllTestsOnScene ();
 				var newTestList = new List<TestResult> ();
-				foreach (var gameObject in foundTestList)
+				foreach (var test in foundTestList)
 				{
-					var result = testList.Find (t => t.go == gameObject);
+					var result = testList.Find (t => t.GameObject == test.gameObject);
 					if (result != null)
 					{
-						result.name = result.go.name;
 						newTestList.Add (result);
 					}
 					else
-						newTestList.Add (new TestResult (gameObject));
+						newTestList.Add (new TestResult (test.gameObject));
 				}
 				testList = newTestList;
 
@@ -53,7 +59,7 @@ namespace UnityTest
 			var go = new GameObject ();
 			go.name = "New Test";
 			go.AddComponent<TestComponent>();
-			ShowTestInHierarchy (go, true);
+			go.transform.hideFlags |= HideFlags.HideInInspector;
 
 			var testResult = new TestResult (go);
 			testList.Add(testResult);
@@ -64,13 +70,7 @@ namespace UnityTest
 
 		private void SortTestList ()
 		{
-			testList.Sort((t1, t2) =>
-			{
-				var result = t1.go.name.CompareTo (t2.go.name);
-				if(result == 0)
-					result = t1.go.GetInstanceID ().CompareTo(t2.go.GetInstanceID ());
-				return result;
-			});
+			testList.Sort();
 		}
 
 		public void ClearTestList ()
@@ -79,32 +79,24 @@ namespace UnityTest
 			InvalidateTestList ();
 		}
 
-		public void DeleteTest(List<TestResult> tests)
-		{
-			foreach (var test in tests)
-			{
-				GameObject.DestroyImmediate(test.go);
-				testList.Remove (test);
-			}
-		}
-
 		public static void InvalidateTestList ()
 		{
 			nextIvalidateTime = DateTime.Now;
 			reloadTestList = true;
 		}
 
-		public TestResult GetResultFor (GameObject testInfo)
+		public TestResult GetResultFor ( GameObject gameObject )
 		{
-			if(reloadTestList) TryToReload ();
-
-			try{
-				return testList.Single (result => result.go == testInfo);
-			}catch(Exception)
+			var results = GetAllTestsResults ().Where (result => result.GameObject == gameObject);
+			if (results.Count () == 1)
+				return results.Single ();
+			else
 			{
-				InvalidateTestList();
-				TryToReload();
-				return testList.SingleOrDefault(result => result.go == testInfo);
+#if !(UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2)
+				Debug.LogWarning ( "Result not found for " + gameObject);
+#endif
+				InvalidateTestList ();
+				return null;
 			}
 		}
 
@@ -119,17 +111,6 @@ namespace UnityTest
 
 		#region Static methods
 
-		public static void ShowOrHideTestInHierarchy (bool hideTestsInHierarchy)
-		{
-			foreach (var t in GetAllTestGameObjects ())
-			{
-				var a = t.activeInHierarchy;
-				t.SetActive (true);
-				ShowTestInHierarchy(t.gameObject, !hideTestsInHierarchy);
-				t.SetActive (a);
-			}
-		}
-
 		public static GameObject FindTopGameObject (GameObject go)
 		{
 			while (go.transform.parent != null)
@@ -137,50 +118,26 @@ namespace UnityTest
 			return go;
 		}
 
-		public static bool AnyTestsOnScene ()
+		public bool AnyTestsOnScene ()
 		{
-			return GetAllTestGameObjects ().Any ();
+			return GetAllTestsResults ().Any ();
 		}
 
-		public static void SelectInHierarchy (GameObject test, bool hideTestsInHierarchy)
+		public void SelectInHierarchy (TestResult test)
 		{
-			foreach (var t in GetAllTestGameObjects ())
+			foreach (var t in GetAllTestsResults ())
 			{
-				t.gameObject.SetActive(t == test);
-				if (hideTestsInHierarchy)
-					ShowTestInHierarchy(t.gameObject, t == test);
+				if (t.GameObject == null)
+				{
+					InvalidateTestList ();
+					continue;
+				}
+				t.TestComponent.EnableTest (test == t);
+				if (t.GameObject.GetComponentsInChildren<TestComponent> (true).Any (c => c == test.TestComponent))
+				{
+					t.TestComponent.EnableTest (true);
+				}
 			}
-		}
-
-		public static void DisableAllTests ()
-		{
-			foreach (var t in GetAllTestGameObjects ())
-			{
-				t.gameObject.SetActive (true);
-				ShowTestInHierarchy (t.gameObject, true);
-				t.gameObject.SetActive (false);
-			}
-		}
-
-		public static void ShowTestInHierarchy (GameObject gameObject, bool show)
-		{
-			if (show)
-				gameObject.hideFlags &= ~HideFlags.HideInHierarchy;
-			else
-				gameObject.hideFlags |= HideFlags.HideInHierarchy;
-
-			gameObject.hideFlags |= HideFlags.NotEditable;
-			gameObject.transform.hideFlags |= HideFlags.HideInInspector;
-			var c = gameObject.GetComponent<TestComponent>();
-			if(c!=null) c.hideFlags = 0;
-			EditorUtility.SetDirty(gameObject);
-		}
-
-		public static List<GameObject> GetAllTestGameObjects ()
-		{
-			var resultArray = Resources.FindObjectsOfTypeAll (typeof (TestComponent)) as TestComponent[];
-			var foundTestList = new List<GameObject> (resultArray.Select (component => component.gameObject));
-			return foundTestList;
 		}
 
 		#endregion

@@ -158,7 +158,7 @@ namespace UnityTest
 			EditorGUILayout.EndHorizontal ();
 		}
 
-		[MenuItem ("Unity Test Tools/Assertion Explorer")]
+		[MenuItem ("Unity Test Tools/Assertions/Assertion Explorer")]
 		public static AssertionExplorerWindow ShowWindow ()
 		{
 			var w = GetWindow (typeof (AssertionExplorerWindow));

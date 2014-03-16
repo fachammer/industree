@@ -4,29 +4,40 @@ using UnityEngine;
 namespace UnityTest
 {
 	[Serializable]
-	public class TestResult : ITestResult
+	public class TestResult : ITestResult, IComparable<TestResult>
 	{
-		public GameObject go;
-		public string name;
+		private GameObject go;
+		private TestComponent testComponent;
+		private string name;
 		public ResultType resultType;
 		public double duration;
 		public string messages;
 		public string stacktrace;
 		public bool isRunning;
-		public string id { get; private set; }
-
+		public int id { get; private set; }
+		
 		public TestComponent TestComponent
 		{
-			get { return go.GetComponent<TestComponent> (); }
+			get { return testComponent ?? (testComponent = go.GetComponent<TestComponent> ()); }
+		}
+
+		public GameObject GameObject
+		{
+			get { return go; }
 		}
 
 		public TestResult ( GameObject gameObject )
 		{
-			id =  Guid.NewGuid().ToString("N");
+			id = gameObject.GetInstanceID ();
 			resultType = ResultType.NotRun;
 			this.go = gameObject;
-			if(gameObject!=null)
-				name = gameObject.name;
+			RefreshName ();
+		}
+
+		public void RefreshName ()
+		{
+			if (go != null)
+				name = go.name;
 		}
 
 		public enum ResultType
@@ -64,11 +75,27 @@ namespace UnityTest
 		}}
 		public string Message { get { return messages; } }
 		public bool Executed { get { return resultType != ResultType.NotRun; } }
-		public string Name { get { return name; } }
-		public string FullName { get { return Name; } }
+		public string Name { get { if (go != null) name = go.name; return name; } }
 		public bool IsSuccess { get { return resultType == ResultType.Success; } }
 		public double Duration { get { return duration; } }
 		public string StackTrace { get { return stacktrace; } }
+		public string FullName { 
+			get
+			{
+				var fullName = Name;
+				if (go != null)
+				{
+					var tempGO = go.transform.parent;
+					while (tempGO != null)
+					{
+						fullName = tempGO.name + "." + fullName;
+						tempGO = tempGO.transform.parent;
+					}
+					
+				}
+				return fullName;
+			} 
+		}
 
 		public bool IsIgnored { get { return resultType == ResultType.Ignored; } }
 		public bool IsFailure 
@@ -80,9 +107,29 @@ namespace UnityTest
 					|| resultType == ResultType.Timeout; 
 			}
 		}
+		#endregion
 
-		
 
+		#region IComparable, GetHashCode and Equals implementation
+		public override int GetHashCode ()
+		{
+			return id;
+		}
+
+		public int CompareTo ( TestResult other )
+		{
+			var result = Name.CompareTo (other.Name);
+			if (result == 0)
+				result = go.GetInstanceID ().CompareTo (other.go.GetInstanceID ());
+			return result;
+		}
+
+		public override bool Equals ( object obj )
+		{
+			if (obj is TestResult)
+				return GetHashCode () == obj.GetHashCode ();
+			return base.Equals (obj);
+		}
 		#endregion
 	}
 }

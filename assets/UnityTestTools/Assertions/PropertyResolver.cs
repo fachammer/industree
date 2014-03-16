@@ -39,20 +39,14 @@ namespace UnityTest
 
 			var propertyToSearch = propertPath;
 			Type type = null;
-			try
+			if (MemberResolver.TryGetMemberType (go, propertyToSearch, out type))
 			{
-				type = GetPropertyTypeFromString(go, propertyToSearch);
-				idx = propertPath.Length-1;
-
+				idx = propertPath.Length - 1;
 			}
-			catch(ArgumentException)
+			else
 			{
-				try
-				{
-					propertyToSearch = propertPath.Substring(0, idx);
-					type = GetPropertyTypeFromString(go, propertyToSearch);
-				}
-				catch (NullReferenceException)
+				propertyToSearch = propertPath.Substring(0, idx);
+				if (!MemberResolver.TryGetMemberType (go, propertyToSearch, out type))
 				{
 					var components = GetFieldsAndPropertiesFromGameObject(go, 2, null);
 					return components.Where(s => s.StartsWith(propertPath.Substring(idx + 1))).ToArray();
@@ -70,7 +64,7 @@ namespace UnityTest
 				path += c;
 			}
 			resultList.Add(path);
-			foreach (var prop in type.GetProperties())
+			foreach (var prop in type.GetProperties ().Where(info=>info.GetIndexParameters ().Length==0))
 			{
 				if (prop.Name.StartsWith(propertPath.Substring(idx + 1)))
 					resultList.Add(propertyToSearch + "." + prop.Name);
@@ -89,8 +83,7 @@ namespace UnityTest
 				return false;
 			if (propertPath.IndexOf ("..") >= 0)
 				return false;
-			if (Regex.IsMatch (propertPath,
-								@"\s"))
+			if (Regex.IsMatch (propertPath, @"\s"))
 				return false;
 			return true;
 		}
@@ -114,8 +107,7 @@ namespace UnityTest
 
 				if (depthOfSearch > 1)
 				{
-					var vals = GetPropertiesAndFieldsFromType (componentType,
-																depthOfSearch - 1 );
+					var vals = GetPropertiesAndFieldsFromType (componentType, depthOfSearch - 1 );
 					var valsFullName = vals.Select (s => componentType.Name + "." + s);
 					result.AddRange (valsFullName);
 				}
@@ -123,10 +115,9 @@ namespace UnityTest
 
 			if (!string.IsNullOrEmpty (extendPath))
 			{
-				var pathType = GetPropertyTypeFromString (gameObject,
-														extendPath);
-				var vals = GetPropertiesAndFieldsFromType (pathType,
-																depthOfSearch - 1);
+				var memberResolver = new MemberResolver (gameObject, extendPath);
+				var pathType = memberResolver.GetMemberType ();
+				var vals = GetPropertiesAndFieldsFromType (pathType, depthOfSearch - 1);
 				var valsFullName = vals.Select (s => extendPath + "." + s);
 				result.AddRange (valsFullName);
 			}
@@ -141,7 +132,7 @@ namespace UnityTest
 			var result = new List<string>();
 			var fields = new List<MemberInfo>();
 			fields.AddRange(type.GetFields());
-			fields.AddRange(type.GetProperties());
+			fields.AddRange(type.GetProperties().Where (info => info.GetIndexParameters ().Length == 0).ToArray());
 
 			foreach (var member in fields)
 			{
@@ -149,7 +140,7 @@ namespace UnityTest
 				var memberTypeName = memberType.Name;
 
 				if (AllowedTypes == null 
-				    ||!AllowedTypes.Any()
+					|| !AllowedTypes.Any()
 					|| (AllowedTypes.Contains(memberType) && !ExcludedFieldNames.Contains(memberTypeName))
 					)
 				{
@@ -158,8 +149,7 @@ namespace UnityTest
 
 				if (level > 0 && IsTypeOrNameNotExcluded(memberType, memberTypeName))
 				{
-					var vals = GetPropertiesAndFieldsFromType(memberType,
-														level);
+					var vals = GetPropertiesAndFieldsFromType(memberType, level);
 					var valsFullName = vals.Select(s => member.Name + "." + s);
 					result.AddRange(valsFullName);
 				}
@@ -193,93 +183,7 @@ namespace UnityTest
 
 		private bool IsTypeOrNameNotExcluded(Type memberType, string memberTypeName)
 		{
-			return !ExcludedTypes.Contains(memberType)
-					&& !ExcludedFieldNames.Contains(memberTypeName);
+			return !ExcludedTypes.Contains(memberType) && !ExcludedFieldNames.Contains(memberTypeName);
 		}
-
-		#region Static helpers
-
-		public static object GetPropertyValueFromString(GameObject gameObj, string propertyPath)
-		{
-			if (propertyPath == "")
-				return gameObj;
-
-			var propsQueue = new Queue<string>(propertyPath.Split('.').Where(s => !string.IsNullOrEmpty(s)));
-
-			if (propsQueue == null) throw new ArgumentException("Incorrent property path");
-
-			object result;
-			if (char.IsLower(propsQueue.Peek()[0]))
-			{
-				result = gameObj;
-			}
-			else
-			{
-				result = gameObj.GetComponent(propsQueue.Dequeue());
-			}
-			Type type = result.GetType();
-
-			while (propsQueue.Count != 0)
-			{
-				var nameToFind = propsQueue.Dequeue();
-
-				var property = type.GetProperty(nameToFind);
-				if (property != null)
-				{
-					result = property.GetGetMethod().Invoke(result,
-															null);
-				}
-				else
-				{
-					var field = type.GetField(nameToFind);
-					result = field.GetValue(result);
-				}
-				type = result.GetType();
-			}
-			return result;
-		}
-
-		private static Type GetPropertyTypeFromString(GameObject gameObj, string propertyPath)
-		{
-			if (propertyPath == "")
-				return gameObj.GetType();
-
-			var propsQueue = new Queue<string>(propertyPath.Split('.').Where(s => !string.IsNullOrEmpty(s)));
-
-			if (propsQueue == null) throw new ArgumentException("Incorrent property path");
-
-			Type result;
-			if (char.IsLower(propsQueue.Peek()[0]))
-			{
-				result = gameObj.GetType();
-			}
-			else
-			{
-				var component = gameObj.GetComponent(propsQueue.Dequeue());
-
-				if (component == null) throw new ArgumentException("Incorrent property path");
-
-				result = component.GetType();
-			}
-			while (propsQueue.Count != 0)
-			{
-				var nameToFind = propsQueue.Dequeue();
-
-				var property = result.GetProperty(nameToFind);
-				if (property != null)
-				{
-					result = property.PropertyType;
-				}
-				else
-				{
-					var field = result.GetField(nameToFind);
-					if (field == null) throw new ArgumentException("Incorrent property path");
-					result = field.FieldType;
-				}
-			}
-			return result;
-		}
-
-		#endregion
 	}
 }

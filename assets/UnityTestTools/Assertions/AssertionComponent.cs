@@ -88,7 +88,7 @@ namespace UnityTest
 		private void OnComponentCopy ()
 		{
 			if (m_ActionBase == null) return;
-			var oldActionList = FindObjectsOfType (typeof (AssertionComponent)).Where (o => ((AssertionComponent) o).m_ActionBase == m_ActionBase && o != this);
+			var oldActionList = Resources.FindObjectsOfTypeAll (typeof (AssertionComponent)).Where (o => ((AssertionComponent) o).m_ActionBase == m_ActionBase && o != this);
 
 			//if it's not a copy but a new component don't do anything
 			if (!oldActionList.Any ()) return;

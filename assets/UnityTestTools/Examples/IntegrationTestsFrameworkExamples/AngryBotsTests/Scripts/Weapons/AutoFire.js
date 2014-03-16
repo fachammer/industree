@@ -73,8 +73,8 @@ function OnStartFire () {
 
 	muzzleFlashFront.SetActive (true);
 
-	if (audio)
-		audio.Play ();
+	if (GetComponent.<AudioSource>())
+		GetComponent.<AudioSource>().Play ();
 }
 
 function OnStopFire () {
@@ -82,6 +82,6 @@ function OnStopFire () {
 
 	muzzleFlashFront.SetActive (false);
 
-	if (audio)
-		audio.Stop ();
+	if (GetComponent.<AudioSource>())
+		GetComponent.<AudioSource>().Stop ();
 }

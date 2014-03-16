@@ -1,3 +1,42 @@
+Vesrion 1.2.1
+- Fixed Unit Test Batch runner
+
+Version 1.2
+Fixes:
+- Windows Store related compilation issues
+- other
+Improvements:
+(unit tests)
+- unit test runner can run in background now without having the runner window open
+- unit test batch runner can take a result file path as a parameter
+- changed undo system for unit test runner and UnityUnitTest base class
+- execution time in now visible in test details
+- fixed a bug with tests that inherit from a base test class
+(integration tests)
+- added hierarchical structure for integration tests
+- added Player runner to automate running integration tests on platforms
+- Integration tests batch runner can take a result directory as a parameter
+- Integration tests batch runner can run tests on platforms
+- results are rendered in a player
+(assertion component)
+- changed default failure messages
+- it's possible to override failure action on comparer failure
+- added code stripper for assertions.
+- vast performance improvement
+- fixed bugs
+Other:
+- "Hide in hierarchy" option was removed from integration test runner
+- "Focus on selection" option was removed from integration test runner
+- "Hide test runner" option was removed from integration test runner
+- result files for unit tests and integration tests are now not generated when running tests from the editor
+- UI improvements
+- removed UnityScript and Boo examples
+- WP8 compatibility fixes
+
+Version 1.1.1
+Other:
+- Documentation in Japanese was added
+
 Version 1.1
 Fixes:
 - fixed display error that happened when unit test class inherited from another TestFixture class

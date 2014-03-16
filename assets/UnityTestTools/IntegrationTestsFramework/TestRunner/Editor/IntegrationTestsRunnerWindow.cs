@@ -14,7 +14,7 @@ namespace UnityTest
 		private IntegrationTestRunnerRenderer renderer;
 
 		#region runner steerign vars
-		private List<TestResult> testsToRun;
+		private List<TestComponent> testsToRun;
 		private bool readyToRun;
 		private bool isRunning;
 		private bool isCompiling;
@@ -42,42 +42,46 @@ namespace UnityTest
 			if (isRunning || EditorApplication.isPlayingOrWillChangePlaymode)
 				return;
 			if (Selection.objects != null 
-				&& Selection.objects.All (o => o is GameObject)
-				&& Selection.objects.All (o=> (o as GameObject).GetComponent<TestComponent>() != null))
+				&& Selection.objects.All (o => o is GameObject))
 			{
-				renderer.SelectInHierarchy(Selection.objects.Select (o => o as GameObject));
-				Repaint ();
-			}
-
-			if (Selection.activeGameObject != null && Selection.activeGameObject.transform.parent != null)
-			{
-				var testGO = TestManager.FindTopGameObject(Selection.activeGameObject);
-				if(testGO.GetComponent<TestComponent>() != null)
-					renderer.SelectInHierarchy(new[] {testGO});
+				if (Selection.objects.Count () == 1)
+				{
+					var go = Selection.objects.Single () as GameObject;
+					var temp = go.transform;
+					while (temp != null)
+					{
+						var tc = temp.gameObject.GetComponent<TestComponent> ();
+						if (tc != null && !tc.gameObject.activeSelf)
+						{
+							renderer.SelectInHierarchy (new[] { temp.gameObject });
+							break;
+						}
+						temp = temp.parent;
+					}
+				}
+				else if (Selection.objects.All (o => (o as GameObject).GetComponent<TestComponent> () != null))
+				{
+					renderer.SelectInHierarchy (Selection.objects.Select (o => o as GameObject));
+					Repaint ();
+				}
+				
 			}
 		}
 
 		public void OnHierarchyChange()
 		{
 			renderer.OnHierarchyChange(isRunning);
-			
 			if(renderer.forceRepaint) Repaint ();
-
-			if (TestManager.GetAllTestGameObjects().Any())
-			{
-				TestRunner.GetTestRunner();
-			}
-
 		}
 
-		private void RunTests(IList<GameObject> tests)
+		private void RunTests ( IList<TestComponent> tests )
 		{
 			if (!tests.Any () || EditorApplication.isCompiling)
 				return;
 			Focus ();
-			testsToRun = renderer.GetTestResultsForGO (tests).ToList ();
+			testsToRun = tests.ToList ();
 			readyToRun = true;
-			TestManager.DisableAllTests ();
+			TestRunner.DisableAllTests ();
 			EditorApplication.isPlaying = true;
 		}
 
@@ -88,9 +92,9 @@ namespace UnityTest
 				readyToRun = false;
 				var testRunner = TestRunner.GetTestRunner();
 				testRunner.TestRunnerCallback.Add (new RunnerCallback (this));
-				testRunner.InitRunner(testsToRun);
-				consoleErrorOnPauseValue = GetConsoleErrorPause();
-				SetConsoleErrorPause (false);
+				testRunner.InitRunner (testsToRun.Cast<ITestComponent> ().ToList ());
+				consoleErrorOnPauseValue = IntegrationTestsRunnerWindow.GetConsoleErrorPause ();
+				IntegrationTestsRunnerWindow.SetConsoleErrorPause (false);
 				isRunning = true;
 
 				if (renderer.blockUIWhenRunning)
@@ -110,7 +114,7 @@ namespace UnityTest
 			}
 		}
 
-		private bool GetConsoleErrorPause ()
+		public static bool GetConsoleErrorPause ()
 		{
 			Assembly assembly = Assembly.GetAssembly (typeof (SceneView));
 			Type type = assembly.GetType ("UnityEditorInternal.LogEntries");
@@ -119,7 +123,7 @@ namespace UnityTest
 			return (result & (1 << 2)) != 0;
 		}
 
-		private void SetConsoleErrorPause (bool b)
+		public static void SetConsoleErrorPause ( bool b )
 		{
 			Assembly assembly = Assembly.GetAssembly (typeof (SceneView));
 			Type type = assembly.GetType ("UnityEditorInternal.LogEntries");
@@ -158,20 +162,10 @@ namespace UnityTest
 				Repaint ();
 			}
 #endif
-			if (!TestManager.AnyTestsOnScene())
-			{
-				renderer.PrintHeadPanel(isRunning);
-				GUILayout.Label ("No tests found on the scene",
-								EditorStyles.boldLabel);
-				GUILayout.FlexibleSpace();
-			}
-			else
-			{
-				renderer.PrintHeadPanel(isRunning);
-				renderer.PrintTestList();
-				renderer.PrintSelectedTestDetails();
-			}
-
+			renderer.PrintHeadPanel(isRunning);
+			renderer.PrintTestList();
+			renderer.PrintSelectedTestDetails();
+			
 			if (renderer.forceRepaint)
 			{
 				renderer.forceRepaint = false;
@@ -192,7 +186,7 @@ namespace UnityTest
 				var activeGO = Selection.activeGameObject;
 				var topActiveGO = TestManager.FindTopGameObject(activeGO);
 				if (topActiveGO.GetComponent<TestComponent>() != null)
-					RunTests(new List<GameObject>() { topActiveGO });
+					RunTests (new List<TestComponent> () { topActiveGO.GetComponent<TestComponent> () });
 				else
 					Debug.LogWarning("Selected object or it's parent has no TestComponent attached.");
 			}
@@ -228,14 +222,14 @@ namespace UnityTest
 				EditorApplication.isPlaying = false;
 				if (integrationTestRunnerWindow.renderer.blockUIWhenRunning)
 					EditorUtility.ClearProgressBar();
-				integrationTestRunnerWindow.SetConsoleErrorPause (integrationTestRunnerWindow.consoleErrorOnPauseValue);
+				IntegrationTestsRunnerWindow.SetConsoleErrorPause (integrationTestRunnerWindow.consoleErrorOnPauseValue);
 			}
 
 			public void TestStarted (TestResult test)
 			{
 				if (integrationTestRunnerWindow.renderer.blockUIWhenRunning
 					&& EditorUtility.DisplayCancelableProgressBar("Integration Test Runner",
-																"Running " + test.go.name,
+																"Running " + test.Name,
 																(float) currentTestNumber / testNumber))
 				{
 					integrationTestRunnerWindow.isRunning = false;
@@ -265,7 +259,7 @@ namespace UnityTest
 			RunTests (renderer.GetVisibleNotIgnoredTests ());
 		}
 
-		[MenuItem("Unity Test Tools/Integration Test Runner %#&t")]
+		[MenuItem ("Unity Test Tools/Integration Tests/Integration Test Runner %#&t")]
 		public static IntegrationTestsRunnerWindow ShowWindow()
 		{
 			var w = GetWindow(typeof(IntegrationTestsRunnerWindow));
@@ -273,14 +267,14 @@ namespace UnityTest
 			return w as IntegrationTestsRunnerWindow;
 		}
 
-		[MenuItem("Unity Test Tools/Run all integration tests %#t")]
+		[MenuItem ("Unity Test Tools/Integration Tests/Run all integration tests %#t")]
 		public static void RunAllTestsMenu()
 		{
 			var trw = ShowWindow();
 			trw.RunAllTests();
 		}
 
-		[MenuItem("Unity Test Tools/Run selected integration test %t")]
+		[MenuItem ("Unity Test Tools/Integration Tests/Run selected integration test %t")]
 		[MenuItem("CONTEXT/TestComponent/Run")]
 		public static void RunSelectedMenu()
 		{
