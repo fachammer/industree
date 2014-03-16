@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  - 114: {fileID: 11400000}
+  - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: viewData
   m_TagString: Untagged
@@ -27,7 +27,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!114 &11400000
+--- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -35,10 +35,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e76398939e212f94481b49efdc255d7a, type: 3}
+  m_Script: {fileID: 11500000, guid: c807651a749f6a34da2ba1a0c9c33ba7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues:
+  - 
+  - actualBaseObject
+  - baseObject
   guiDepth: 0
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
 --- !u!1001 &100100000

@@ -5,7 +5,6 @@ namespace assets.scripts.View
 {
     public abstract class View<T> : DataSubject<T> where T : ViewData
     {
-
         protected void OnGUI()
         {
             GUI.skin = data.guiSkin;

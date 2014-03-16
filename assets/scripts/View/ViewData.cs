@@ -4,7 +4,7 @@ using UnityEngine;
 namespace assets.scripts.View
 {
     [System.Serializable]
-    public class ViewData :  DataObject
+    public class ViewData : DataObject
     {
         public int guiDepth;
         public GUISkin guiSkin;

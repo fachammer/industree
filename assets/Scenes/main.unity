@@ -359,6 +359,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 0b87196f0fb48494da9610dd33147c45, type: 3}
@@ -466,6 +468,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 0073800cef28f0d43ab343472b9b978d, type: 3}
@@ -574,6 +578,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 09d53bda158152a4a96d5acb1cdfebb5, type: 3}
@@ -861,6 +867,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 0
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   creditIcon: {fileID: 2800000, guid: d96d93066eafa1d4c998da6d173c8972, type: 3}
@@ -1074,6 +1082,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 0b87196f0fb48494da9610dd33147c45, type: 3}
@@ -1182,6 +1192,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 09d53bda158152a4a96d5acb1cdfebb5, type: 3}
@@ -1603,6 +1615,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 702505b7e45f5bf45adf2dda7675cb07, type: 3}
@@ -1638,215 +1652,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 128552487}
---- !u!1 &916811642
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 916811643}
-  - 114: {fileID: 916811646}
-  - 114: {fileID: 916811645}
-  - 114: {fileID: 916811644}
-  - 114: {fileID: 916811651}
-  - 114: {fileID: 916811650}
-  - 114: {fileID: 916811649}
-  - 114: {fileID: 916811648}
-  - 114: {fileID: 916811647}
-  m_Layer: 0
-  m_Name: dataMaster
-  m_TagString: DataMaster
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &916811643
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
---- !u!114 &916811644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400010, guid: dd6422acb18b38f4fb6e79e15235247b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f01f422957cfe5f4eb7516323f6d598b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseObject: {fileID: 0}
-  guiDepth: 3
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
-  actionIcon: {fileID: 0}
-  bounds:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
---- !u!114 &916811645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400012, guid: dd6422acb18b38f4fb6e79e15235247b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92ddc5dddac218d4eb2e6c2fcf38e14d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseObject: {fileID: 0}
-  guiDepth: 2
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
-  cooldownOverlay: {fileID: 2800000, guid: 3f793a87b54ca564195554621f6a662b, type: 3}
---- !u!114 &916811646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400014, guid: dd6422acb18b38f4fb6e79e15235247b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2af91b48c6ef6504897973417517a4fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseObject: {fileID: 0}
-  guiDepth: 1
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
-  deniedOverlay: {fileID: 2800000, guid: dea45f49d25074942a4c6fe66767516c, type: 3}
-  overlayTime: .5
---- !u!114 &916811647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: dd6422acb18b38f4fb6e79e15235247b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b141fb7cd977db47898da1bbe9c5ce5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseObject: {fileID: 0}
-  guiDepth: 0
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
-  dialogRectangle:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  winDialog: {fileID: 2800000, guid: 948f3658edc53ab499ae2c786a0a4752, type: 3}
-  loseDialog: {fileID: 2800000, guid: 44cda6f30a55af24d83728d0b58da18e, type: 3}
---- !u!114 &916811648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: dd6422acb18b38f4fb6e79e15235247b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16636d7b86bab3a4595d328a59ecb480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseObject: {fileID: 0}
-  guiDepth: 0
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
-  selectedActionIconOverlay: {fileID: 2800000, guid: 3d2aa43571d857f4b89968910e8f0b68,
-    type: 3}
---- !u!114 &916811649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: dd6422acb18b38f4fb6e79e15235247b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e81630a6b30d1bc42bb2ed58f4d7e0fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseObject: {fileID: 0}
-  guiDepth: 0
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
-  pollutionBilanceRectangle:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  airColor: {r: 0, g: 0, b: 0, a: 0}
-  pollutionColor: {r: 0, g: 0, b: 0, a: 0}
-  pollutionDecorationRectangle:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  pollutionDecoration: {fileID: 0}
---- !u!114 &916811650
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400006, guid: dd6422acb18b38f4fb6e79e15235247b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dc71691daedc2b49b94e0bdd9eaae1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseObject: {fileID: 0}
-  guiDepth: 0
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
-  pauseDialogRectangle:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  pauseDialog: {fileID: 2800000, guid: 5467fd250715f0f4b8bfff446801c5ca, type: 3}
---- !u!114 &916811651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400008, guid: dd6422acb18b38f4fb6e79e15235247b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1467571101}
-  m_GameObject: {fileID: 916811642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96b5cbcbb88a0354a9129999a590e03d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseObject: {fileID: 0}
-  guiDepth: 3
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
-  creditIcon: {fileID: 2800000, guid: d96d93066eafa1d4c998da6d173c8972, type: 3}
-  creditIconRectangle:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  creditRectangle:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
 --- !u!1 &1005066530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,6 +1750,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 0073800cef28f0d43ab343472b9b978d, type: 3}
@@ -2234,6 +2041,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 48d802a0bf234924697a5bef944cd9e0, type: 3}
@@ -2420,6 +2229,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 0
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   creditIcon: {fileID: 2800000, guid: d96d93066eafa1d4c998da6d173c8972, type: 3}
@@ -2534,50 +2345,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1451530040}
   m_Mesh: {fileID: 4300000, guid: 5109a554011171846b34f3db1733dc0d, type: 3}
---- !u!1001 &1467571101
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400008, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-      propertyPath: guiDepth
-      value: 3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: dd6422acb18b38f4fb6e79e15235247b, type: 2}
-  m_RootGameObject: {fileID: 916811642}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &1472442791
 GameObject:
   m_ObjectHideFlags: 0
@@ -2836,6 +2603,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 702505b7e45f5bf45adf2dda7675cb07, type: 3}
@@ -3156,6 +2925,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 0}
+  actualBaseObject: {fileID: 0}
+  inheritValues: []
   guiDepth: 3
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 48d802a0bf234924697a5bef944cd9e0, type: 3}

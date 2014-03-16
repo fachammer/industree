@@ -38,8 +38,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f01f422957cfe5f4eb7516323f6d598b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseObject: {fileID: 11400000, guid: b9343eb703609474696d22cc9b01b92b, type: 2}
-  guiDepth: 3
+  baseObject: {fileID: 11400002, guid: b9343eb703609474696d22cc9b01b92b, type: 2}
+  actualBaseObject: {fileID: 11400002, guid: b9343eb703609474696d22cc9b01b92b, type: 2}
+  inheritValues:
+  - guiSkin
+  - guiDepth
+  guiDepth: 0
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 0}
   bounds:

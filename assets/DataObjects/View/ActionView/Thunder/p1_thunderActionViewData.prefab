@@ -39,7 +39,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 11400000, guid: 3235e891d84e1e547a68531da46fcce6, type: 2}
-  guiDepth: 3
+  actualBaseObject: {fileID: 11400000, guid: 3235e891d84e1e547a68531da46fcce6, type: 2}
+  inheritValues:
+  - actionIcon
+  - guiDepth
+  - guiSkin
+  guiDepth: 0
   guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
   actionIcon: {fileID: 2800000, guid: 09d53bda158152a4a96d5acb1cdfebb5, type: 3}
   bounds:

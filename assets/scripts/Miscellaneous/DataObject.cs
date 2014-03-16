@@ -13,9 +13,13 @@ namespace assets.scripts.Miscellaneous
     {
         public DataObject baseObject;
 
+        [HideInInspector]
+        [SerializeField]
         private DataObject actualBaseObject;
 
-        private Dictionary<string, bool> inheritValue = new Dictionary<string,bool>();
+        [HideInInspector]
+        [SerializeField]
+        private List<string> inheritValues;
 
         public bool HasBaseObject { get { return actualBaseObject != null; } }
 
@@ -32,7 +36,17 @@ namespace assets.scripts.Miscellaneous
 
                         if (actualBaseObject != null)
                         {
-                            UpdateInheritedValues();
+                            foreach (FieldInfo field in actualBaseObject.GetType().GetFields())
+                            {
+                                if (field.Name != "baseObject")
+                                {
+                                    AddInheritValueIfNotExists(field.Name);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            inheritValues.Clear();
                         }
                     }
                 }
@@ -43,48 +57,55 @@ namespace assets.scripts.Miscellaneous
                     throw new ArgumentException(value.GetType().FullName + " is not assignable from " + this.GetType().FullName);
                 }
             }
-        }
+        } 
 
         private bool IsValidNewBaseObject(DataObject newBaseObject)
         {
             return newBaseObject == null || newBaseObject.GetType().IsAssignableFrom(this.GetType());
         }
 
-        private void UpdateInheritedValues()
-        {
-            inheritValue = new Dictionary<string, bool>();
-            foreach (FieldInfo field in actualBaseObject.GetType().GetFields())
-            {
-                if (field.Name != "baseObject")
-                {
-                    inheritValue[field.Name] = true;
-                }
-            }
-        }
-
         public void CommitNewBaseObject()
         {
             BaseObject = baseObject;
-        }
-
-        public void SetInheritValue(string valueName, bool inheritProperties)
-        {
-            inheritValue[valueName] = inheritProperties;
-        }
-
-        public bool InheritsValue(string valueName)
-        {
-            if (inheritValue.ContainsKey(valueName))
-            {
-                return actualBaseObject != null && inheritValue[valueName];
-            }
-
-            return false;
-        }
+        }        
 
         public bool HasField(string fieldName)
         {
             return GetType().GetField(fieldName) != null;
+        }
+
+        public bool InheritsValue(string valueName)
+        {
+            return inheritValues.Contains(valueName);
+        }
+
+        public void SetInheritsValue(string valueName, bool inherit)
+        {
+            if (inherit)
+            {
+                AddInheritValueIfNotExists(valueName);
+            }
+
+            else
+            {
+                RemoveInheritValueIfExists(valueName);
+            }
+        }
+
+        private void AddInheritValueIfNotExists(string valueName)
+        {
+            if (!inheritValues.Contains(valueName))
+            {
+                inheritValues.Add(valueName);
+            }
+        }
+
+        private void RemoveInheritValueIfExists(string valueName)
+        {
+            if (inheritValues.Contains(valueName))
+            {
+                inheritValues.Remove(valueName);
+            }
         }
 
         [MenuItem("Assets/Create/DataObjectPrefab")]

@@ -4,6 +4,8 @@ using assets.scripts.Rendering;
 
 namespace assets.scripts.View
 {
+    
+
     [RequireComponent(typeof(Action))]
     [RequireComponent(typeof(ActionView))]
     public class ActionCooldownView : View<ActionCooldownViewData>
