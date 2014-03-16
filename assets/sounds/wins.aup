@@ -1,0 +1,51 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="wins_data" version="1.3.0" audacityversion="2.0.5" sel0="20.1666875000" sel1="20.1666875000" vpos="0" h="0.0000000000" zoom="11.3553634785" rate="48000.0">
+	<tags/>
+	<wavetrack name="144083__bosk1__wind-houling-1" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="48000" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="968001">
+				<waveblock start="0">
+					<simpleblockfile filename="e000068b.au" len="173473" min="-0.181335" max="0.181519" rms="0.042038"/>
+				</waveblock>
+				<waveblock start="173473">
+					<simpleblockfile filename="e0000494.au" len="173473" min="-0.232758" max="0.219177" rms="0.043025"/>
+				</waveblock>
+				<waveblock start="346946">
+					<simpleblockfile filename="e0000ba0.au" len="262144" min="-0.206085" max="0.206055" rms="0.042701"/>
+				</waveblock>
+				<waveblock start="609090">
+					<simpleblockfile filename="e0000d98.au" len="179455" min="-0.209625" max="0.197662" rms="0.041338"/>
+				</waveblock>
+				<waveblock start="788545">
+					<simpleblockfile filename="e000083f.au" len="179456" min="-0.233215" max="0.221924" rms="0.050219"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="144083__bosk1__wind-houling-1" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="48000" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="968001">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000286.au" len="173473" min="-0.200836" max="0.189362" rms="0.046811"/>
+				</waveblock>
+				<waveblock start="173473">
+					<simpleblockfile filename="e00001b4.au" len="173473" min="-0.265991" max="0.236938" rms="0.050245"/>
+				</waveblock>
+				<waveblock start="346946">
+					<simpleblockfile filename="e0000a7f.au" len="262144" min="-0.263367" max="0.248291" rms="0.04888"/>
+				</waveblock>
+				<waveblock start="609090">
+					<simpleblockfile filename="e0000576.au" len="179455" min="-0.217529" max="0.217041" rms="0.044865"/>
+				</waveblock>
+				<waveblock start="788545">
+					<simpleblockfile filename="e00005dd.au" len="179456" min="-0.28894" max="0.2547" rms="0.056867"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="144083__bosk1__wind-houling-1" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="48000" gain="1.0" pan="0.0"/>
+	<wavetrack name="144083__bosk1__wind-houling-1" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="48000" gain="1.0" pan="0.0"/>
+</project>

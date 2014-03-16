@@ -1,0 +1,126 @@
+fileFormatVersion: 2
+guid: 516c38777a00c0942b0cc51e2db110bd
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Camera
+    100004: Cube
+    100006: Lamp
+    100008: Armature
+    100010: Bone
+    100012: Bone_002
+    100014: Bone_003
+    100016: Bone_004
+    100018: Bone_005
+    100020: Cube_003
+    100022: Cube_004
+    100024: Cube_005
+    100026: Cube_006
+    400000: //RootNode
+    400002: Camera
+    400004: Cube
+    400006: Lamp
+    400008: Armature
+    400010: Bone
+    400012: Bone_002
+    400014: Bone_003
+    400016: Bone_004
+    400018: Bone_005
+    400020: Cube_003
+    400022: Cube_004
+    400024: Cube_005
+    400026: Cube_006
+    2300000: Cube
+    3300000: Cube
+    4300000: Cube
+    4300002: Cube_004
+    4300004: Cube_005
+    4300006: Cube_003
+    4300008: Cube_006
+    7400000: OilPump idle
+    7400002: ArmatureAction
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: Cube_003
+    13700002: Cube_004
+    13700004: Cube_005
+    13700006: Cube_006
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 2
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: OilPump idle
+      takeName: Default Take
+      firstFrame: 1
+      lastFrame: 96
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .0500000007
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  userData: 
