@@ -18,21 +18,31 @@ public class DataObjectEditor : Editor
     {
         serializedObject.Update();
 
-        DataObject dataObject = target as DataObject;
-
-        SetInheritedValues(dataObject);
-
-        foreach(FieldInfo field in target.GetType().GetFields()){
-            DrawPropertyGUI(dataObject, field);
-        }
-
-        serializedObject.ApplyModifiedProperties();
-
-        CheckInputValidity(dataObject);
+        HandleInspectorInput();
 
         if (GUI.changed)
         {
             EditorUtility.SetDirty(target);
+        }
+    }
+
+    private void HandleInspectorInput()
+    {
+        DataObject dataObject = target as DataObject;
+
+        HandleInheritedValues(dataObject);
+        DrawProperties(dataObject);
+
+        serializedObject.ApplyModifiedProperties();
+
+        CheckInputValidity(dataObject);
+    }
+
+    private void DrawProperties(DataObject dataObject)
+    {
+        foreach (FieldInfo field in target.GetType().GetFields())
+        {
+            DrawPropertyGUI(dataObject, field);
         }
     }
 
@@ -48,19 +58,23 @@ public class DataObjectEditor : Editor
         }
     }
 
-    private void SetInheritedValues(DataObject dataObject)
+    private void HandleInheritedValues(DataObject dataObject)
+    {
+        if (dataObject.BaseObject != null)
+        {
+            SetInheritedValues(dataObject);
+        }
+    }
+
+    private static void SetInheritedValues(DataObject dataObject)
     {
         DataObject baseObject = dataObject.BaseObject;
-
-        if (baseObject != null)
+        foreach (FieldInfo field in baseObject.GetType().GetFields())
         {
-            foreach (FieldInfo field in baseObject.GetType().GetFields())
+            if (dataObject.InheritsValue(field.Name))
             {
-                if (dataObject.InheritsValue(field.Name))
-                {
-                    object baseObjectValue = baseObject.GetType().GetField(field.Name).GetValue(baseObject);
-                    field.SetValue(dataObject, baseObjectValue);
-                }
+                object baseObjectValue = baseObject.GetType().GetField(field.Name).GetValue(baseObject);
+                field.SetValue(dataObject, baseObjectValue);
             }
         }
     }

@@ -13,11 +13,9 @@ namespace assets.scripts.Miscellaneous
     {
         public DataObject baseObject;
 
-        [HideInInspector]
         [SerializeField]
         private DataObject actualBaseObject;
 
-        [HideInInspector]
         [SerializeField]
         private List<string> inheritValues;
 
@@ -30,31 +28,50 @@ namespace assets.scripts.Miscellaneous
             {
                 if (IsValidNewBaseObject(value))
                 {
-                    if (actualBaseObject != value)
-                    {
-                        actualBaseObject = value;
-
-                        if (actualBaseObject != null)
-                        {
-                            foreach (FieldInfo field in actualBaseObject.GetType().GetFields())
-                            {
-                                if (field.Name != "baseObject")
-                                {
-                                    AddInheritValueIfNotExists(field.Name);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            inheritValues.Clear();
-                        }
-                    }
+                    HandleValidBaseObject(value);
                 }
                 else
                 {
-                    // set the base object to the old value
-                    baseObject = actualBaseObject;
-                    throw new ArgumentException(value.GetType().FullName + " is not assignable from " + this.GetType().FullName);
+                    HandleInvalidBaseObject(value);
+                }
+            }
+        }
+
+        private void HandleInvalidBaseObject(DataObject newValue)
+        {
+            // set the base object to the old value
+            baseObject = actualBaseObject;
+            throw new ArgumentException(newValue.GetType().FullName + " is not assignable from " + this.GetType().FullName);
+        }
+
+        private void HandleValidBaseObject(DataObject newValue)
+        {
+            if (actualBaseObject != newValue)
+            {
+                actualBaseObject = newValue;
+                HandleNewBaseObject();
+            }
+        }
+
+        private void HandleNewBaseObject()
+        {
+            if (actualBaseObject != null)
+            {
+                SetAllValuesToInherited();
+            }
+            else
+            {
+                inheritValues.Clear();
+            }
+        }
+
+        private void SetAllValuesToInherited()
+        {
+            foreach (FieldInfo field in actualBaseObject.GetType().GetFields())
+            {
+                if (field.Name != "baseObject")
+                {
+                    AddInheritValueIfNotExists(field.Name);
                 }
             }
         } 
