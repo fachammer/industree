@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     [Serializable]
     public class ActionDeniedViewData : ViewData

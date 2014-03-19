@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
-using assets.scripts.Rendering;
+using Industree.Rendering;
+using Industree.Model.Actions;
+using Industree.Facade;
+using Industree.Facade.Internal;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     
 
-    [RequireComponent(typeof(Action))]
+    [RequireComponent(typeof(IAction))]
     [RequireComponent(typeof(ActionView))]
     public class ActionCooldownView : View<ActionCooldownViewData>
     {
-        private Action action;
+        private IAction action;
         private ActionView actionView;
 
         private void Awake()
@@ -28,11 +31,11 @@ namespace assets.scripts.View
             }
         }
 
-        private Rect CalculateCooldownOverlayRectangle(Action action)
+        private Rect CalculateCooldownOverlayRectangle(IAction action)
         {
             Rect actionIconRectangle = actionView.data.bounds;
             float overlayWidth = Mathf.Clamp(
-                action.GetRemainingCooldown() * actionIconRectangle.width / action.cooldown,
+                action.GetRemainingCooldown() * actionIconRectangle.width / action.Cooldown,
                 0,
                 actionIconRectangle.width);
 

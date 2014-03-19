@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace assets.scripts.Miscellaneous
+namespace Industree.Miscellaneous
 {
-    public abstract class DataSubject<T> : MonoBehaviour where T : DataObject
+    public abstract class DataSubject<TData> : MonoBehaviour where TData : DataObject
     {
-        public T data;
+        public TData data;
     }
 }

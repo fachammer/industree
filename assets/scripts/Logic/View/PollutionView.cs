@@ -1,10 +1,10 @@
-﻿using assets.scripts.Miscellaneous;
-using assets.scripts.Rendering;
+﻿using Industree.Miscellaneous;
+using Industree.Rendering;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     public class PollutionView : View<PollutionViewData>
     {

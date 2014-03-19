@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     public class PollutionScreenFaderView : MonoBehaviour
     {

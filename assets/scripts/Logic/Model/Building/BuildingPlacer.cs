@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using assets.scripts.Miscellaneous;
+using Industree.Miscellaneous;
 
 public class BuildingPlacer : MonoBehaviour {
 

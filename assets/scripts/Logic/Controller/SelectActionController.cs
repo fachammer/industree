@@ -1,11 +1,12 @@
-﻿using assets.scripts.View;
+﻿using Industree.Facade;
+using Industree.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace assets.scripts.Controller
+namespace Industree.Controller
 {
     public class SelectActionController
     {
@@ -23,7 +24,7 @@ namespace assets.scripts.Controller
             this.gameController = gameController;
         }
 
-        private void OnActionSelectInput(Player player, float selectDirection)
+        private void OnActionSelectInput(IPlayer player, float selectDirection)
         {
             if (!gameController.GameEnded && !gameController.GamePaused)
             {

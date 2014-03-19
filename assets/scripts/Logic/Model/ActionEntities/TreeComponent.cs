@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Industree.Facade;
+using Industree.Facade.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +20,7 @@ public class TreeComponent: MonoBehaviour {
     public String[] idleAnim;
     public String[] growAnim;
 
-    public Player player;
+    public IPlayer player;
 
     private float[] levelUpTimes;
     private float dieSpeed = 0f;
@@ -69,7 +71,7 @@ public class TreeComponent: MonoBehaviour {
 	}
 
 	private void OnCleanTimerTick(Timer timer){
-		player.GetComponent<CreditsManager>().IncreaseCredits(creditsPerSec[levelable.Level - 1]);
+		player.IncreaseCredits(creditsPerSec[levelable.Level - 1]);
 	}
 
     private void OnLevelUpTimerTick(Timer timer)

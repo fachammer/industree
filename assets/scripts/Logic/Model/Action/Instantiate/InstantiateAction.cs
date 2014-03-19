@@ -1,18 +1,25 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Industree.Facade;
+using Industree.Facade.Internal;
 
-public class InstantiateAction : Action {
+namespace Industree.Model.Actions
+{
+    public class InstantiateAction : Action
+    {
 
-	public GameObject actionGameEntity;
+        public GameObject actionGameEntity;
 
-	protected override void PerformInvoke(Player player, float actionDirection){
-		InstantiateActionEntity(player, actionDirection);
-	}
+        protected override void PerformInvoke(IPlayer player, float actionDirection)
+        {
+            InstantiateActionEntity(player, actionDirection);
+        }
 
-	protected GameObject InstantiateActionEntity(Player player, float actionDirection){
-		ActionEntity actionEntity = ((GameObject) Instantiate(actionGameEntity)).GetComponent<ActionEntity>();
-		actionEntity.Player = player;
-		actionEntity.ActionDirection = actionDirection;
-		return actionEntity.gameObject;
-	}
+        protected GameObject InstantiateActionEntity(IPlayer player, float actionDirection)
+        {
+            ActionEntity actionEntity = ((GameObject)Instantiate(actionGameEntity)).GetComponent<ActionEntity>();
+            actionEntity.Player = player;
+            actionEntity.ActionDirection = actionDirection;
+            return actionEntity.gameObject;
+        }
+    }
 }

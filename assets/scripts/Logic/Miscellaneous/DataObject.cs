@@ -1,4 +1,4 @@
-﻿using assets.scripts.View;
+﻿using Industree.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace assets.scripts.Miscellaneous
+namespace Industree.Miscellaneous
 {
     public abstract class DataObject : MonoBehaviour
     {
@@ -74,7 +74,7 @@ namespace assets.scripts.Miscellaneous
                     AddInheritValueIfNotExists(field.Name);
                 }
             }
-        } 
+        }
 
         private bool IsValidNewBaseObject(DataObject newBaseObject)
         {

@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿using Industree.Facade;
+using Industree.Model;
+using UnityEngine;
 
 public class ActionEntity : MonoBehaviour {
 
-	private Player player;
+	private IPlayer player;
 	private float actionDirection;
 
-	public Player Player { 
+    public IPlayer Player
+    { 
 		get { return player; }
 		set { player = value; } 
 	}

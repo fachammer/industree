@@ -1,28 +1,28 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using assets.scripts.Rendering;
-using assets.scripts.Controller;
+using Industree.Rendering;
+using Industree.Logic;
+using Industree.Facade;
+using Industree.Facade.Internal;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     [RequireComponent(typeof(ActionView))]
     public class ActionDeniedView : View<ActionDeniedViewData>
     {
-        private ActionInvoker actionInvoker;
+        private IActionInvoker actionInvoker;
         private Timer actionDeniedOverlayTimer;
         private ActionView actionView;
-        private Action action;
+        private IAction action;
 
         private void Awake()
         {
-            actionInvoker = transform.parent.GetComponent<ActionInvoker>();
+            actionInvoker = transform.parent.GetComponent<Player>().ActionInvoker;
             actionInvoker.ActionFailure += OnPlayerActionFailure;
             actionView = GetComponent<ActionView>();
             action = GetComponent<Action>();
         }
 
-        private void OnPlayerActionFailure(Player player, Action action, float actionDirection)
+        private void OnPlayerActionFailure(IPlayer player, IAction action, float actionDirection)
         {
             if (this.action == action)
             {

@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Industree.Facade;
+using Industree.Facade.Internal;
 
-public class TreeAction : Action {
+namespace Industree.Model.Actions
+{
+    public class TreeAction : Action
+    {
 
-	protected override void PerformInvoke(Player player, float actionDirection){
-		TreePlacer treePlacer = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<TreePlacer>();
-		TreeComponent treeComponent = treePlacer.PlaceTree(player);
-		treeComponent.player = player;
-	}
+        protected override void PerformInvoke(IPlayer player, float actionDirection)
+        {
+            TreePlacer treePlacer = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<TreePlacer>();
+            TreeComponent treeComponent = treePlacer.PlaceTree(player);
+            treeComponent.player = player;
+        }
 
-	public override bool IsInvokable(Player player, float actionDirection){
-		TreePlacer treePlacer = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<TreePlacer>();
-		return treePlacer.CanPlaceTree(player);
-	}
+        public override bool IsInvokable(IPlayer player, float actionDirection)
+        {
+            TreePlacer treePlacer = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<TreePlacer>();
+            return treePlacer.CanPlaceTree(player);
+        }
+    }
 }

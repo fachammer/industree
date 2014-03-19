@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using assets.scripts.Controls;
+using Industree.Controls;
 
 public class StartScreen:MonoBehaviour {
 

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace assets.scripts.Miscellaneous
+namespace Industree.Miscellaneous
 {
     public delegate void NoArgsEventHandler(object sender);
 

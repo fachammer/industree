@@ -1,4 +1,4 @@
-﻿using assets.scripts.Miscellaneous;
+﻿using Industree.Miscellaneous;
 using UnityEngine;
 
 public class Thunderstorm :ActionEntity {  

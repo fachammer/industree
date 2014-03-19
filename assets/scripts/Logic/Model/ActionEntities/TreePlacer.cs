@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Industree.Model;
+using Industree.Facade;
 
 public class TreePlacer : MonoBehaviour {
 
@@ -11,8 +13,8 @@ public class TreePlacer : MonoBehaviour {
 		buildSlots = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<BuildSlots>();
 	}
 
-	public TreeComponent PlaceTree(Player player){
-		int nextTreeIndex = GetNextTreeIndex(player.index);
+	public TreeComponent PlaceTree(IPlayer player){
+		int nextTreeIndex = GetNextTreeIndex(player.Index);
 
 		GameObject treeClone = (GameObject) Instantiate(treeModel);
 		buildSlots.PlaceGameObjectOnBuildSlot(treeClone, nextTreeIndex);
@@ -39,8 +41,8 @@ public class TreePlacer : MonoBehaviour {
 		return -1;
 	}
 
-	public bool CanPlaceTree(Player player){
-        return GetNextTreeIndex(player.index) != -1;
+	public bool CanPlaceTree(IPlayer player){
+        return GetNextTreeIndex(player.Index) != -1;
 	}
 
 	private bool CanPlaceTreeOnIndex(int index){

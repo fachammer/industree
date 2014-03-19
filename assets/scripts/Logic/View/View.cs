@@ -1,7 +1,7 @@
-﻿using assets.scripts.Miscellaneous;
+﻿using Industree.Miscellaneous;
 using UnityEngine;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     public abstract class View<T> : DataSubject<T> where T : ViewData
     {

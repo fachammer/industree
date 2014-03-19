@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace assets.scripts.Inspector
+namespace Industree.Inspector
 {
     [Serializable]
     public class MultidimensionalRectangle

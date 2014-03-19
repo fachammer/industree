@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Industree.Facade;
 
-public abstract class InstantiateOnPositionAction : InstantiateAction {
+namespace Industree.Model.Actions {
+    public abstract class InstantiateOnPositionAction : InstantiateAction
+    {
 
-	protected override void PerformInvoke(Player player, float actionDirection){
-		GameObject actionEntity = base.InstantiateActionEntity(player, actionDirection);
-		Vector3 position = GetInitialActionEntityPosition(player, actionDirection);
-		actionEntity.transform.position = position;
-	}
+        protected override void PerformInvoke(IPlayer player, float actionDirection)
+        {
+            GameObject actionEntity = base.InstantiateActionEntity(player, actionDirection);
+            Vector3 position = GetInitialActionEntityPosition(player, actionDirection);
+            actionEntity.transform.position = position;
+        }
 
-	protected abstract Vector3 GetInitialActionEntityPosition(Player player, float actionDirection);
+        protected abstract Vector3 GetInitialActionEntityPosition(IPlayer player, float actionDirection);
+    }
 }

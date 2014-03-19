@@ -1,19 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using assets.scripts.Miscellaneous;
+using Industree.Miscellaneous;
 using System;
+using Industree.Facade.Internal;
+using Industree.Facade;
 
 public class PlayerInput : MonoBehaviour
 {
     public string selectInputName;
     public string actionInputName;
 
-    private Player player;
+    private IPlayer player;
     private float previousSelectInputAxis;
     private float previousActionInputAxis;
 
-    public event System.Action<Player, float> PlayerActionSelectInput = (player, selectDirection) => {};
-    public event System.Action<Player, float> PlayerActionInput = (player, actionDirection) => {};
+    public event System.Action<IPlayer, float> PlayerActionSelectInput = (player, selectDirection) => {};
+    public event System.Action<IPlayer, float> PlayerActionInput = (player, actionDirection) => {};
 
     private void Awake(){
         player = GetComponent<Player>();

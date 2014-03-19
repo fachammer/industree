@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace assets.scripts.Rendering
+namespace Industree.Rendering
 {
     public static class ResolutionIndependentRenderer
     {

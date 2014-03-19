@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using assets.scripts.Rendering;
+using Industree.Rendering;
+using Industree.Facade;
+using Industree.Facade.Internal;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
-    [RequireComponent(typeof(Player))]
+    [RequireComponent(typeof(IPlayer))]
     public class SelectedActionView : View<SelectedActionViewData>
     {
         private PlayerInput playerInputInterface;
-        private Player player;
+        private IPlayer player;
 
-        public event System.Action<Player, float> ActionSelectInput = (player, selectDirection) => { };
+        public event System.Action<IPlayer, float> ActionSelectInput = (player, selectDirection) => { };
 
         private void Awake()
         {
@@ -21,14 +23,14 @@ namespace assets.scripts.View
             playerInputInterface.PlayerActionSelectInput += OnPlayerActionSelectInput;
         }
 
-        private void OnPlayerActionSelectInput(Player player, float selectDirection)
+        private void OnPlayerActionSelectInput(IPlayer player, float selectDirection)
         {
             ActionSelectInput(player, selectDirection);
         }
 
         protected override void Draw()
         {
-            Rect drawRectangle = player.SelectedAction.GetComponent<ActionView>().data.bounds;
+            Rect drawRectangle = player.SelectedAction.IconBounds;
             ResolutionIndependentRenderer.DrawTexture(drawRectangle, data.guiSkin.button.focused.background);
         }
 

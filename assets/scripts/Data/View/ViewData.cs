@@ -1,7 +1,7 @@
-﻿using assets.scripts.Miscellaneous;
+﻿using Industree.Miscellaneous;
 using UnityEngine;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     [System.Serializable]
     public class ViewData : DataObject

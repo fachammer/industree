@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace assets.scripts.Miscellaneous
+namespace Industree.Miscellaneous
 {
     public static class SpaceConverter
     {

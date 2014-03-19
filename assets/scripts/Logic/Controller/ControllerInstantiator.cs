@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using assets.scripts.View;
+using Industree.View;
 
-namespace assets.scripts.Controller
+namespace Industree.Controller
 {
     public class ControllerInstantiator : MonoBehaviour
     {

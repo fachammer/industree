@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace assets.scripts.Controls
+namespace Industree.Controls
 {
     public class Button : MonoBehaviour
     {

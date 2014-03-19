@@ -1,5 +1,5 @@
-﻿using assets.scripts.Miscellaneous;
-using assets.scripts.View;
+﻿using Industree.Miscellaneous;
+using Industree.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;

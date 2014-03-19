@@ -619,6 +619,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 1
+  initialCredits: 0
+  creditsUpInterval: 0
+  creditsPerInterval: 0
 --- !u!4 &410376386
 Transform:
   m_ObjectHideFlags: 0
@@ -1918,6 +1921,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
+  initialCredits: 0
+  creditsUpInterval: 0
+  creditsPerInterval: 0
 --- !u!4 &1446195717
 Transform:
   m_ObjectHideFlags: 0

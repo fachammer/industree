@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using assets.scripts.Rendering;
+using Industree.Rendering;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     public class ActionView : View<ActionViewData>
     {

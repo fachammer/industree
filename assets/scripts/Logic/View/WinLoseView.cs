@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
-using assets.scripts.Rendering;
+using Industree.Rendering;
 
-namespace assets.scripts.View
+namespace Industree.View
 {
     public class WinLoseView : View<WinLoseViewData>
     {

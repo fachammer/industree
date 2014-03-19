@@ -1,10 +1,10 @@
-﻿using assets.scripts.View;
+﻿using Industree.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace assets.scripts.Controller
+namespace Industree.Controller
 {
     public class ActionDeniedController
     {
