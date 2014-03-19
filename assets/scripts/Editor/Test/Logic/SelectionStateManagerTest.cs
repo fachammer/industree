@@ -3,7 +3,7 @@ using System.Collections;
 using NUnit.Framework;
 using NSubstitute;
 
-namespace Industree.Logic.Test
+namespace Industree.Logic.StateManager.Test
 {
     public class SelectionStateManagerTest
     {

@@ -2,7 +2,7 @@
 using Industree.Logic;
 using System;
 
-namespace Industree.Logic.Test
+namespace Industree.Logic.StateManager.Test
 {
     public class LevelManagerTest
     {

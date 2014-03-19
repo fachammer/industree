@@ -319,6 +319,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &142507943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 25385bf215d6f1847a75addf5bd18c75, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &142507944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -403,6 +406,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &244088738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,6 +421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d4048587ce6477b46b414bd5a6d02e87, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &244088739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -488,6 +494,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &246328334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -501,6 +509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d4048587ce6477b46b414bd5a6d02e87, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &246328335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,6 +660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: dcf7f6fb868e8e94685853ec89293667, type: 2}
+  playerInputInterface: {fileID: 0}
 --- !u!114 &410376388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -663,8 +673,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a133d5c1f1125848b8c5639a09e6bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectInputName: Player2Select
-  actionInputName: Player2Action
+  selectInputName: 506c617965723253656c656374
+  actionInputName: 506c6179657232416374696f6e
+  previousSelectInputAxis: 0
+  previousActionInputAxis: 0
 --- !u!114 &410376389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -835,6 +847,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &439363488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -848,6 +862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d4048587ce6477b46b414bd5a6d02e87, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &439363489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -920,6 +935,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &443457816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -933,6 +950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 25385bf215d6f1847a75addf5bd18c75, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &443457817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1194,6 +1212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: e0d0adc0c79030e4484464a7af9cb514, type: 2}
+  gameController: {fileID: 0}
 --- !u!1001 &565068610
 Prefab:
   m_ObjectHideFlags: 0
@@ -1372,6 +1391,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &648522881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1385,6 +1406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 25385bf215d6f1847a75addf5bd18c75, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &648522882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1562,6 +1584,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &1005066534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1575,6 +1599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 25385bf215d6f1847a75addf5bd18c75, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &1005066535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1788,6 +1813,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &1262111247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1801,6 +1828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 25385bf215d6f1847a75addf5bd18c75, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &1262111248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1953,6 +1981,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: dcf7f6fb868e8e94685853ec89293667, type: 2}
+  playerInputInterface: {fileID: 0}
 --- !u!114 &1446195719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1965,8 +1994,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a133d5c1f1125848b8c5639a09e6bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectInputName: Player1Select
-  actionInputName: Player1Action
+  selectInputName: 506c617965723153656c656374
+  actionInputName: 506c6179657231416374696f6e
+  previousSelectInputAxis: 0
+  previousActionInputAxis: 0
 --- !u!114 &1446195720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2324,6 +2355,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &1636108638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2337,6 +2370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d4048587ce6477b46b414bd5a6d02e87, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &1636108639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2581,6 +2615,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8fc38518ed653c64e8d14dc2feee8071, type: 2}
+  actionDeniedOverlayTimer: {fileID: 0}
+  actionView: {fileID: 0}
 --- !u!114 &1970570744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2594,6 +2630,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d4048587ce6477b46b414bd5a6d02e87, type: 2}
+  actionView: {fileID: 0}
 --- !u!114 &1970570745
 MonoBehaviour:
   m_ObjectHideFlags: 0

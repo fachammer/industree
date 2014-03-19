@@ -29,7 +29,7 @@ namespace Industree.Miscellaneous
 
         public static float GetAxisRawDown(string axis, float previousValue, out float rawAxisValue)
         {
-            float inputValue = Input.GetAxisRaw(axis);
+            float inputValue = UnityEngine.Input.GetAxisRaw(axis);
             rawAxisValue = inputValue;
 
             if (inputValue != 0 && previousValue == 0)

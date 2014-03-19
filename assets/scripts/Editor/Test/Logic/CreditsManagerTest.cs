@@ -3,7 +3,7 @@ using Industree.Facade;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Industree.Logic.Test
+namespace Industree.Logic.StateManager.Test
 {
     public class CreditsManagerTest
     {
@@ -84,6 +84,19 @@ namespace Industree.Logic.Test
             creditsManager.DecreaseCreditsByAmount(1);
 
             Assert.Fail();
+        }
+
+        [Test]
+        public void WhenIncreaseCreditsByAmountWithZeroAmountIsCalledThenCreditsChangeEventIsNotThrown()
+        {
+            CreditsManager creditsManager = new CreditsManager(1);
+            creditsManager.CreditsChange += (oldCredits, newCredits) => {
+                Assert.Fail();
+            };
+
+            creditsManager.IncreaseCreditsByAmount(0);
+
+            Assert.Pass();
         }
     }
 }
