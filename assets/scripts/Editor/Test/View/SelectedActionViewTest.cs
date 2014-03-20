@@ -14,21 +14,22 @@ namespace Industree.View.Test
         public void WhenDrawIsCalledThenGuiRendererRecievesCallToDrawTexture()
         {
             IAction fakeSelectedAction = Substitute.For<IAction>();
-            fakeSelectedAction.IconBounds.Returns(new Rect());
+            fakeSelectedAction.IconBounds.Returns(new Rect(0, 0, 1, 1));
+            ITexture fakeTexture = Substitute.For<ITexture>();
+            fakeSelectedAction.SelectedOverlayIcon.Returns(fakeTexture);
+
             IPlayer player = Substitute.For<IPlayer>();
             player.SelectedAction.Returns(fakeSelectedAction);
 
-            ISelectedActionViewData data = Substitute.For<ISelectedActionViewData>();
-            ITexture fakeTexture = Substitute.For<ITexture>();
-            data.IconOverlay.Returns(fakeTexture);
-
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
 
-            SelectedActionView selectedActionView = new SelectedActionView(player, data, gui);
+            SelectedActionView selectedActionView = new SelectedActionView(player, gui);
+
 
             selectedActionView.Draw();
 
-            gui.Received().DrawTexture(fakeTexture, fakeSelectedAction.IconBounds);
+
+            gui.Received().DrawTexture(fakeTexture, new Rect(0, 0, 1, 1));
         }
     }
 }

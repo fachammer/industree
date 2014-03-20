@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using Industree.Time;
+using Industree.Time.Internal;
 
 public class Polluting : MonoBehaviour {
 
@@ -14,7 +16,7 @@ public class Polluting : MonoBehaviour {
         Timer.Start(timeBetweenPollution, OnPollutionTimerTick);
 	}
 
-    private void OnPollutionTimerTick(Timer timer)
+    private void OnPollutionTimerTick(ITimer timer)
     {
     	foreach(Pollutable pollutable in pollutables){
     		pollutable.IncreasePollution(pollution);

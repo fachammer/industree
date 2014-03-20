@@ -6,7 +6,7 @@ using Industree.Data.View;
 using Industree.Graphics;
 using UnityEngine;
 
-namespace Industree.Test.View
+namespace Industree.View.Test
 {
     public class CreditsViewTest
     {

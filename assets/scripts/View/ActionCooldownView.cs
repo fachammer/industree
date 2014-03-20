@@ -1,51 +1,36 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Industree.Rendering;
-using Industree.Model.Actions;
 using Industree.Facade;
-using Industree.Facade.Internal;
+using Industree.Data.View;
+using Industree.Graphics;
 
 namespace Industree.View
 {
-    
-
-    [RequireComponent(typeof(IAction))]
-    [RequireComponent(typeof(ActionView))]
-    public class ActionCooldownView : View<ActionCooldownViewData>
+    public class ActionCooldownView : IView
     {
         private IAction action;
-        private ActionView actionView;
+        private IActionViewData actionViewData;
+        private IActionCooldownViewData actionCooldownViewData;
+        private IGuiRenderer gui;
 
-        private void Awake()
+        public ActionCooldownView(IAction action, IActionViewData actionViewData, IActionCooldownViewData data, IGuiRenderer gui)
         {
-            action = GetComponent<Action>();
-            actionView = GetComponent<ActionView>();
+            this.action = action;
+            this.actionViewData = actionViewData;
+            this.actionCooldownViewData = data;
+            this.gui = gui;
         }
 
-        protected override void Draw()
+        public void Draw()
         {
-            if (action.IsCoolingDown)
-            {
-                Rect drawRectangle = CalculateCooldownOverlayRectangle(action);
-                ResolutionIndependentRenderer.DrawTexture(drawRectangle, data.cooldownOverlay);
-            }
+            if(action.IsCoolingDown)
+                gui.DrawTexture(actionCooldownViewData.IconOverlay, GetOverlayBounds());
         }
 
-        private Rect CalculateCooldownOverlayRectangle(IAction action)
+        private Rect GetOverlayBounds()
         {
-            Rect actionIconRectangle = actionView.data.bounds;
-            float overlayWidth = Mathf.Clamp(
-                action.GetRemainingCooldown() * actionIconRectangle.width / action.Cooldown,
-                0,
-                actionIconRectangle.width);
-
-            float xCoordinate = data.barDecreaseDirection == BarDecreaseDirection.LeftToRight ? actionIconRectangle.x + actionIconRectangle.width - overlayWidth : actionIconRectangle.x;
-
-            return new Rect(
-                    xCoordinate,
-                    actionIconRectangle.y,
-                    overlayWidth,
-                    actionIconRectangle.height);
+            Rect overlayBounds = new Rect(actionViewData.IconBounds);
+            overlayBounds.width = actionViewData.IconBounds.width * action.RemainingCooldown / action.Cooldown;
+            return overlayBounds;
         }
     }
 }

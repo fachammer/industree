@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Industree.Miscellaneous;
+using Industree.Time.Internal;
+using Industree.Time;
 
 public class BuildingPlacer : MonoBehaviour {
 
@@ -14,7 +16,7 @@ public class BuildingPlacer : MonoBehaviour {
 		Timer.Start(buildInterval, OnBuildTimerTick);
 	}
 
-	private void OnBuildTimerTick(Timer timer){
+	private void OnBuildTimerTick(ITimer timer){
 		int nextBuildingIndex = GetNextBuildingIndex();
 		if(nextBuildingIndex != -1){
 			PlaceNewBuildingOnIndex(nextBuildingIndex);

@@ -1,30 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Industree.Rendering;
+using Industree.Facade;
+using Industree.Graphics;
 
 namespace Industree.View
 {
-    public class WinLoseView : View<WinLoseViewData>
+    public class WinLoseView : IView
     {
-        private GameController gameController;
+        private IGame game;
+        private IGuiRenderer gui;
 
-        private void Awake()
+        public WinLoseView(IGame game, IGuiRenderer gui)
         {
-            gameController = GameController.Get();
+            this.game = game;
+            this.gui = gui;
         }
 
-        protected override void Draw()
+        public void Draw()
         {
-            if (gameController.GameEnded)
+            if (game.HasGameEnded)
             {
-                if (gameController.GameWon)
-                {
-                    ResolutionIndependentRenderer.DrawTexture(data.dialogRectangle, data.winDialog);
-                }
+                if (game.PlayerWonGame)
+                    gui.DrawTexture(game.WinTexture, game.ScreenBounds);
                 else
-                {
-                    ResolutionIndependentRenderer.DrawTexture(data.dialogRectangle, data.loseDialog);
-                }
+                    gui.DrawTexture(game.LoseTexture, game.ScreenBounds);
             }
         }
     }

@@ -6,7 +6,7 @@ using Industree.Model.Actions;
 
 namespace Industree.Facade.Internal
 {
-    public class Player : MonoBehaviour, IPlayer
+    internal class Player : MonoBehaviour, IPlayer
     {
         public int index;
         public int initialCredits;
@@ -20,6 +20,7 @@ namespace Industree.Facade.Internal
 
         public event Action<IPlayer, float> ActionInput;
         public event Action<IPlayer, IAction, float> ActionSuccess;
+        public event Action<IPlayer, IAction, float> ActionFailure;
         public event Action<int, int> CreditsChange;
 
         public IAction[] Actions { get { return actions; } }

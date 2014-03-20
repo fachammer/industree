@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Industree.Facade;
 
 public class CameraAnchor : MonoBehaviour {
 
     private void OnBecameVisible()
     {
-        GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().StartGame();	
+        GameFactory.GetGameInstance().StartGame();
     }
 }

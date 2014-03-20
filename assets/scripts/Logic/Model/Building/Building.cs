@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Industree.Time;
+using Industree.Time.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,13 +55,14 @@ public class Building : MonoBehaviour{
         newGameObject.transform.parent = transform;
 	}
 
-    private void OnLevelUpTimerTick(Timer timer)
+    private void OnLevelUpTimerTick(ITimer timer)
     {
         levelable.LevelUp();
 
         if (levelable.Level < levelable.maxLevel)
         {
-            timer.interval = levelUpTimes[levelable.Level - 1];
+            timer.Stop();
+            Timer.Start(levelUpTimes[levelable.Level - 1], OnLevelUpTimerTick);
         }
         else
         {

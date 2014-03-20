@@ -1,5 +1,7 @@
 ﻿using Industree.Facade;
 using Industree.Facade.Internal;
+using Industree.Time;
+using Industree.Time.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,17 +72,18 @@ public class TreeComponent: MonoBehaviour {
         damagable.BeforeDestroy -= OnTreeDestroy;
 	}
 
-	private void OnCleanTimerTick(Timer timer){
+	private void OnCleanTimerTick(ITimer timer){
 		player.IncreaseCredits(creditsPerSec[levelable.Level - 1]);
 	}
 
-    private void OnLevelUpTimerTick(Timer timer)
+    private void OnLevelUpTimerTick(ITimer timer)
     {
         levelable.LevelUp();
 
         if (levelable.Level < levelable.maxLevel)
         {
-            timer.interval = levelUpTimes[levelable.Level - 1];
+            timer.Stop();
+            Timer.Start(levelUpTimes[levelable.Level - 1], OnLevelUpTimerTick);
         }
         else
         {

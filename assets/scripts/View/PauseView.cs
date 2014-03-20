@@ -1,23 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Industree.Rendering;
+using Industree.Facade;
+using Industree.Graphics;
 
 namespace Industree.View
 {
-    public class PauseView : View<PauseViewData>
+    public class PauseView : IView
     {
-        private GameController gameController;
+        private IGame game;
+        private IGuiRenderer gui;
 
-        private void Awake()
+        public PauseView(IGame game, IGuiRenderer gui)
         {
-            gameController = GameController.Get();
+            this.game = game;
+            this.gui = gui;
         }
 
-        protected override void Draw()
+        public void Draw()
         {
-            if (gameController.GamePaused && !gameController.GameEnded)
+            if (game.IsGamePaused && !game.HasGameEnded)
             {
-                ResolutionIndependentRenderer.DrawTexture(data.pauseDialogRectangle, data.pauseDialog);
+                gui.DrawTexture(game.PauseTexture, game.ScreenBounds);
             }
         }
     }

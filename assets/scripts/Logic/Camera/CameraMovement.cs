@@ -12,7 +12,7 @@ public class CameraMovement:MonoBehaviour
 
     private void Awake()
     {
-        GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().GameStart += OnGameStart;
+        // GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().GameStart += OnGameStart;
     }   
 
     private void OnGameStart()

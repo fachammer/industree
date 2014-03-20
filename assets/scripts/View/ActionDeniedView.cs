@@ -1,56 +1,41 @@
-﻿using UnityEngine;
-using Industree.Rendering;
-using Industree.Logic;
-using Industree.Facade;
-using Industree.Facade.Internal;
+﻿using Industree.Facade;
+using Industree.Graphics;
+using Industree.Time;
+using System;
 
 namespace Industree.View
 {
-    [RequireComponent(typeof(ActionView))]
-    public class ActionDeniedView : View<ActionDeniedViewData>
+    public class ActionDeniedView : IView
     {
-        private IActionInvoker actionInvoker;
-        private Timer actionDeniedOverlayTimer;
-        private ActionView actionView;
-        private IAction action;
+        private IPlayer player;
+        private IClock clock;
+        private IGuiRenderer gui;
+        private Action drawCall;
 
-        private void Awake()
+        public ActionDeniedView(IPlayer player, IClock clock, IGuiRenderer gui)
         {
-            throw new System.NotImplementedException("change to non-MonoBehaviour");
-            // actionInvoker = transform.parent.GetComponent<Player>().ActionInvoker;
-            // actionInvoker.ActionFailure += OnPlayerActionFailure;
-            actionView = GetComponent<ActionView>();
-            action = GetComponent<Action>();
+            this.player = player;
+            this.clock = clock;
+            this.gui = gui;
+            drawCall = null;
+
+            player.ActionFailure += AddDrawCall;
         }
 
-        private void OnPlayerActionFailure(IPlayer player, IAction action, float actionDirection)
+        private void AddDrawCall(IPlayer player, IAction action, float actionDirection)
         {
-            if (this.action == action)
-            {
-                HandleActionFailure();
-            }
+            drawCall = () => gui.DrawTexture(action.DeniedOverlayIcon, action.IconBounds);
+
+            clock.ClearCallbacks();
+            clock.CallbackOnce(
+                action.DeniedOverlayIconTime, 
+                () => drawCall = null);
         }
 
-        private void HandleActionFailure()
+        public void Draw()
         {
-            if (actionDeniedOverlayTimer != null)
-            {
-                actionDeniedOverlayTimer.Stop();
-            }
-
-            actionDeniedOverlayTimer = Timer.Start(data.overlayTime,
-                (timer) => {
-                    timer.Stop();
-                    actionDeniedOverlayTimer = null;
-                });
-        }
-
-        protected override void Draw()
-        {
-            if (actionDeniedOverlayTimer != null)
-            {
-                ResolutionIndependentRenderer.DrawTexture(actionView.data.bounds, data.deniedOverlay);
-            }
+            if(drawCall != null)
+                drawCall();
         }
     }
 }

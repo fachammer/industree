@@ -1,4 +1,6 @@
 ﻿using Industree.Miscellaneous;
+using Industree.Time;
+using Industree.Time.Internal;
 using UnityEngine;
 
 public class Tornado :ActionEntity {
@@ -27,7 +29,7 @@ public class Tornado :ActionEntity {
         }
     }
 
-    private void OnDamageTimerTick(Timer timer){
+    private void OnDamageTimerTick(ITimer timer){
         Collider[] colliders = Physics.OverlapSphere(transform.position, collisionRadius, Layers.Building);
         foreach (Collider c in colliders){
             bool isHit = UnityEngine.Random.Range(0f, 1f) <= damageProbability;

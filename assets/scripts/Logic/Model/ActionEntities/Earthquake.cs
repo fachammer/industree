@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 using System;
+using Industree.Facade;
+using Industree.Time.Internal;
+using Industree.Time;
 
 public class Earthquake :ActionEntity {
 
     public float hurtDeltaTime;
     public float shakeIntensity;
     
-    private GameController gameController;
+    private IGame game;
     private Damaging damaging;
     private Vector3 initialCameraPosition;
     private Building[] buildings;
     private Timer damageTimer;
 
     private void Awake(){
-        gameController = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>();
+        game = GameFactory.GetGameInstance();
         damaging = GetComponent<Damaging>();
         
-        gameController.GameEnd += OnGameEnd;
-        gameController.GamePause += OnGamePause;
-        gameController.GameResume += OnGameResume;
+        game.GameEnd += Disable;
+        game.GamePause += Disable;
+        game.GameResume += Disable;
     }
 
     private void Start(){
@@ -27,19 +30,12 @@ public class Earthquake :ActionEntity {
         damageTimer = Timer.Start(hurtDeltaTime, OnDamageTimerTick);
     }
 
-    private void OnGameEnd(bool win){
+    private void Disable()
+    {
         enabled = false;
     }
 
-    private void OnGamePause(){
-        enabled = false;
-    }
-
-    private void OnGameResume(){
-        enabled = true;
-    }
-
-    private void OnDamageTimerTick(Timer timer){
+    private void OnDamageTimerTick(ITimer timer){
         int randomBuildingIndex = UnityEngine.Random.Range(0, buildings.Length);
         Building building = buildings[randomBuildingIndex];
             
@@ -61,10 +57,10 @@ public class Earthquake :ActionEntity {
 	private void OnDestroy(){
 		Camera.main.transform.position = initialCameraPosition;
 
-        gameController.GameEnd -= OnGameEnd;
-        gameController.GamePause -= OnGamePause;
-        gameController.GameResume -= OnGameResume;
-
+        game.GameEnd -= Disable;
+        game.GamePause -= Disable;
+        game.GameResume -= Disable;
+            
         damageTimer.Stop();
 	}
 

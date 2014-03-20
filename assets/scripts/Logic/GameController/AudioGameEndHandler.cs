@@ -7,7 +7,7 @@ public class AudioGameEndHandler : MonoBehaviour {
 	public AudioClip soundDefeated;
    
 	private void Awake () {
-		GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().GameEnd += OnGameEnd;
+		// GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<GameController>().GameEnd += OnGameEnd;
 	}
 
 	private void OnGameEnd(bool win){
