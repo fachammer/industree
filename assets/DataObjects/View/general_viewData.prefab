@@ -41,8 +41,8 @@ MonoBehaviour:
   baseObject: {fileID: 0}
   actualBaseObject: {fileID: 0}
   inheritValues: []
-  guiDepth: 0
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
+  depth: 0
+  viewSkin: {fileID: 11400000, guid: e4485f01e7481de43bacf5ae225fb150, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

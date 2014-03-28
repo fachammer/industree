@@ -14,12 +14,14 @@ namespace Industree.Facade.Internal
         public int cost;
         public float cooldown;
         public int index;
-        public IActionViewData actionViewData;
-        public IActionCooldownViewData actionCooldownViewData;
-        public ISelectedActionViewData selectedActionViewData;
-        public IActionDeniedViewData actionDeniedViewData;
+        public ActionIconViewData actionViewData;
+        public ActionCooldownViewData actionCooldownViewData;
+        public ActionDeniedViewData actionDeniedViewData;
 
-        private Timer cooldownTimer;
+        private ITimer cooldownTimer;
+        private ActionView actionView;
+
+        public event Action<IPlayer, IAction, float> Failure;
 
         public int Cost { get { return cost; } }
         public float Cooldown { get { return cooldown; } }
@@ -37,15 +39,16 @@ namespace Industree.Facade.Internal
         }
 
         public Rect IconBounds { get { return actionViewData.IconBounds; } }
-        public ITexture Icon { get { return actionViewData.Icon; } }
-        public ITexture CooldownOverlayIcon { get { return actionCooldownViewData.IconOverlay; } }
-        public ITexture DeniedOverlayIcon { get { return actionDeniedViewData.IconOverlay; } }
-        public ITexture SelectedOverlayIcon { get { return selectedActionViewData.IconOverlay; } }
+        public Rect CostBounds { get { return actionViewData.CostBounds; } }
+        public Texture Icon { get { return actionViewData.Icon; } }
+        public Texture CooldownOverlayIcon { get { return actionCooldownViewData.IconOverlay; } }
+        public Texture DeniedOverlayIcon { get { return actionDeniedViewData.IconOverlay; } }
         public float DeniedOverlayIconTime { get { return actionDeniedViewData.OverlayTime; } }
 
         private void StartCooldown()
         {
-            cooldownTimer = Timer.Start(cooldown, StopCooldownTimer);
+            cooldownTimer = Timing.GetTimerFactory().GetTimer(cooldown);
+            cooldownTimer.Tick += StopCooldownTimer;
         }
 
         private void StopCooldownTimer(ITimer timer)
@@ -54,17 +57,29 @@ namespace Industree.Facade.Internal
             cooldownTimer = null;
         }
 
-        public virtual void Invoke(IPlayer player, float actionDirection)
+        public void Invoke(IPlayer player, float actionDirection)
         {
             StartCooldown();
             PerformInvoke(player, actionDirection);
+        }
+
+        public void Fail(IPlayer player, float actionDirection)
+        {
+            Failure(player, this, actionDirection);
         }
 
         protected abstract void PerformInvoke(IPlayer player, float actionDirection);
 
         public virtual bool IsInvokable(IPlayer player, float actionDirection) { return true; }
 
+        private void Awake()
+        {
+            actionView = new ActionView(this, GuiRendererFactory.GetResolutionIndependentRenderer(), actionViewData.ViewSkin);
+        }
 
-        
+        private void OnGUI()
+        {
+            actionView.Draw();
+        }
     }
 }

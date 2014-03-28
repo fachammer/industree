@@ -3,15 +3,10 @@ using UnityEngine;
 
 namespace Industree.Miscellaneous
 {
-    public delegate void NoArgsEventHandler(object sender);
-
     public static class Utilities
     {
-        public delegate void NoArgsEventHandler(object sender);
-
         public static Transform GetMostOuterAncestor(Transform transform)
         {
-
             Transform ancestor = transform.parent;
 
             if (ancestor == null)

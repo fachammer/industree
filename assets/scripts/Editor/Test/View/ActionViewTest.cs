@@ -12,18 +12,15 @@ namespace Industree.View.Test
         [Test]
         public void GivenActionViewIsInstantiatedWhenDrawIsCalledThenGuiRendererRecievesCallToDrawTexture()
         {
-            IActionViewData actionViewData = Substitute.For<IActionViewData>();
-            Rect actionIconBounds = new Rect(1, 1, 1, 1);
-            actionViewData.IconBounds.Returns(actionIconBounds);
-            ITexture fakeTexture = Substitute.For<ITexture>();
-            actionViewData.Icon.Returns(fakeTexture);
-
+            IAction action = Substitute.For<IAction>();
+            action.IconBounds.Returns(new Rect(1, 1, 1, 1));
+            action.Icon.Returns(Substitute.For<Texture>());
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
-            ActionView actionView = new ActionView(Substitute.For<IAction>(), actionViewData, gui);
+            ActionIconView actionView = new ActionIconView(action, gui, Substitute.For<IViewSkin>());
 
             actionView.Draw();
 
-            gui.Received().DrawTexture(fakeTexture, actionIconBounds);
+            gui.Received().DrawTexture(action.Icon, action.IconBounds);
         }
 
         [Test]
@@ -31,17 +28,15 @@ namespace Industree.View.Test
         {
             IAction action = Substitute.For<IAction>();
             action.Cost.Returns(1);
-
-            IActionViewData actionViewData = Substitute.For<IActionViewData>();
-            Rect actionCostBounds = new Rect(1, 1, 1, 1);
-            actionViewData.CostBounds.Returns(actionCostBounds);
+            action.CostBounds.Returns(new Rect(1, 1, 1, 1));
 
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
-            ActionView actionView = new ActionView(action, actionViewData, gui);
+            IViewSkin skin = Substitute.For<IViewSkin>();
+            ActionIconView actionView = new ActionIconView(action, gui, Substitute.For<IViewSkin>());
 
             actionView.Draw();
 
-            gui.Received().DrawText(1.ToString(), actionCostBounds);
+            gui.Received().DrawText(1.ToString(), action.CostBounds, skin.Label);
         }
     }
 }

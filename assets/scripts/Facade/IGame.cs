@@ -1,5 +1,4 @@
-﻿using Industree.Graphics;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace Industree.Facade
@@ -17,9 +16,9 @@ namespace Industree.Facade
         bool IsGamePaused { get; }
         bool HasGameEnded { get; }
         bool PlayerWonGame { get; }
-        ITexture PauseTexture { get; }
-        ITexture WinTexture { get; }
-        ITexture LoseTexture { get; }
+        Texture PauseTexture { get; }
+        Texture WinTexture { get; }
+        Texture LoseTexture { get; }
         Rect ScreenBounds { get; }
         void StartGame();
         void PauseGame();

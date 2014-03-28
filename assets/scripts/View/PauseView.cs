@@ -6,18 +6,16 @@ using Industree.Graphics;
 
 namespace Industree.View
 {
-    public class PauseView : IView
+    public class PauseView : AbstractView
     {
         private IGame game;
-        private IGuiRenderer gui;
 
-        public PauseView(IGame game, IGuiRenderer gui)
+        public PauseView(IGame game, IGuiRenderer gui, IViewSkin skin) : base(gui, skin)
         {
             this.game = game;
-            this.gui = gui;
         }
 
-        public void Draw()
+        public override void Draw()
         {
             if (game.IsGamePaused && !game.HasGameEnded)
             {

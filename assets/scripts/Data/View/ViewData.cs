@@ -1,12 +1,21 @@
-﻿using Industree.Miscellaneous;
-using UnityEngine;
+﻿using Industree.View;
+using System;
 
-namespace Industree.View
+namespace Industree.Data.View
 {
-    [System.Serializable]
-    public class ViewData : DataObject
+    public interface IViewData
     {
-        public int guiDepth;
-        public GUISkin guiSkin;
+        int Depth { get; }
+        IViewSkin ViewSkin { get; }
+    }
+
+    [Serializable]
+    public class ViewData : DataObject, IViewData
+    {
+        public int depth;
+        public UnityViewSkin viewSkin;
+
+        public int Depth { get { return depth; } }
+        public IViewSkin ViewSkin { get { return viewSkin; } }
     }
 }

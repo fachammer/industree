@@ -4,7 +4,8 @@ namespace Industree.Graphics
 {
     public interface IGuiRenderer
     {
-        void DrawText(string text, Rect bounds);
-        void DrawTexture(ITexture texture, Rect bounds);
+        void DrawText(string text, Rect bounds, GUIStyle style);
+        void DrawTexture(Texture texture, Rect bounds);
+        void DrawTexture(Texture texture, Rect bounds, int depth);
     }
 }

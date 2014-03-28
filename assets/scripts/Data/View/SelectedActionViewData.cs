@@ -1,13 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-namespace Industree.View
+namespace Industree.Data.View
 {
-    [System.Serializable]
-    public class SelectedActionViewData : ViewData
+    public interface ISelectedActionViewData
     {
+        Texture IconOverlay { get; }
+    }
+
+    [Serializable]
+    public class SelectedActionViewData : ViewData, ISelectedActionViewData
+    {
+        public Texture selectedActionIconOverlay;
+
+        public Texture IconOverlay { get { return selectedActionIconOverlay; } }
     }
 }

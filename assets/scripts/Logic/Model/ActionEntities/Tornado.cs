@@ -12,14 +12,15 @@ public class Tornado :ActionEntity {
     public float moveRange;
 
     private Damaging damaging;
-    private Timer damageTimer;
+    private ITimer damageTimer;
 
     private void Awake(){
         damaging = GetComponent<Damaging>();
     }
 
     private void Start(){
-        damageTimer = Timer.Start(damageInterval, OnDamageTimerTick);
+        damageTimer = Timing.GetTimerFactory().GetTimer(damageInterval);
+        damageTimer.Tick += OnDamageTimerTick;
         Transform planetTransform = GameObject.FindGameObjectWithTag(Tags.planet).transform;
         transform.LookAt(planetTransform.position);
         transform.Rotate(new Vector3(-90, 0, 0));

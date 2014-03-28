@@ -1,10 +1,6 @@
-﻿using Industree.Miscellaneous;
-using Industree.View;
+﻿using Industree.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 

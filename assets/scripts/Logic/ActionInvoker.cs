@@ -14,7 +14,10 @@ namespace Industree.Logic
                 ActionSuccess(player, action, direction);
             }
             else
+            {
+                action.Fail(player, direction);
                 ActionFailure(player, action, direction);
+            }
         }
 
         private bool CanActionSucceed(IPlayer player, IAction action, float direction)

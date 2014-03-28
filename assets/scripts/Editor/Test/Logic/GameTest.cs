@@ -12,7 +12,7 @@ namespace Industree.Facade.Internal.Test
             IPlanet planet = Substitute.For<IPlanet>();
             Game game = new Game(planet);
 
-            planet.MaximumPollution += Raise.Event<System.Action>();
+            planet.MaximumPollutionReached += Raise.Event<System.Action>();
 
             Assert.That(game.HasGameEnded);
         }
@@ -53,7 +53,7 @@ namespace Industree.Facade.Internal.Test
             IPlanet planet = Substitute.For<IPlanet>();
             Game game = new Game(planet);
 
-            planet.ZeroPollution += Raise.Event<System.Action>();
+            planet.ZeroPollutionReached += Raise.Event<System.Action>();
 
             Assert.That(game.HasGameEnded);
         }
@@ -74,7 +74,7 @@ namespace Industree.Facade.Internal.Test
             IPlanet planet = Substitute.For<IPlanet>();
             Game game = new Game(planet);
 
-            planet.ZeroPollution += Raise.Event<System.Action>();
+            planet.ZeroPollutionReached += Raise.Event<System.Action>();
 
             Assert.That(game.PlayerWonGame);
         }
@@ -85,7 +85,7 @@ namespace Industree.Facade.Internal.Test
             IPlanet planet = Substitute.For<IPlanet>();
             Game game = new Game(planet);
 
-            planet.MaximumPollution += Raise.Event<System.Action>();
+            planet.MaximumPollutionReached += Raise.Event<System.Action>();
 
             Assert.That(!game.PlayerWonGame);
         }
@@ -105,7 +105,7 @@ namespace Industree.Facade.Internal.Test
             Game game = new Game(planet);
             game.GameEnd += Assert.Pass;
 
-            planet.ZeroPollution += Raise.Event<System.Action>();
+            planet.ZeroPollutionReached += Raise.Event<System.Action>();
 
             Assert.Fail();
         }
@@ -117,7 +117,7 @@ namespace Industree.Facade.Internal.Test
             Game game = new Game(planet);
             game.GameEnd += Assert.Pass;
 
-            planet.MaximumPollution += Raise.Event<System.Action>();
+            planet.MaximumPollutionReached += Raise.Event<System.Action>();
 
             Assert.Fail();
         }
@@ -129,7 +129,7 @@ namespace Industree.Facade.Internal.Test
             Game game = new Game(planet);
             game.GameWin += Assert.Pass;
 
-            planet.ZeroPollution += Raise.Event<System.Action>();
+            planet.ZeroPollutionReached += Raise.Event<System.Action>();
 
             Assert.Fail();
         }
@@ -141,7 +141,7 @@ namespace Industree.Facade.Internal.Test
             Game game = new Game(planet);
             game.GameLose += Assert.Pass;
 
-            planet.MaximumPollution += Raise.Event<System.Action>();
+            planet.MaximumPollutionReached += Raise.Event<System.Action>();
 
             Assert.Fail();
         }

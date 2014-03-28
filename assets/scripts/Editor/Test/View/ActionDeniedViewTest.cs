@@ -1,47 +1,60 @@
 ﻿using NUnit.Framework;
 using NSubstitute;
+using Industree.Time;
 using Industree.Facade;
-using Industree.Data.View;
 using Industree.Graphics;
 using System;
 using UnityEngine;
-using Industree.Logic.Test;
-using Industree.Time;
 
 namespace Industree.View.Test
 {
     public class ActionDeniedViewTest
     {
         [Test]
-        public void GivenActionDeneidViewIsInstantiatedWhenActionWasDeniedAndDrawIsCalledThenDrawTextureOnGuiRendererIsCalledOnceAfterOneTick()
+        public void WhenActionFailsAndDrawIsCalledThenGuiRecievesCallToDrawTexture()
         {
-            IPlayer player = Substitute.For<IPlayer>();
-            IAction failedAction = Substitute.For<IAction>();
-            ITexture fakeTexture = Substitute.For<ITexture>();
-            failedAction.DeniedOverlayIcon.Returns(fakeTexture);
-            failedAction.IconBounds.Returns(new Rect(0, 0, 1, 1));
-            failedAction.DeniedOverlayIconTime.Returns(1);
-
-            IClock clock = Substitute.For<IClock>();
-            TestTimer fakeTimer = new TestTimer();
-
-            clock.WhenForAnyArgs(c => c.CallbackOnce(0, null))
-                .Do(callInfo => {
-                    fakeTimer.Tick += (t) => callInfo.Arg<Action>()();
-                });
-
+            IAction action = Substitute.For<IAction>();
+            action.IconBounds.Returns(new Rect());
+            action.DeniedOverlayIcon.Returns(Substitute.For<Texture>());
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
-            ActionDeniedView actionDeniedView = new ActionDeniedView(player, clock, gui);
+            ActionDeniedView actionDeniedView = new ActionDeniedView(action, Substitute.For<ITimerFactory>(), gui, Substitute.For<IViewSkin>());
 
-            player.ActionFailure += Raise.Event<Action<IPlayer, IAction, float>>(player, failedAction, 1f);
-
+            action.Failure += Raise.Event<Action<IPlayer, IAction, float>>(Substitute.For<IPlayer>(), action, 1f);
 
             actionDeniedView.Draw();
-            fakeTimer.SimulateOneTick();
+
+            gui.Received().DrawTexture(action.DeniedOverlayIcon, action.IconBounds);
+        }
+
+        [Test]
+        public void WhenActionDoesNotFailAndDrawIsCalledThenGuiDoesNotRecieveCallToDrawTexture()
+        {
+            IAction action = Substitute.For<IAction>();
+            action.IconBounds.Returns(new Rect());
+            action.DeniedOverlayIcon.Returns(Substitute.For<Texture>());
+            IGuiRenderer gui = Substitute.For<IGuiRenderer>();
+            ActionDeniedView actionDeniedView = new ActionDeniedView(action, Substitute.For<ITimerFactory>(), gui, Substitute.For<IViewSkin>());
+
             actionDeniedView.Draw();
 
+            gui.DidNotReceiveWithAnyArgs().DrawTexture(action.DeniedOverlayIcon, action.IconBounds);
+        }
 
-            gui.Received(1).DrawTexture(fakeTexture, new Rect(0, 0, 1, 1));
+        [Test]
+        public void WhenActionFailsAndTimerTickedAndDrawIsCalledThenGuiDoesNotRecieveCallToDrawTexture()
+        {
+            IAction action = Substitute.For<IAction>();
+            ITimerFactory timerFactory = Substitute.For<ITimerFactory>();
+            ITimer fakeTimer = Substitute.For<ITimer>();
+            timerFactory.GetTimer(action.DeniedOverlayIconTime).ReturnsForAnyArgs(fakeTimer);
+            IGuiRenderer gui = Substitute.For<IGuiRenderer>();
+            ActionDeniedView actionDeniedView = new ActionDeniedView(action, timerFactory, gui, Substitute.For<IViewSkin>());
+
+            action.Failure += Raise.Event<Action<IPlayer, IAction, float>>(Substitute.For<IPlayer>(), action, 1f);
+            fakeTimer.Tick += Raise.Event<Action<ITimer>>(fakeTimer);
+            actionDeniedView.Draw();
+
+            gui.DidNotReceiveWithAnyArgs().DrawTexture(null, new Rect());
         }
     }
 }

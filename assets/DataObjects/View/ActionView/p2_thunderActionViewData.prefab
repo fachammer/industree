@@ -35,7 +35,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e34cc7330a633040826d9104332c73c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7aa89d91673abc540b7d6e5a6b411088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   baseObject: {fileID: 11400000, guid: 3235e891d84e1e547a68531da46fcce6, type: 2}
@@ -44,14 +44,22 @@ MonoBehaviour:
   - actionIcon
   - guiDepth
   - guiSkin
-  guiDepth: 0
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
+  - viewSkin
+  - depth
+  depth: 0
+  viewSkin: {fileID: 11400000, guid: e4485f01e7481de43bacf5ae225fb150, type: 2}
   actionIcon: {fileID: 2800000, guid: 09d53bda158152a4a96d5acb1cdfebb5, type: 3}
-  bounds:
+  iconBounds:
     serializedVersion: 2
     x: .920000017
     y: .270000011
     width: .0799999982
+    height: .119999997
+  costBounds:
+    serializedVersion: 2
+    x: .870000005
+    y: .270000011
+    width: .0500000007
     height: .119999997
 --- !u!1001 &100100000
 Prefab:

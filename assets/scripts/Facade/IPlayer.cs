@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Industree.Facade
 {
@@ -8,6 +9,7 @@ namespace Industree.Facade
         event Action<IPlayer, IAction, float> ActionSuccess;
         event Action<IPlayer, IAction, float> ActionFailure;
         event Action<int, int> CreditsChange;
+
         IAction[] Actions { get; }
         IAction SelectedAction { get; }
         int Credits { get; }
@@ -15,5 +17,10 @@ namespace Industree.Facade
         void SelectNextAction();
         void SelectPreviousAction();
         void IncreaseCredits(int amount);
+
+        Texture CreditsIcon { get; }
+        Rect CreditsIconBounds { get; }
+        Rect CreditsTextBounds { get; }
+        Texture SelectedOverlayIcon { get; }
     }
 }

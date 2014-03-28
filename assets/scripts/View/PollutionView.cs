@@ -1,41 +1,30 @@
-﻿using Industree.Miscellaneous;
-using Industree.Rendering;
-using System;
-using System.Collections.Generic;
+﻿using Industree.Facade;
+using Industree.Graphics;
 using UnityEngine;
 
 namespace Industree.View
 {
-    public class PollutionView : View<PollutionViewData>
+    public class PollutionView : AbstractView
     {
-        private Pollutable pollutable;
-        private Texture airTexture;
-        private Texture pollutionTexture;
-        private Rect airRectangle;
-        private Rect pollutionRectangle;
+        private IPlanet planet;
 
-        private void Awake()
+        public PollutionView(IPlanet planet, IGuiRenderer gui, IViewSkin skin) : base(gui, skin)
         {
-            pollutable = Pollutable.Get();
+            this.planet = planet;
         }
 
-        private void Update()
+        public override void Draw()
         {
-            float pollution = Mathf.Clamp(pollutable.currentPollution, 0, pollutable.maxPollution);
-
-            airRectangle = new Rect(data.pollutionBilanceRectangle);
-            pollutionRectangle = new Rect(data.pollutionBilanceRectangle);
-            airRectangle.width = data.pollutionBilanceRectangle.width * (1 - pollution / pollutable.maxPollution);
-
-            airTexture = Utilities.MakeTexture2DWithColor(data.airColor);
-            pollutionTexture = Utilities.MakeTexture2DWithColor(data.pollutionColor);
+            Rect airBounds = CalculateAirBounds();
+            gui.DrawTexture(planet.AirTexture, airBounds, 0);
+            gui.DrawTexture(planet.PollutionTexture, planet.PollutionViewBounds, 1);
         }
 
-        protected override void Draw()
-        { 
-            ResolutionIndependentRenderer.DrawTexture(pollutionRectangle, pollutionTexture);
-            ResolutionIndependentRenderer.DrawTexture(airRectangle, airTexture);
-            ResolutionIndependentRenderer.DrawTexture(data.pollutionDecorationRectangle, data.pollutionDecoration); 
+        private Rect CalculateAirBounds()
+        {
+            Rect airBounds = new Rect(planet.PollutionViewBounds);
+            airBounds.width =  (1f - ((float)planet.CurrentPollution) / planet.MaximumPollution) * planet.PollutionViewBounds.width;
+            return airBounds;
         }
     }
 }

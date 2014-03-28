@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-namespace Industree.View
+namespace Industree.Data.View
 {
-    [System.Serializable]
+    [Serializable]
     public class PauseViewData : ViewData
     {
         public Rect pauseDialogRectangle;

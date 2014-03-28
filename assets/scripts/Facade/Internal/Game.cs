@@ -1,5 +1,4 @@
-﻿using Industree.Graphics;
-using Industree.Time;
+﻿using Industree.Time;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -16,9 +15,9 @@ namespace Industree.Facade.Internal
         public bool HasGameStarted { get; private set; }
         public bool IsGamePaused { get; private set; }
         public bool PlayerWonGame { get { return playerWonGame; } }
-        public ITexture PauseTexture { get { throw new System.NotImplementedException(); } }
-        public ITexture WinTexture { get { throw new System.NotImplementedException(); } }
-        public ITexture LoseTexture { get { throw new System.NotImplementedException(); } }
+        public Texture PauseTexture { get { throw new System.NotImplementedException(); } }
+        public Texture WinTexture { get { throw new System.NotImplementedException(); } }
+        public Texture LoseTexture { get { throw new System.NotImplementedException(); } }
         public Rect ScreenBounds { get { throw new System.NotImplementedException(); } }
 
         public event System.Action GameStart = () => { };
@@ -32,8 +31,8 @@ namespace Industree.Facade.Internal
         {
             HasGameStarted = false;
             playerWonGame = false;
-            planet.MaximumPollution += () => EndGame(false);
-            planet.ZeroPollution += () => EndGame(true);
+            planet.MaximumPollutionReached += () => EndGame(false);
+            planet.ZeroPollutionReached += () => EndGame(true);
         }
 
         private void EndGame(bool playerWonGame)
@@ -67,8 +66,5 @@ namespace Industree.Facade.Internal
         {
             throw new System.NotImplementedException();
         }
-
-
-        
     }
 }

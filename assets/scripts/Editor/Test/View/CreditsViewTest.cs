@@ -16,18 +16,15 @@ namespace Industree.View.Test
             IPlayer player = Substitute.For<IPlayer>();
             int playerCredits = 1;
             player.Credits.Returns(playerCredits);
-
-            ICreditsViewData data = Substitute.For<ICreditsViewData>();
-            Rect fakeRect = new Rect();
-            data.TextBounds.Returns(fakeRect);
+            player.CreditsTextBounds.Returns(new Rect());
 
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
-
-            CreditsView creditsView = new CreditsView(player, data, gui);
+            IViewSkin skin = Substitute.For<IViewSkin>();
+            CreditsView creditsView = new CreditsView(player, gui, skin);
 
             creditsView.Draw();
 
-            gui.Received().DrawText(playerCredits.ToString(), fakeRect);
+            gui.Received().DrawText(playerCredits.ToString(), player.CreditsTextBounds, skin.Label);
         }
 
         [Test]
@@ -36,20 +33,16 @@ namespace Industree.View.Test
             IPlayer player = Substitute.For<IPlayer>();
             int playerCredits = 1;
             player.Credits.Returns(playerCredits);
-
-            ICreditsViewData data = Substitute.For<ICreditsViewData>();
-            Rect fakeRect = new Rect();
-            data.IconBounds.Returns(fakeRect);
-            ITexture fakeTexture = Substitute.For<ITexture>();
-            data.Icon.Returns(fakeTexture);
+            player.CreditsIconBounds.Returns(new Rect());
+            player.CreditsIcon.Returns(Substitute.For<Texture>());
 
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
 
-            CreditsView creditsView = new CreditsView(player, data, gui);
+            CreditsView creditsView = new CreditsView(player, gui, Substitute.For<IViewSkin>());
 
             creditsView.Draw();
 
-            gui.Received().DrawTexture(fakeTexture, fakeRect);
+            gui.Received().DrawTexture(player.CreditsIcon, player.CreditsIconBounds);
         }
     }
 }

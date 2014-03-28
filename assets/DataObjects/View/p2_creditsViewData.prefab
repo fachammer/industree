@@ -44,8 +44,10 @@ MonoBehaviour:
   - creditIcon
   - guiDepth
   - guiSkin
-  guiDepth: 0
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
+  - viewSkin
+  - depth
+  depth: 0
+  viewSkin: {fileID: 0}
   creditIcon: {fileID: 2800000, guid: d96d93066eafa1d4c998da6d173c8972, type: 3}
   creditIconRectangle:
     serializedVersion: 2

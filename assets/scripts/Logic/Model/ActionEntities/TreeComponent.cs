@@ -1,5 +1,6 @@
 ﻿using Industree.Facade;
 using Industree.Facade.Internal;
+using Industree.Logic.StateManager;
 using Industree.Time;
 using Industree.Time.Internal;
 using System;
@@ -27,7 +28,7 @@ public class TreeComponent: MonoBehaviour {
     private float[] levelUpTimes;
     private float dieSpeed = 0f;
 	
-	private Levelable levelable;
+	private LevelManager levelManager;
     private Damagable damagable;
     private Polluting polluting;
 	
@@ -36,14 +37,14 @@ public class TreeComponent: MonoBehaviour {
 	public Damagable Damagable { get { return damagable; } }
 	
 	private void Awake(){
-		levelable = GetComponent<Levelable>();
+        levelManager = new LevelManager(0);
 		damagable = GetComponent<Damagable>();
 		polluting = GetComponent<Polluting>();
-		Timer.Start(timeBetweenClean, OnCleanTimerTick);
+        Timing.GetTimerFactory().GetTimer(timeBetweenClean).Tick += OnCleanTimerTick;
 	}
 
 	private void Start(){
-		levelable.LeveledUp += OnLevelUp;
+		levelManager.LevelUp += OnLevelUp;
 		damagable.BeforeDestroy += OnTreeDestroy;
 
         levelUpTimes = new float[minLevelUpTimes.Length];
@@ -51,39 +52,39 @@ public class TreeComponent: MonoBehaviour {
 			levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
 
-        Timer.Start(levelUpTimes[0], OnLevelUpTimerTick);
-
+        Timing.GetTimerFactory().GetTimer(levelUpTimes[0]).Tick += OnLevelUpTimerTick;
+       
         polluting.pollution = -reducePollution[0];
 
         animation.Play(plantAnim);
         audio.PlayOneShot(levelUpSound);
 	}
 
-	private void OnLevelUp(Levelable levelable){
-        polluting.pollution = -reducePollution[levelable.Level - 2];
+	private void OnLevelUp(int oldLevel, int newLevel){
+        polluting.pollution = -reducePollution[oldLevel - 1];
 
-		animation.Play(growAnim[levelable.Level - 2]);		
+		animation.Play(growAnim[oldLevel - 1]);		
 		audio.PlayOneShot(levelUpSound);
 	}
 
 	private void OnTreeDestroy(Damagable damagable){
 		Destroy(gameObject, 2);
-        levelable.LeveledUp -= OnLevelUp;
+        levelManager.LevelUp -= OnLevelUp;
         damagable.BeforeDestroy -= OnTreeDestroy;
 	}
 
 	private void OnCleanTimerTick(ITimer timer){
-		player.IncreaseCredits(creditsPerSec[levelable.Level - 1]);
+		player.IncreaseCredits(creditsPerSec[levelManager.Level]);
 	}
 
     private void OnLevelUpTimerTick(ITimer timer)
     {
-        levelable.LevelUp();
+        levelManager.RaiseLevel();
 
-        if (levelable.Level < levelable.maxLevel)
+        if (levelManager.Level < 4)
         {
             timer.Stop();
-            Timer.Start(levelUpTimes[levelable.Level - 1], OnLevelUpTimerTick);
+            Timing.GetTimerFactory().GetTimer(levelUpTimes[levelManager.Level]).Tick += OnLevelUpTimerTick;
         }
         else
         {
@@ -97,7 +98,7 @@ public class TreeComponent: MonoBehaviour {
         }
 
         // Plays the animation after the last animation
-        animation.PlayQueued(idleAnim[levelable.Level - 1], QueueMode.CompleteOthers);
+        animation.PlayQueued(idleAnim[levelManager.Level], QueueMode.CompleteOthers);
     }
 
     private void AnimateDeath(){

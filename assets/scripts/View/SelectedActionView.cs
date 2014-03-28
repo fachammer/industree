@@ -4,20 +4,19 @@ using Industree.Facade;
 
 namespace Industree.View
 {
-    public class SelectedActionView : IView
+    public class SelectedActionView : AbstractView
     {
         private IPlayer player;
-        private IGuiRenderer gui;
 
-        public SelectedActionView(IPlayer player, IGuiRenderer gui)
+        public SelectedActionView(IPlayer player, IGuiRenderer gui, IViewSkin skin)
+            : base(gui, skin)
         {
             this.player = player;
-            this.gui = gui;
         }
 
-        public void Draw()
+        public override void Draw()
         {
-            gui.DrawTexture(player.SelectedAction.SelectedOverlayIcon, player.SelectedAction.IconBounds);
+            gui.DrawTexture(player.SelectedOverlayIcon, player.SelectedAction.IconBounds);
         }
     }
 }

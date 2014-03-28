@@ -43,8 +43,10 @@ MonoBehaviour:
   inheritValues:
   - guiDepth
   - guiSkin
-  guiDepth: 0
-  guiSkin: {fileID: 11400000, guid: 4e655f792b4e2804397a194d00e9ed39, type: 2}
+  - viewSkin
+  - depth
+  depth: 0
+  viewSkin: {fileID: 11400000, guid: e4485f01e7481de43bacf5ae225fb150, type: 2}
   selectedActionIconOverlay: {fileID: 2800000, guid: 3d2aa43571d857f4b89968910e8f0b68,
     type: 3}
 --- !u!1001 &100100000

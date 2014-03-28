@@ -13,7 +13,7 @@ public class Earthquake :ActionEntity {
     private Damaging damaging;
     private Vector3 initialCameraPosition;
     private Building[] buildings;
-    private Timer damageTimer;
+    private ITimer damageTimer;
 
     private void Awake(){
         game = GameFactory.GetGameInstance();
@@ -27,7 +27,8 @@ public class Earthquake :ActionEntity {
     private void Start(){
         initialCameraPosition = Camera.main.transform.position;
         buildings = Array.ConvertAll(GameObject.FindObjectsOfType(typeof(Building)), obj => (Building) obj);
-        damageTimer = Timer.Start(hurtDeltaTime, OnDamageTimerTick);
+        damageTimer = Timing.GetTimerFactory().GetTimer(hurtDeltaTime);
+        damageTimer.Tick += OnDamageTimerTick;
     }
 
     private void Disable()

@@ -2,40 +2,40 @@
 using Industree.Graphics;
 using Industree.Time;
 using System;
+using UnityEngine;
 
 namespace Industree.View
 {
-    public class ActionDeniedView : IView
+    public class ActionDeniedView : AbstractView
     {
-        private IPlayer player;
-        private IClock clock;
-        private IGuiRenderer gui;
         private Action drawCall;
+        private ITimerFactory timerFactory;
 
-        public ActionDeniedView(IPlayer player, IClock clock, IGuiRenderer gui)
+        public ActionDeniedView(IAction action, ITimerFactory timerFactory, IGuiRenderer gui, IViewSkin skin) : base(gui, skin)
         {
-            this.player = player;
-            this.clock = clock;
-            this.gui = gui;
+            this.timerFactory = timerFactory;
             drawCall = null;
 
-            player.ActionFailure += AddDrawCall;
+            action.Failure += AddDrawCall;
         }
 
         private void AddDrawCall(IPlayer player, IAction action, float actionDirection)
         {
+            ITimer timer = timerFactory.GetTimer(action.DeniedOverlayIconTime);
+            timer.Tick += OnActionDeniedTimerTick;
             drawCall = () => gui.DrawTexture(action.DeniedOverlayIcon, action.IconBounds);
-
-            clock.ClearCallbacks();
-            clock.CallbackOnce(
-                action.DeniedOverlayIconTime, 
-                () => drawCall = null);
         }
 
-        public void Draw()
+        private void OnActionDeniedTimerTick(ITimer timer)
         {
-            if(drawCall != null)
-                drawCall();
+            timer.Stop();
+            drawCall = null;
+        }
+
+        public override void Draw()
+        {
+            if (drawCall != null)
+                drawCall();               
         }
     }
 }

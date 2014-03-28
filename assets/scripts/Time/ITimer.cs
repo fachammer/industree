@@ -8,6 +8,9 @@ namespace Industree.Time
     public interface ITimer
     {
         event Action<ITimer> Tick;
+
+        float TimeSinceLastTick { get; }
+
         void Pause();
         void Resume();
         void Stop();

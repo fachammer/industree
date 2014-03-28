@@ -7,5 +7,7 @@ namespace Industree.Logic
     {
         event Action<IPlayer, IAction, float> ActionFailure;
         event Action<IPlayer, IAction, float> ActionSuccess;
+
+        void Invoke(IPlayer player, IAction action, float direction);
     }
 }

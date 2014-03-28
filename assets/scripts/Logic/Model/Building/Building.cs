@@ -1,4 +1,5 @@
-﻿using Industree.Time;
+﻿using Industree.Logic.StateManager;
+using Industree.Time;
 using Industree.Time.Internal;
 using System;
 using System.Collections.Generic;
@@ -22,10 +23,10 @@ public class Building : MonoBehaviour{
 
     private Polluting polluting;
     private Damagable damagable;
-    private Levelable levelable;
+    private LevelManager levelManager;
 
-    public Levelable Levelable {
-        get { return levelable; }
+    public LevelManager LevelManager {
+        get { return levelManager; }
     }
 
     public Damagable Damagable {
@@ -34,9 +35,9 @@ public class Building : MonoBehaviour{
 
     private void Awake(){
         polluting = GetComponent<Polluting>();
-        levelable = GetComponent<Levelable>();
+        levelManager = new LevelManager(1);
         damagable = GetComponent<Damagable>();
-        levelable.LeveledUp += OnLevelUp;
+        levelManager.LevelUp += OnLevelUp;
         damagable.BeforeDestroy += OnBuildingDestroy;
     }
 	
@@ -49,7 +50,7 @@ public class Building : MonoBehaviour{
 	        levelUpTimes[i] = UnityEngine.Random.Range(minLevelUpTimes[i], maxLevelUpTimes[i]);
 		}
 
-        Timer.Start(levelUpTimes[0], OnLevelUpTimerTick);
+        Timing.GetTimerFactory().GetTimer(levelUpTimes[0]).Tick += OnLevelUpTimerTick;
 
         GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[0], transform.position, transform.rotation);
         newGameObject.transform.parent = transform;
@@ -57,12 +58,12 @@ public class Building : MonoBehaviour{
 
     private void OnLevelUpTimerTick(ITimer timer)
     {
-        levelable.LevelUp();
+        levelManager.RaiseLevel();
 
-        if (levelable.Level < levelable.maxLevel)
+        if (levelManager.Level < 4)
         {
             timer.Stop();
-            Timer.Start(levelUpTimes[levelable.Level - 1], OnLevelUpTimerTick);
+            Timing.GetTimerFactory().GetTimer(levelUpTimes[levelManager.Level - 1]).Tick += OnLevelUpTimerTick;
         }
         else
         {
@@ -79,22 +80,22 @@ public class Building : MonoBehaviour{
         }
     }
 
-    private void OnLevelUp(Levelable levelable)
+    private void OnLevelUp(int oldLevel, int newLevel)
     {
-        damagable.Hitpoints = hitpointLevels[levelable.Level - 1];
-        polluting.pollution = pollutionLevels[levelable.Level - 1];
+        damagable.Hitpoints = hitpointLevels[newLevel - 1];
+        polluting.pollution = pollutionLevels[newLevel - 1];
 
         // Destroy children and add new model as current model
         foreach(Transform t in transform){
             Destroy(t.gameObject);
         }
 
-        GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[levelable.Level - 1], transform.position, transform.rotation);
+        GameObject newGameObject = (GameObject)Instantiate(buildingLevelModels[newLevel - 1], transform.position, transform.rotation);
         newGameObject.transform.parent = transform;
     }
 
     private void OnBuildingDestroy(Damagable damagable){
-    	levelable.LeveledUp -= OnLevelUp;
+    	levelManager.LevelUp -= OnLevelUp;
     	damagable.BeforeDestroy -= OnBuildingDestroy;
         Destroy(gameObject, destroyDelay);
     }

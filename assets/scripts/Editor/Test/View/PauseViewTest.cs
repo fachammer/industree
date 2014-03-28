@@ -13,10 +13,10 @@ namespace Industree.View.Test
         {
             IGame game = Substitute.For<IGame>();
             game.IsGamePaused.Returns(true);
-            game.PauseTexture.Returns(Substitute.For<ITexture>());
+            game.PauseTexture.Returns(Substitute.For<Texture>());
             game.ScreenBounds.Returns(new Rect(0, 0, 1, 1));
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
-            PauseView pauseView = new PauseView(game, gui);
+            PauseView pauseView = new PauseView(game, gui, Substitute.For<IViewSkin>());
 
             pauseView.Draw();
 
@@ -29,10 +29,10 @@ namespace Industree.View.Test
             IGame game = Substitute.For<IGame>();
             game.HasGameEnded.Returns(true);
             game.IsGamePaused.Returns(true);
-            game.PauseTexture.Returns(Substitute.For<ITexture>());
+            game.PauseTexture.Returns(Substitute.For<Texture>());
             game.ScreenBounds.Returns(new Rect(0, 0, 1, 1));
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
-            PauseView pauseView = new PauseView(game, gui);
+            PauseView pauseView = new PauseView(game, gui, Substitute.For<IViewSkin>());
 
             pauseView.Draw();
 

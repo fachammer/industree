@@ -13,7 +13,7 @@ public class BuildingPlacer : MonoBehaviour {
 
 	private void Awake () {
 		buildSlots = GameObject.FindGameObjectWithTag(Tags.planet).GetComponent<BuildSlots>();
-		Timer.Start(buildInterval, OnBuildTimerTick);
+		Timing.GetTimerFactory().GetTimer(buildInterval).Tick += OnBuildTimerTick;
 	}
 
 	private void OnBuildTimerTick(ITimer timer){

@@ -4,23 +4,19 @@ using Industree.Graphics;
 
 namespace Industree.View
 {
-    public class CreditsView : IView
+    public class CreditsView : AbstractView
     {
         private IPlayer player;
-        private ICreditsViewData data;
-        private IGuiRenderer gui;
 
-        public CreditsView(IPlayer player, ICreditsViewData data, IGuiRenderer gui)
+        public CreditsView(IPlayer player, IGuiRenderer gui, IViewSkin skin) : base(gui, skin)
         {
             this.player = player;
-            this.data = data;
-            this.gui = gui;
         }
 
-        public void Draw()
+        public override void Draw()
         {
-            gui.DrawText(player.Credits.ToString(), data.TextBounds);
-            gui.DrawTexture(data.Icon, data.IconBounds);
+            gui.DrawText(player.Credits.ToString(), player.CreditsTextBounds, skin.Label);
+            gui.DrawTexture(player.CreditsIcon, player.CreditsIconBounds);
         }
     }
 }

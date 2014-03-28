@@ -1,10 +1,17 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Industree.Facade
 {
     public interface IPlanet
     {
-        event Action MaximumPollution;
-        event Action ZeroPollution;
+        Texture PollutionTexture { get; }
+        Texture AirTexture { get; }
+        Rect PollutionViewBounds { get; }
+        int MaximumPollution { get; }
+        int CurrentPollution { get; }
+
+        event Action MaximumPollutionReached;
+        event Action ZeroPollutionReached;
     }
 }

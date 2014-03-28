@@ -5,31 +5,25 @@ using Industree.Graphics;
 
 namespace Industree.View
 {
-    public class ActionCooldownView : IView
+    public class ActionCooldownView : AbstractView
     {
         private IAction action;
-        private IActionViewData actionViewData;
-        private IActionCooldownViewData actionCooldownViewData;
-        private IGuiRenderer gui;
 
-        public ActionCooldownView(IAction action, IActionViewData actionViewData, IActionCooldownViewData data, IGuiRenderer gui)
+        public ActionCooldownView(IAction action, IGuiRenderer gui, IViewSkin skin) : base(gui, skin)
         {
             this.action = action;
-            this.actionViewData = actionViewData;
-            this.actionCooldownViewData = data;
-            this.gui = gui;
         }
 
-        public void Draw()
+        public override void Draw()
         {
             if(action.IsCoolingDown)
-                gui.DrawTexture(actionCooldownViewData.IconOverlay, GetOverlayBounds());
+                gui.DrawTexture(action.CooldownOverlayIcon, GetOverlayBounds());
         }
 
         private Rect GetOverlayBounds()
         {
-            Rect overlayBounds = new Rect(actionViewData.IconBounds);
-            overlayBounds.width = actionViewData.IconBounds.width * action.RemainingCooldown / action.Cooldown;
+            Rect overlayBounds = new Rect(action.IconBounds);
+            overlayBounds.width = action.IconBounds.width * action.RemainingCooldown / action.Cooldown;
             return overlayBounds;
         }
     }

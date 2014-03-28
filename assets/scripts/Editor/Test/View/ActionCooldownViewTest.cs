@@ -17,20 +17,15 @@ namespace Industree.View.Test
             action.IsCoolingDown.Returns(true);
             action.Cooldown.Returns(actionCooldown);
             action.RemainingCooldown.Returns(remainingCooldown);
-
-            IActionViewData actionViewData = Substitute.For<IActionViewData>();
-            actionViewData.IconBounds.Returns(new Rect(0, 0, actionBoundsWidth, 1));
-
-            IActionCooldownViewData actionCooldownViewData = Substitute.For<IActionCooldownViewData>();
-            ITexture fakeTexture = Substitute.For<ITexture>();
-            actionCooldownViewData.IconOverlay.Returns(fakeTexture);
+            action.IconBounds.Returns(new Rect(0, 0, actionBoundsWidth, 1));
+            action.CooldownOverlayIcon.Returns(Substitute.For<Texture>());
 
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
-            ActionCooldownView actionCooldownView = new ActionCooldownView(action, actionViewData, actionCooldownViewData, gui);
+            ActionCooldownView actionCooldownView = new ActionCooldownView(action, gui, Substitute.For<IViewSkin>());
 
             actionCooldownView.Draw();
 
-            gui.Received().DrawTexture(fakeTexture, new Rect(0, 0, expectedCooldownOverlayBoundsWidth, 1));
+            gui.Received().DrawTexture(action.CooldownOverlayIcon, new Rect(0, 0, expectedCooldownOverlayBoundsWidth, 1));
         }
 
         [Test]
@@ -40,16 +35,11 @@ namespace Industree.View.Test
             action.IsCoolingDown.Returns(false);
             action.Cooldown.Returns(1);
             action.RemainingCooldown.Returns(0);
-
-            IActionViewData actionViewData = Substitute.For<IActionViewData>();
-            actionViewData.IconBounds.Returns(new Rect());
-
-            IActionCooldownViewData actionCooldownViewData = Substitute.For<IActionCooldownViewData>();
-            ITexture fakeTexture = Substitute.For<ITexture>();
-            actionCooldownViewData.IconOverlay.Returns(fakeTexture);
+            action.IconBounds.Returns(new Rect());
+            action.CooldownOverlayIcon.Returns(Substitute.For<Texture>());
 
             IGuiRenderer gui = Substitute.For<IGuiRenderer>();
-            ActionCooldownView actionCooldownView = new ActionCooldownView(action, actionViewData, actionCooldownViewData, gui);
+            ActionCooldownView actionCooldownView = new ActionCooldownView(action, gui, Substitute.For<IViewSkin>());
 
             actionCooldownView.Draw();
 
