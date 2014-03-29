@@ -17,6 +17,7 @@ namespace Industree.Facade
         void SelectNextAction();
         void SelectPreviousAction();
         void IncreaseCredits(int amount);
+        void DecreaseCredits(int amount);
 
         Texture CreditsIcon { get; }
         Rect CreditsIconBounds { get; }

@@ -6,8 +6,7 @@ namespace Industree.Model.Actions
 {
     internal class InstantiateAction : Action
     {
-
-        public GameObject actionGameEntity;
+        public GameObject actionGameEntity = null;
 
         protected override void PerformInvoke(IPlayer player, float actionDirection)
         {

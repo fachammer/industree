@@ -12,14 +12,14 @@ namespace Industree.Facade.Internal
 {
     internal class Player : MonoBehaviour, IPlayer
     {
-        public int index;
-        public int initialCredits;
-        public int creditsUpInterval;
-        public int creditsPerInterval;
-        public CreditsViewData creditsViewData;
-        public SelectedActionViewData selectedActionViewData;
-        public UnityAxis selectAxis;
-        public UnityAxis actionAxis;
+        public int index = 0;
+        public int initialCredits = 0;
+        public int creditsUpInterval = 0;
+        public int creditsPerInterval = 0;
+        public CreditsViewData creditsViewData = null;
+        public SelectedActionViewData selectedActionViewData = null;
+        public UnityAxis selectAxis = null;
+        public UnityAxis actionAxis = null;
 
         private IAction[] actions;
         private SelectionStateManager selectedActionManager;
@@ -29,10 +29,10 @@ namespace Industree.Facade.Internal
 
         private PlayerView view;
 
-        public event Action<IPlayer, float> ActionInput;
-        public event Action<IPlayer, IAction, float> ActionSuccess;
-        public event Action<IPlayer, IAction, float> ActionFailure;
-        public event Action<int, int> CreditsChange;
+        public event Action<IPlayer, float> ActionInput = (player, direction) => { };
+        public event Action<IPlayer, IAction, float> ActionSuccess = (player, action, direction) => { };
+        public event Action<IPlayer, IAction, float> ActionFailure = (player, action, direction) => { };
+        public event Action<int, int> CreditsChange = (oldValue, newValue) => { };
 
         public IAction[] Actions { get { return actions; } }
         public IAction SelectedAction { get { return actions[selectedActionManager.SelectedActionIndex]; } }
@@ -57,6 +57,11 @@ namespace Industree.Facade.Internal
         public void IncreaseCredits(int amount)
         {
             creditsManager.IncreaseCreditsByAmount(amount);
+        }
+
+        public void DecreaseCredits(int amount)
+        {
+            creditsManager.DecreaseCreditsByAmount(amount);
         }
 
         private void Awake()

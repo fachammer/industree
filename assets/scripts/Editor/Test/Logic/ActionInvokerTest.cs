@@ -92,5 +92,22 @@ namespace Industree.Logic.Test
 
             action.DidNotReceive().Invoke(player, actionDirection);
         }
+
+        [Test]
+        public void WhenInvokeSucceedsThenCreditsOfPlayerGetDecreased()
+        {
+            float actionDirection = 1f;
+            IAction action = Substitute.For<IAction>();
+            IPlayer player = Substitute.For<IPlayer>();
+            action.Cost.Returns(1);
+            player.Credits.Returns(1);
+            action.IsInvokable(player, actionDirection).Returns(true);
+            action.IsCoolingDown.Returns(false);
+            ActionInvoker actionInvoker = new ActionInvoker();
+
+            actionInvoker.Invoke(player, action, actionDirection);
+
+            player.Received().DecreaseCredits(action.Cost);
+        }
     }
 }

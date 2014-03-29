@@ -1,37 +1,53 @@
 ﻿using UnityEngine;
 using System;
+using Industree.Data.View;
+using Industree.Graphics;
+using Industree.View;
+using Industree.Logic.StateManager;
 
 namespace Industree.Facade.Internal
 {
     internal class Planet : MonoBehaviour, IPlanet
     {
-        public event System.Action MaximumPollutionReached;
+        public int maximumPollution = 1;
+        public int currentPollution = 0;
+        public PollutionViewData pollutionViewData = null;
 
-        public event System.Action ZeroPollutionReached;
+        private PollutionManager pollutionManager;
 
-        public Texture PollutionTexture
+        private PollutionView pollutionView;
+
+        public event System.Action MaximumPollutionReached = () => { };
+        public event System.Action ZeroPollutionReached = () => { };
+
+        public Texture PollutionTexture { get { return GraphicsUtility.CreateTextureWithColor(pollutionViewData.pollutionColor); } }
+        public Texture AirTexture { get { return GraphicsUtility.CreateTextureWithColor(pollutionViewData.airColor); } }
+        public Rect PollutionViewBounds { get { return pollutionViewData.pollutionBilanceRectangle; } }
+        public int MaximumPollution { get { return pollutionManager.MaximumPollution; } }
+        public int CurrentPollution { get { return pollutionManager.CurrentPollution; } }
+
+        public void IncreasePollution(int pollutionAmount)
         {
-            get { throw new NotImplementedException(); }
-        }   
-
-        public Texture AirTexture
-        {
-            get { throw new NotImplementedException(); }
+            pollutionManager.IncreasePollutionByAmount(pollutionAmount);
         }
 
-        public Rect PollutionViewBounds
+        public void DecreasePollution(int pollutionAmount)
         {
-            get { throw new NotImplementedException(); }
+            pollutionManager.DecreasePollutionByAmount(pollutionAmount);
         }
 
-        public int MaximumPollution
+        private void Awake()
         {
-            get { throw new NotImplementedException(); }
+            pollutionManager = new PollutionManager(maximumPollution, currentPollution);
+            pollutionView = new PollutionView(this, GuiRendererFactory.GetResolutionIndependentRenderer(), pollutionViewData.viewSkin);
+
+            pollutionManager.MaximumPollutionReached += MaximumPollutionReached;
+            pollutionManager.ZeroPollutionReached += ZeroPollutionReached;
         }
 
-        public int CurrentPollution
+        private void OnGUI()
         {
-            get { throw new NotImplementedException(); }
+            pollutionView.Draw();
         }
     }
 }

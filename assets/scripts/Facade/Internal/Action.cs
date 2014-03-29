@@ -11,17 +11,17 @@ namespace Industree.Facade.Internal
 {
     internal abstract class Action : MonoBehaviour, IAction
     {
-        public int cost;
-        public float cooldown;
-        public int index;
-        public ActionIconViewData actionViewData;
-        public ActionCooldownViewData actionCooldownViewData;
-        public ActionDeniedViewData actionDeniedViewData;
+        public int cost = 0;
+        public float cooldown = 0;
+        public int index = 0;
+        public ActionIconViewData actionViewData = null;
+        public ActionCooldownViewData actionCooldownViewData = null;
+        public ActionDeniedViewData actionDeniedViewData = null;
 
         private ITimer cooldownTimer;
         private ActionView actionView;
 
-        public event Action<IPlayer, IAction, float> Failure;
+        public event Action<IPlayer, IAction, float> Failure = (player, action, direction) => { };
 
         public int Cost { get { return cost; } }
         public float Cooldown { get { return cooldown; } }
@@ -42,6 +42,7 @@ namespace Industree.Facade.Internal
         public Rect CostBounds { get { return actionViewData.CostBounds; } }
         public Texture Icon { get { return actionViewData.Icon; } }
         public Texture CooldownOverlayIcon { get { return actionCooldownViewData.IconOverlay; } }
+        public BarDecreaseDirection CooldownDecreaseDirection { get { return actionCooldownViewData.CooldownOverlayDecreaseDirection; } }
         public Texture DeniedOverlayIcon { get { return actionDeniedViewData.IconOverlay; } }
         public float DeniedOverlayIconTime { get { return actionDeniedViewData.OverlayTime; } }
 

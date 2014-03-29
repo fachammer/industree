@@ -6,8 +6,7 @@ namespace Industree.Model.Actions
 {
     internal class InstantiateTornadoAction : InstantiateOnPositionAction
     {
-
-        public float xRange;
+        public float xRange = 0;
 
         protected override Vector3 GetInitialActionEntityPosition(IPlayer player, float actionDirection)
         {

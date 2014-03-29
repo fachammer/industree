@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: p1_actionCooldownViewData
+  m_Name: general_pollutionViewData
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,21 +35,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 995a8c734e295d842afe319e002e6613, type: 3}
+  m_Script: {fileID: 11500000, guid: e0a40a68acc2ae1468b82ebce2128387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseObject: {fileID: 11400000, guid: f3f3722641ca74f4e8db4894e2337a5e, type: 2}
-  actualBaseObject: {fileID: 11400000, guid: f3f3722641ca74f4e8db4894e2337a5e, type: 2}
+  baseObject: {fileID: 11400000, guid: b9343eb703609474696d22cc9b01b92b, type: 2}
+  actualBaseObject: {fileID: 11400000, guid: b9343eb703609474696d22cc9b01b92b, type: 2}
   inheritValues:
-  - cooldownOverlay
-  - guiDepth
-  - guiSkin
-  - viewSkin
   - depth
+  - viewSkin
   depth: 0
   viewSkin: {fileID: 11400000, guid: e4485f01e7481de43bacf5ae225fb150, type: 2}
-  cooldownOverlay: {fileID: 2800000, guid: 3f793a87b54ca564195554621f6a662b, type: 3}
-  cooldownDecreaseDirection: 1
+  pollutionBilanceRectangle:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: .0500000007
+  airColor: {r: .742084801, g: .948529422, b: .544009507, a: 1}
+  pollutionColor: {r: .16911763, g: .144247383, b: .144247383, a: 1}
+  pollutionDecorationRectangle:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  pollutionDecoration: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

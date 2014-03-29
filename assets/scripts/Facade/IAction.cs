@@ -19,6 +19,8 @@ namespace Industree.Facade
         Texture CooldownOverlayIcon { get; }
         Texture DeniedOverlayIcon { get; }
         float DeniedOverlayIconTime { get; }
+        BarDecreaseDirection CooldownDecreaseDirection { get; }
+
         void Invoke(IPlayer player, float actionDirection);
         void Fail(IPlayer player, float actionDirection);
         bool IsCoolingDown { get; }

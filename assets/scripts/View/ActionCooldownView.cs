@@ -22,6 +22,22 @@ namespace Industree.View
 
         private Rect GetOverlayBounds()
         {
+            if (action.CooldownDecreaseDirection == BarDecreaseDirection.LeftToRight)
+                return GetLeftToRightOverlayBounds();
+            else
+                return GetRightToLeftOverlayBounds();
+            
+        }
+
+        private Rect GetLeftToRightOverlayBounds()
+        {
+            Rect overlayBounds = new Rect(GetRightToLeftOverlayBounds());
+            overlayBounds.x = action.IconBounds.x + (action.IconBounds.width - overlayBounds.width);
+            return overlayBounds;
+        }
+
+        private Rect GetRightToLeftOverlayBounds()
+        {
             Rect overlayBounds = new Rect(action.IconBounds);
             overlayBounds.width = action.IconBounds.width * action.RemainingCooldown / action.Cooldown;
             return overlayBounds;

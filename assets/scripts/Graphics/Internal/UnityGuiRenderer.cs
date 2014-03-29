@@ -20,11 +20,11 @@ namespace Industree.Graphics.Internal
 
         public void DrawTexture(Texture texture, Rect bounds, int depth)
         {
-            GUI.depth = depth;
             if (texture == null)
                 throw new NullReferenceException("texture must not be null");
 
-            GUI.DrawTexture(bounds, texture);
+            GUI.depth = depth;
+            GUI.DrawTexture(bounds, texture, ScaleMode.StretchToFill);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Industree.Logic
         {
             if (CanActionSucceed(player, action, direction)){
                 action.Invoke(player, direction);
+                player.DecreaseCredits(action.Cost);
                 ActionSuccess(player, action, direction);
             }
             else

@@ -5,7 +5,7 @@ namespace Industree.Input.Internal
 {
     internal class UnityAxis : MonoBehaviour, IAxis
     {
-        public string name;
+        public string axisName = "";
 
         private float value = 0f;
 
@@ -27,7 +27,7 @@ namespace Industree.Input.Internal
 
         private void Update()
         {
-            Value = UnityEngine.Input.GetAxisRaw(name);
+            Value = UnityEngine.Input.GetAxisRaw(axisName);
         }
     }
 }

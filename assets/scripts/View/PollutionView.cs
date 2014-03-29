@@ -16,14 +16,14 @@ namespace Industree.View
         public override void Draw()
         {
             Rect airBounds = CalculateAirBounds();
-            gui.DrawTexture(planet.AirTexture, airBounds, 0);
             gui.DrawTexture(planet.PollutionTexture, planet.PollutionViewBounds, 1);
+            gui.DrawTexture(planet.AirTexture, airBounds, 0);
         }
 
         private Rect CalculateAirBounds()
         {
             Rect airBounds = new Rect(planet.PollutionViewBounds);
-            airBounds.width =  (1f - ((float)planet.CurrentPollution) / planet.MaximumPollution) * planet.PollutionViewBounds.width;
+            airBounds.width =  (1f - ((float) planet.CurrentPollution) / planet.MaximumPollution) * planet.PollutionViewBounds.width;
             return airBounds;
         }
     }

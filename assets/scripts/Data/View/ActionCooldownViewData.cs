@@ -19,9 +19,9 @@ namespace Industree.Data.View
     public class ActionCooldownViewData : ViewData, IActionCooldownViewData
     {
         public Texture cooldownOverlay;
-        public BarDecreaseDirection barDecreaseDirection;
+        public BarDecreaseDirection cooldownDecreaseDirection;
 
         public Texture IconOverlay { get { return cooldownOverlay; } }
-        public BarDecreaseDirection CooldownOverlayDecreaseDirection { get { return barDecreaseDirection; } }
+        public BarDecreaseDirection CooldownOverlayDecreaseDirection { get { return cooldownDecreaseDirection; } }
     }
 }

@@ -13,5 +13,8 @@ namespace Industree.Facade
 
         event Action MaximumPollutionReached;
         event Action ZeroPollutionReached;
+
+        void IncreasePollution(int pollutionAmount);
+        void DecreasePollution(int pollutionAmount);
     }
 }
